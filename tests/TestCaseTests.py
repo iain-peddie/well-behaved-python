@@ -53,7 +53,17 @@ class TestCaseTests(TestCase):
         assert results.summary() == "0 failed from 1 test"
         
 if __name__ == "__main__":
-    TestCaseTests("test_run_template_on_good_method").run()
-    TestCaseTests("test_run_template_on_error_method").run()
-    TestCaseTests("test_good_method_summary").run()
+    # Let's hand craft a test suite
+
+    testMethods = [
+        "test_run_template_on_good_method", 
+        "test_run_template_on_error_method", 
+        "test_good_method_summary"
+        ]
+
+    for testMethod in testMethods:
+        print("running {}".format(testMethod))
+        results = TestCaseTests(testMethod).run()
+        print(results.summary())
+
 
