@@ -51,6 +51,14 @@ class TestCaseTests(TestCase):
         results = test.run()
         
         assert results.summary() == "0 failed from 1 test"
+
+    def test_error_method_summary(self):
+        test = TestCaseTests("targetErrorMethod")
+        test.handleError = test.ignoreError
+        results = test.run()
+
+        assert results.summary() == "1 failed from 1 test"
+        
         
 if __name__ == "__main__":
     # Let's hand craft a test suite
@@ -58,7 +66,8 @@ if __name__ == "__main__":
     testMethods = [
         "test_run_template_on_good_method", 
         "test_run_template_on_error_method", 
-        "test_good_method_summary"
+        "test_good_method_summary",
+        "test_error_method_summary"
         ]
 
     for testMethod in testMethods:

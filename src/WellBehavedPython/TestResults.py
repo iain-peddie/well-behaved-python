@@ -8,6 +8,9 @@ class TestResults:
 
     def registerTestStarted(self):
         self.testCount += 1
+
+    def registerTestFailed(self):
+        self.failCount += 1
     
     def summary(self):
         if self.testCount > 1:

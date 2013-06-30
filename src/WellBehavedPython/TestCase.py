@@ -23,17 +23,21 @@ class TestCase:
         """Command to organise a single test run of a single
            test function."""
         
+        results = TestResults()
+        results.registerTestStarted()
         self.before()
         try:
             self.testMethod()
         except AssertionError as ex:
+            results.registerTestFailed()
             raise
         except Exception as ex:
+            results.registerTestFailed()
             self.handleError(ex)
         finally:
             self.after()
 
-        return TestResults()
+        return results
 
     def handleError(self, error):
         print("Test of {} encountered error".format(self.testMethod))
