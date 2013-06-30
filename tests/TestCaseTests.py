@@ -5,7 +5,7 @@ import os.path
 import sys
 from WellBehavedPython.TestCase import *
 
-class WasRun(TestCase):
+class TestCaseTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
@@ -24,5 +24,5 @@ class WasRun(TestCase):
         assert self.wasTargetMethodCalled        
         
 if __name__ == "__main__":
-    WasRun("test_run_template").run()
+    TestCaseTests("test_run_template").run()
 
