@@ -17,15 +17,13 @@ class WasRun:
 
     def targetMethod(self):
         """Target method when running unit tests."""
-        self.wasRun = True
+        self.wasTargetMethodCalled = True
 
-    def test_TestCommand_runsTest(self):
+    def test_run_template(self):
         self.targetMethod()
-        assert self.wasRun
-
-    def test_before_run(self):
-        self.targetMethod()
+        
         assert self.wasBeforeCalled
+        assert self.wasTargetMethodCalled        
         
 if __name__ == "__main__":
     import os
@@ -38,8 +36,5 @@ if __name__ == "__main__":
     sys.path.append(srcPath)    
     from WellBehavedPython.TestCommand import *
 
-
-
-    WasRun("test_TestCommand_runsTest").run()
-    WasRun("test_before_run").run()
+    WasRun("test_run_template").run()
 
