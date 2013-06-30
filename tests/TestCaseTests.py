@@ -89,7 +89,6 @@ if __name__ == "__main__":
         ]
 
     for testMethod in testMethods:
-        print("running {}".format(testMethod))
         results = TestCaseTests(testMethod).run()
         print(results.summary())
 
