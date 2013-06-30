@@ -8,15 +8,12 @@ import os.path
 def main():
     setup()
     from WasRun import WasRun
+
+    # test block
     test = WasRun("test_TestCommand_runsTest")
     test.run()
-
-def setup():
-    cwd = os.curdir
-    srcPath = os.path.join(cwd, '../src/')
-    srcPath = os.path.abspath(srcPath)
-    sys.path.append(srcPath)    
+    test = WasRun("test_before_run")
+    test.run()
 
 if __name__ == "__main__":
-    setup()
     main()
