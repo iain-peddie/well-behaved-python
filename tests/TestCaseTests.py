@@ -17,6 +17,9 @@ class TestCaseTests(TestCase):
     def after(self):
         self.log += "after "
 
+    def ignoreError(self, error):
+        pass
+
     def targetGoodMethod(self):
         """Target method when running unit tests."""
         self.log += "targetMethod "
@@ -35,7 +38,10 @@ class TestCaseTests(TestCase):
         assert test.log == "before targetMethod after "
 
     def test_run_template_on_error_method(self):
+        # bypass usual error handling, because we want to
+        # ingore it for this test
         test = TestCaseTests("targetErrorMethod")
+        test.handleError = test.ignoreError
         test.run()
 
         assert test.log == "before after "
@@ -43,7 +49,6 @@ class TestCaseTests(TestCase):
     def test_good_method_summary(self):
         test = TestCaseTests("targetGoodMethod")
         results = test.run()
-        print("results {}".format(results))
         
         assert results.summary() == "0 failed from 1 test"
         
