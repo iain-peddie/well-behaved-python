@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+import traceback
+
+from .TestResults import TestResults
+
 class TestCase:
     
     def __init__(self, testMethodName):
@@ -18,11 +22,26 @@ class TestCase:
     def run(self):
         """Command to organise a single test run of a single
            test function."""
-
+        
+        results = TestResults()
+        results.registerTestStarted()
         self.before()
         try:
             self.testMethod()
-        except:
+        except AssertionError as ex:
+            results.registerTestFailed()
+            raise
+        except Exception as ex:
+            results.registerTestFailed()
+            self.handleError(ex)
+        finally:
             self.after()
+
+        return results
+
+    def handleError(self, error):
+        print("Test of {} encountered error".format(self.testMethod))
+        traceback.print_exc()
+
 
 
