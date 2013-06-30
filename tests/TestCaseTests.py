@@ -39,8 +39,16 @@ class TestCaseTests(TestCase):
         test.run()
 
         assert test.log == "before after "
+
+    def test_good_method_summary(self):
+        test = TestCaseTests("targetGoodMethod")
+        results = test.run()
+        print("results {}".format(results))
+        
+        assert results.summary() == "0 failed from 1 test"
         
 if __name__ == "__main__":
     TestCaseTests("test_run_template_on_good_method").run()
     TestCaseTests("test_run_template_on_error_method").run()
+    TestCaseTests("test_good_method_summary").run()
 
