@@ -8,14 +8,21 @@ class TestCase:
         self.testMethod = getattr(self, testMethodName)
 
     def before(self):
-        """Override this to create your before tests setup logic"""
-        pass
+        """Override this to create the setup logic which should run
+        before each individual test method."""
+
+    def after(self):
+        """Override this to create the cleanup logic which should run
+        after each individual test method."""
 
     def run(self):
         """Command to organise a single test run of a single
            test function."""
 
         self.before()
-        self.testMethod()
+        try:
+            self.testMethod()
+        except:
+            self.after()
 
 
