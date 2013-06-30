@@ -17,60 +17,60 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+
+import os
+import os.path
+import sys
 from WellBehavedPython.TestCase import *
-from WellBehavedPython.TestResults import *
 from WellBehavedPython.TestSuite import *
 
-class TestResultsTests(TestCase):
+class TestSuiteTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
     def before(self):
+        self.testMethodCount = 0
+        self.suite = TestSuite()
         self.results = TestResults()
-        self.results.registerTestStarted()
 
-    def test_summary_for_single_passing_test(self):
-        results = self.results
-
-        assert results.summary() == "0 failed from 1 test"
-
-    def test_summary_for_two_passing_tests(self):
-        results = self.results
-        results.registerTestStarted()
-
-        assert results.summary() == "0 failed from 2 tests"
-
-    def test_summary_for_single_failing_test(self):
-        results = self.results
-        results.registerTestFailed()
-
-        assert results.summary() == "1 failed from 1 test"
-
-    def test_summary_for_passing_and_failing_test(self):
-        results = self.results
-        results.registerTestFailed()
-        results.registerTestStarted()
-
-        assert results.summary() == "1 failed from 2 tests"
+    def selfShuntIncrementMethod(self):
+        self.testMethodCount += 1
         
+    def test_running_suite_with_one_test_runs_one_test(self):
+        test = TestSuiteTests("selfShuntIncrementMethod")
+        self.suite.add(test)
+
+        self.suite.run(self.results)
+        assert(test.testMethodCount == 1)
+        assert(self.results.summary() == "0 failed from 1 test")
+
+    def test_running_suite_with_two_tests_runs_both(self):
+        test1 = TestSuiteTests("selfShuntIncrementMethod")
+        test2 = TestSuiteTests("selfShuntIncrementMethod")
+
+        self.suite.add(test1)
+        self.suite.add(test2)
+        
+        self.suite.run(self.results)
+
+        assert(test1.testMethodCount == 1)
+        assert(test2.testMethodCount == 1)
+        assert(self.results.summary() == "0 failed from 2 tests")
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
 
     testMethods = [
-        "test_summary_for_single_passing_test",
-        "test_summary_for_two_passing_tests",
-        "test_summary_for_single_failing_test",
-        "test_summary_for_passing_and_failing_test",
-        ]
-
+        "test_running_suite_with_one_test_runs_one_test", 
+        "test_running_suite_with_two_tests_runs_both"        ]
     suite = TestSuite()
     
     for testMethod in testMethods:
-        suite.add(TestResultsTests(testMethod))
+        suite.add(TestSuiteTests(testMethod))
 
     results = TestResults()
     suite.run(results)
     
     print(results.summary())
+
