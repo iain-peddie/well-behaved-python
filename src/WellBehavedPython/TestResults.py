@@ -10,5 +10,9 @@ class TestResults:
         self.testCount += 1
     
     def summary(self):
-        return "{} failed from {} test".format(
-            self.failCount, self.testCount)
+        if self.testCount > 1:
+            plural = "s"
+        else:
+            plural = ""
+        return "{} failed from {} test{}".format(
+            self.failCount, self.testCount, plural)
