@@ -19,6 +19,7 @@
 
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestResults import *
+from WellBehavedPython.TestSuite import *
 
 class TestResultsTests(TestCase):
 
@@ -64,7 +65,12 @@ if __name__ == "__main__":
         "test_summary_for_passing_and_failing_test",
         ]
 
+    suite = TestSuite()
+    
     for testMethod in testMethods:
-        results = TestResultsTests(testMethod).run()
-        print(results.summary())
+        suite.add(TestResultsTests(testMethod))
 
+    results = TestResults()
+    suite.run(results)
+    
+    print(results.summary())

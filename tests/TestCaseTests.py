@@ -21,7 +21,9 @@
 import os
 import os.path
 import sys
+
 from WellBehavedPython.TestCase import *
+from WellBehavedPython.TestSuite import *
 
 class TestCaseTests(TestCase):
 
@@ -51,7 +53,7 @@ class TestCaseTests(TestCase):
         # then after would be called after this test, which
         # would mean we couldn't test for it...
         test = TestCaseTests("targetGoodMethod")
-        test.run()
+        test.run(TestResults())
         
         assert test.log == "before targetMethod after "
 
@@ -60,20 +62,23 @@ class TestCaseTests(TestCase):
         # ingore it for this test
         test = TestCaseTests("targetErrorMethod")
         test.handleError = test.ignoreError
-        test.run()
+        test.run(TestResults())
 
         assert test.log == "before after "
 
     def test_good_method_summary(self):
         test = TestCaseTests("targetGoodMethod")
-        results = test.run()
+        results = TestResults()
+        test.run(results)
         
         assert results.summary() == "0 failed from 1 test"
 
     def test_error_method_summary(self):
         test = TestCaseTests("targetErrorMethod")
         test.handleError = test.ignoreError
-        results = test.run()
+        results = TestResults()
+
+        test.run(results)
 
         assert results.summary() == "1 failed from 1 test"
         
@@ -88,8 +93,14 @@ if __name__ == "__main__":
         "test_error_method_summary"
         ]
 
+    suite = TestSuite()
+    
     for testMethod in testMethods:
-        results = TestCaseTests(testMethod).run()
-        print(results.summary())
+        suite.add(TestCaseTests(testMethod))
+
+    results = TestResults()
+    suite.run(results)
+    
+    print(results.summary())
 
 
