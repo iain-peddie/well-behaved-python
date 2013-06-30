@@ -1,25 +1,28 @@
 #!/usr/bin/env python3
 
-from WellBehavedPython.it import it
-from WellBehavedPython.TestCommand import *
+import os
+import os.path
+import sys
+from WellBehavedPython.TestCase import *
 
-
-class WasRun:
+class WasRun(TestCase):
 
     def __init__(self, testFunctionName):
-        pass
+        TestCase.__init__(self, testFunctionName)
 
-    def run(self):
-        self.test_TestCommand_runsTest()
+    def before(self):
+        self.wasBeforeCalled = True
 
     def targetMethod(self):
         """Target method when running unit tests."""
-        self.wasRun = True
+        self.wasTargetMethodCalled = True
 
-    def test_TestCommand_runsTest(self):
-        tester = self
-        test = TestCommand(tester.targetMethod)
-        test.run()
-        assert tester.wasRun
+    def test_run_template(self):
+        self.targetMethod()
         
+        assert self.wasBeforeCalled
+        assert self.wasTargetMethodCalled        
+        
+if __name__ == "__main__":
+    WasRun("test_run_template").run()
 
