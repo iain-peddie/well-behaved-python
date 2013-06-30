@@ -12,24 +12,35 @@ class TestCaseTests(TestCase):
         self.log = ""
 
     def before(self):
-        self.wasBeforeCalled = True
         self.log += "before "
 
-    def targetMethod(self):
+    def after(self):
+        self.log += "after "
+
+    def targetGoodMethod(self):
         """Target method when running unit tests."""
-        self.wasTargetMethodCalled = True
         self.log += "targetMethod "
 
-    def test_run_template(self):
+    def targetErrorMethod(self):
+        raise Exception
+
+    def test_run_template_on_good_method(self):
         # we can't use self shunt here, because we need to
         # test for the after case. If we were self-shunting,
         # then after would be called after this test, which
         # would mean we couldn't test for it...
-        test = TestCaseTests("targetMethod")
+        test = TestCaseTests("targetGoodMethod")
         test.run()
         
-        assert test.log == "before targetMethod "
+        assert test.log == "before targetMethod after "
+
+    def test_run_template_on_error_method(self):
+        test = TestCaseTests("targetErrorMethod")
+        test.run()
+
+        assert test.log == "before after "
         
 if __name__ == "__main__":
-    TestCaseTests("test_run_template").run()
+    TestCaseTests("test_run_template_on_good_method").run()
+    TestCaseTests("test_run_template_on_error_method").run()
 
