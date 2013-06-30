@@ -36,11 +36,10 @@ class TestCase:
         """Override this to create the cleanup logic which should run
         after each individual test method."""
 
-    def run(self):
+    def run(self, results):
         """Command to organise a single test run of a single
            test function."""
         
-        results = TestResults()
         results.registerTestStarted()
         self.before()
         try:
@@ -53,8 +52,6 @@ class TestCase:
             self.handleError(ex)
         finally:
             self.after()
-
-        return results
 
     def handleError(self, error):
         print("Test of {} encountered error".format(self.testMethod))

@@ -18,9 +18,13 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 class TestSuite:
+
+    def __init__(self):
+        self.tests = []
     
     def add(self, test):
-        self.test = test
+        self.tests.append(test)
 
-    def run(self):
-        self.test.run()
+    def run(self, results):
+        for test in self.tests:
+            test.run(results)        
