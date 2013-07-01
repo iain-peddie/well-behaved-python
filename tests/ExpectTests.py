@@ -21,7 +21,7 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.Expect import *
 
-class ExpectsTests(TestCase):
+class ExpectTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
@@ -29,14 +29,14 @@ class ExpectsTests(TestCase):
     @staticmethod
     def suite():
         testMethods = [
-            "test_expects_fail_throws_AssertionError"
+            "test_expects_fail_throws_AssertionError",
+            "test_failure_stores_message_if_provided",
             ]
         
         suite = TestSuite()
     
         for testMethod in testMethods:
-            suite.add(ExpectsTests(testMethod))
-        
+            suite.add(ExpectTests(testMethod))
         return suite
 
     def test_expects_fail_throws_AssertionError(self):
@@ -51,8 +51,18 @@ class ExpectsTests(TestCase):
         
         assert(flag)
 
+    def test_failure_stores_message_if_provided(self):
+        flag = True
+        try:
+            Expect(True).fail("ExpectedMessage")
+            flag = False
+        except AssertionError as ex:
+            assert ex.args[0] == "ExpectedMessage"
+        
+        assert flag, "expected message not stored in exception"
+
 if __name__ == "__main__":
-    suite = ExpectsTests.suite()
+    suite = ExpectTests.suite()
     results = TestResults()
     suite.run(results)
     

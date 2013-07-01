@@ -6,5 +6,5 @@ class Expect:
     def __init__(self, condition):
         pass
 
-    def fail(self):
-        raise AssertionError()
+    def fail(self, Message = ""):
+        raise AssertionError(Message)
