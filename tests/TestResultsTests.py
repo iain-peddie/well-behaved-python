@@ -20,6 +20,7 @@
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestResults import *
 from WellBehavedPython.TestSuite import *
+from WellBehavedPython.Expect import *
 
 class TestResultsTests(TestCase):
 
@@ -48,28 +49,26 @@ class TestResultsTests(TestCase):
     def test_summary_for_single_passing_test(self):
         results = self.results
 
-        assert results.summary() == "0 failed from 1 test"
+        Expect(results.summary()).toEqual("0 failed from 1 test")
 
     def test_summary_for_two_passing_tests(self):
         results = self.results
         results.registerTestStarted()
 
-        assert results.summary() == "0 failed from 2 tests"
+        Expect(results.summary()).toEqual("0 failed from 2 tests")
 
     def test_summary_for_single_failing_test(self):
         results = self.results
         results.registerTestFailed()
 
-        assert results.summary() == "1 failed from 1 test"
+        Expect(results.summary()).toEqual("1 failed from 1 test")
 
     def test_summary_for_passing_and_failing_test(self):
         results = self.results
         results.registerTestFailed()
         results.registerTestStarted()
 
-        assert results.summary() == "1 failed from 2 tests"
-
-        
+        Expect(results.summary()).toEqual("1 failed from 2 tests")
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
