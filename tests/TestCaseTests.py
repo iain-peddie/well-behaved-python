@@ -24,12 +24,29 @@ import sys
 
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
+from WellBehavedPython.Expect import *
 
 class TestCaseTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
         self.log = ""
+
+    @staticmethod
+    def suite():
+        testMethods = [
+            "test_run_template_on_good_method", 
+            "test_run_template_on_error_method", 
+            "test_good_method_summary",
+            "test_error_method_summary"
+            ]
+        
+        suite = TestSuite()
+    
+        for testMethod in testMethods:
+            suite.add(TestCaseTests(testMethod))
+        
+        return suite
 
     def before(self):
         self.log += "before "
@@ -55,7 +72,7 @@ class TestCaseTests(TestCase):
         test = TestCaseTests("targetGoodMethod")
         test.run(TestResults())
         
-        assert test.log == "before targetMethod after "
+        Expect(test.log).toEqual("before targetMethod after ")
 
     def test_run_template_on_error_method(self):
         # bypass usual error handling, because we want to
@@ -64,14 +81,14 @@ class TestCaseTests(TestCase):
         test.handleError = test.ignoreError
         test.run(TestResults())
 
-        assert test.log == "before after "
+        Expect(test.log).toEqual("before after ")
 
     def test_good_method_summary(self):
         test = TestCaseTests("targetGoodMethod")
         results = TestResults()
         test.run(results)
         
-        assert results.summary() == "0 failed from 1 test"
+        Expect(results.summary()).toEqual("0 failed from 1 test")
 
     def test_error_method_summary(self):
         test = TestCaseTests("targetErrorMethod")
@@ -80,24 +97,13 @@ class TestCaseTests(TestCase):
 
         test.run(results)
 
-        assert results.summary() == "1 failed from 1 test"
+        Expect(results.summary()).toEqual("1 failed from 1 test")
         
         
 if __name__ == "__main__":
     # Let's hand craft a test suite
 
-    testMethods = [
-        "test_run_template_on_good_method", 
-        "test_run_template_on_error_method", 
-        "test_good_method_summary",
-        "test_error_method_summary"
-        ]
-
-    suite = TestSuite()
-    
-    for testMethod in testMethods:
-        suite.add(TestCaseTests(testMethod))
-
+    suite = TestCaseTests.suite()
     results = TestResults()
     suite.run(results)
     

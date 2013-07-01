@@ -23,11 +23,24 @@ import os.path
 import sys
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
+from WellBehavedPython.Expect import *
 
 class TestSuiteTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
+
+    @staticmethod
+    def suite():
+        testMethods = [
+            "test_running_suite_with_one_test_runs_one_test", 
+            "test_running_suite_with_two_tests_runs_both"        ]
+        suite = TestSuite()
+    
+        for testMethod in testMethods:
+            suite.add(TestSuiteTests(testMethod))
+        
+        return suite
 
     def before(self):
         self.testMethodCount = 0
@@ -42,7 +55,7 @@ class TestSuiteTests(TestCase):
         self.suite.add(test)
 
         self.suite.run(self.results)
-        assert(test.testMethodCount == 1)
+        Expect(test.testMethodCount).toEqual(1)
         assert(self.results.summary() == "0 failed from 1 test")
 
     def test_running_suite_with_two_tests_runs_both(self):
@@ -54,21 +67,15 @@ class TestSuiteTests(TestCase):
         
         self.suite.run(self.results)
 
-        assert(test1.testMethodCount == 1)
-        assert(test2.testMethodCount == 1)
+        Expect(test1.testMethodCount).toEqual(1)
+        Expect(test2.testMethodCount).toEqual(1)
         assert(self.results.summary() == "0 failed from 2 tests")
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
-
-    testMethods = [
-        "test_running_suite_with_one_test_runs_one_test", 
-        "test_running_suite_with_two_tests_runs_both"        ]
-    suite = TestSuite()
     
-    for testMethod in testMethods:
-        suite.add(TestSuiteTests(testMethod))
-
+    suite = TestSuiteTests.suite()
+    
     results = TestResults()
     suite.run(results)
     
