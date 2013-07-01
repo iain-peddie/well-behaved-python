@@ -32,7 +32,9 @@ class ExpectTests(TestCase):
             "test_expects_fail_throws_AssertionError",
             "test_failure_stores_message_if_provided",
             "test_equals_doesnt_raise_if_numeric_items_are_equal",
-            "test_equals_raises_with_right_message_if_numeric_items_not_equal"
+            "test_equals_raises_with_right_message_if_numeric_items_not_equal",
+            "test_equals_doesnt_raise_if_string_items_are_equal",
+            "test_equals_raises_with_right_message_if_string_items_not_equal"
             ]
         
         suite = TestSuite()
@@ -79,7 +81,16 @@ class ExpectTests(TestCase):
     def test_equals_doesnt_raise_if_string_items_are_equal(self):
         Expect("hello").toEqual("hello")
 
-            
+    def test_equals_raises_with_right_message_if_string_items_not_equal(self):
+        flag = True
+        try:
+            Expect("hello").toEqual("world")
+            flag = False
+        except AssertionError as ex:
+            assert ex.args[0] == "Expected world but actual value is hello"
+        
+        assert flag, "Expected exception to be thrown"
+        
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

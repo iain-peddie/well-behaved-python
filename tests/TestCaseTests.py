@@ -96,7 +96,7 @@ class TestCaseTests(TestCase):
 
         test.run(results)
 
-        assert results.summary() == "1 failed from 1 test"
+        assert results.summary() ==  "1 failed from 1 test"
         
         
 if __name__ == "__main__":
