@@ -70,11 +70,15 @@ class ExpectTests(TestCase):
         flag = True
         try:
             Expect(1).toEqual(2)
-            falg = False
+            flag = False
         except AssertionError as ex:
             assert ex.args[0] == "Expected 2 but actual value is 1"
         
         assert flag, "Expected exception to be thrown"
+
+    def test_equals_doesnt_raise_if_string_items_are_equal(self):
+        Expect("hello").toEqual("hello")
+
             
 
 if __name__ == "__main__":
