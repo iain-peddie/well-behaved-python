@@ -26,6 +26,21 @@ class TestResultsTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
+    def suite():
+        testMethods = [
+            "test_summary_for_single_passing_test",
+            "test_summary_for_two_passing_tests",
+            "test_summary_for_single_failing_test",
+            "test_summary_for_passing_and_failing_test",
+            ]
+        
+        suite = TestSuite()
+        
+        for testMethod in testMethods:
+            suite.add(TestResultsTests(testMethod))
+
+        return suite
+
     def before(self):
         self.results = TestResults()
         self.results.registerTestStarted()
@@ -53,23 +68,13 @@ class TestResultsTests(TestCase):
         results.registerTestStarted()
 
         assert results.summary() == "1 failed from 2 tests"
+
         
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
 
-    testMethods = [
-        "test_summary_for_single_passing_test",
-        "test_summary_for_two_passing_tests",
-        "test_summary_for_single_failing_test",
-        "test_summary_for_passing_and_failing_test",
-        ]
-
-    suite = TestSuite()
-    
-    for testMethod in testMethods:
-        suite.add(TestResultsTests(testMethod))
-
+    suite = TestResultsTests.suite()
     results = TestResults()
     suite.run(results)
     

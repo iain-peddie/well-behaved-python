@@ -29,6 +29,18 @@ class TestSuiteTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
+    @staticmethod
+    def suite():
+        testMethods = [
+            "test_running_suite_with_one_test_runs_one_test", 
+            "test_running_suite_with_two_tests_runs_both"        ]
+        suite = TestSuite()
+    
+        for testMethod in testMethods:
+            suite.add(TestSuiteTests(testMethod))
+        
+        return suite
+
     def before(self):
         self.testMethodCount = 0
         self.suite = TestSuite()
@@ -60,15 +72,9 @@ class TestSuiteTests(TestCase):
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
-
-    testMethods = [
-        "test_running_suite_with_one_test_runs_one_test", 
-        "test_running_suite_with_two_tests_runs_both"        ]
-    suite = TestSuite()
     
-    for testMethod in testMethods:
-        suite.add(TestSuiteTests(testMethod))
-
+    suite = TestSuiteTests.suite()
+    
     results = TestResults()
     suite.run(results)
     

@@ -31,6 +31,22 @@ class TestCaseTests(TestCase):
         TestCase.__init__(self, testFunctionName)
         self.log = ""
 
+    @staticmethod
+    def suite():
+        testMethods = [
+            "test_run_template_on_good_method", 
+            "test_run_template_on_error_method", 
+            "test_good_method_summary",
+            "test_error_method_summary"
+            ]
+        
+        suite = TestSuite()
+    
+        for testMethod in testMethods:
+            suite.add(TestCaseTests(testMethod))
+        
+        return suite
+
     def before(self):
         self.log += "before "
 
@@ -86,18 +102,7 @@ class TestCaseTests(TestCase):
 if __name__ == "__main__":
     # Let's hand craft a test suite
 
-    testMethods = [
-        "test_run_template_on_good_method", 
-        "test_run_template_on_error_method", 
-        "test_good_method_summary",
-        "test_error_method_summary"
-        ]
-
-    suite = TestSuite()
-    
-    for testMethod in testMethods:
-        suite.add(TestCaseTests(testMethod))
-
+    suite = TestCaseTests.suite()
     results = TestResults()
     suite.run(results)
     
