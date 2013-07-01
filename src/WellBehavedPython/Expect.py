@@ -8,3 +8,6 @@ class Expect:
 
     def fail(self, Message = ""):
         raise AssertionError(Message)
+
+    def toEqual(self, value):
+        pass
