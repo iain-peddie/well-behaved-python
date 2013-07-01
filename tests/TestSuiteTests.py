@@ -23,6 +23,7 @@ import os.path
 import sys
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
+from WellBehavedPython.Expect import *
 
 class TestSuiteTests(TestCase):
 
@@ -54,7 +55,7 @@ class TestSuiteTests(TestCase):
         self.suite.add(test)
 
         self.suite.run(self.results)
-        assert(test.testMethodCount == 1)
+        Expect(test.testMethodCount).toEqual(1)
         assert(self.results.summary() == "0 failed from 1 test")
 
     def test_running_suite_with_two_tests_runs_both(self):
@@ -66,8 +67,8 @@ class TestSuiteTests(TestCase):
         
         self.suite.run(self.results)
 
-        assert(test1.testMethodCount == 1)
-        assert(test2.testMethodCount == 1)
+        Expect(test1.testMethodCount).toEqual(1)
+        Expect(test2.testMethodCount).toEqual(1)
         assert(self.results.summary() == "0 failed from 2 tests")
 
 if __name__ == "__main__":
