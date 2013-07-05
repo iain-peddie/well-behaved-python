@@ -44,5 +44,5 @@ class ExpectNot:
         else:        
             self.fail()
 
-    def _buildMessage(self, expected, operation):
+    def _buildMessage(self, operation, expected):
         return "Expected {} not {} {}".format(self.actual, operation, expected)

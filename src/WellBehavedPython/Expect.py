@@ -30,4 +30,4 @@ class Expect:
         if self.actual == expected:
             pass
         else:
-            self.fail("Expected {} but actual value is {}".format(expected, self.actual))
+            self.fail("Expected {} to equal {}".format(self.actual, expected))
