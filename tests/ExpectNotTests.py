@@ -31,9 +31,9 @@ class ExpectNotTests(TestCase):
     def suite():
         testMethods = [
             "test_fail_doesnt_raise_anything",
-            "test_success_raises_AssertionError",            
-#            "test_equals_doesnt_raise_if_numeric_items_are_equal",
-#            "test_equals_raises_with_right_message_if_numeric_items_not_equal",
+            "test_success_raises_AssertionError",
+            "test_equals_success_if_numbers_unequal",
+            "test_equals_raises_correctly_if_numbers_equal",
 #            "test_equals_doesnt_raise_if_string_items_are_equal",
 #            "test_equals_raises_with_right_message_if_string_items_not_equal"
             ]
@@ -56,6 +56,25 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             Expect(ex.args[0]).toEqual("Message")
         assert flag, "Expected AssertionError to have been thrown, but nothing was"
+
+    def test_equals_success_if_numbers_unequal(self):
+        ExpectNot(1).toEqual(2)
+        # Pass condition if we get here with no exception
+
+    def test_equals_raises_correctly_if_numbers_equal(self):
+        raised = False
+        message = ""
+        try:
+            ExpectNot(1).toEqual(1)
+        except AssertionError as ex:
+            raised = True
+            message = ex.args[0]
+        
+        assert raised, "Expected exception to be thrown"
+        Expect(message).toEqual("Expected 1 not to equal 1")
+
+        
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

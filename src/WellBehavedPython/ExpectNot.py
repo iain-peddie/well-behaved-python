@@ -37,5 +37,12 @@ class ExpectNot:
         same semantics as Expect.fail()"""
         raise AssertionError(Message)
 
-    def toEqual(self, expected):
-        pass
+    def toEqual(self, expected):        
+        message = self._buildMessage("to equal", expected);
+        if self.actual == expected:
+            self.success(message)
+        else:        
+            self.fail()
+
+    def _buildMessage(self, expected, operation):
+        return "Expected {} not {} {}".format(self.actual, operation, expected)
