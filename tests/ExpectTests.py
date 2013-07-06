@@ -78,7 +78,6 @@ class ExpectTests(TestCase):
         except AssertionError as ex:
             # We use a manual assert here, otherwise we assume that toEqual works
             # in the test that's checking that it works
-            print("exception message was {}".format(ex.args[0]))
             assert ex.args[0] == "Expected 1 to equal 2", ex.args[0]
         
         assert flag, "Expected exception to be thrown"
@@ -94,7 +93,10 @@ class ExpectTests(TestCase):
         except AssertionError as ex:
             # We use a manual assert here. Otherwise we're assuming the code we're
             # testing here is already working. Which would be crazy.
-            assert ex.args[0] == "Expected hello to equal world", ex.args[0]
+            expected = "Expected 'hello' to equal 'world'"
+            actual = ex.args[0]
+            message = "'{}' != '{}'".format(expected, ex.args[0])
+            assert actual == expected, message
         
         assert flag, "Expected exception to be thrown"        
 
