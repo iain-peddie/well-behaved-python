@@ -45,4 +45,10 @@ class BaseExpect:
             actualType, expectedType)
         assert actualType == expectedType, message
 
+    def formatForMessage(self, unformatted):
+        """Perform formatting for special types which need to be formatted
+        differently, e.g. strings to indicate where their start and ends are."""
+        if isinstance(unformatted, str):
+            return "'{}'".format(unformatted)
+        return unformatted
 

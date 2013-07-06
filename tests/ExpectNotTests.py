@@ -87,7 +87,7 @@ class ExpectNotTests(TestCase):
             message = ex.args[0]
         
         assert raised, "Expected exception to be thrown"
-        Expect(message).toEqual("Expected asdf not to equal asdf")        
+        Expect(message).toEqual("Expected 'asdf' not to equal 'asdf'")        
 
     def test_expecting_string1_not_to_equal_double1_fails(self):
         caught = False
