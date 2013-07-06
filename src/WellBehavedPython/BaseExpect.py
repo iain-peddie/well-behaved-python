@@ -17,19 +17,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .BaseExpect import BaseExpect
-
-class Expect(BaseExpect):
-    """Class used to indicate expected outcomes."""
-
+class BaseExpect:
+    
     def __init__(self, actual):
-        BaseExpect.__init__(self, actual)
+        self.actual = actual
 
-    def buildMessage(self, operation, expected):
-        return "Expected {} {} {}".format(self.actual, operation, expected)
+    def toEqual(self, expected):        
+        message = self.buildMessage("to equal", expected);
+        if self.actual == expected:
+            self.success(message)
+        else:        
+            self.fail(message)
 
-    def fail(self, Message = ""):
-        raise AssertionError(Message)
 
-    def success(self, Message = ""):
-        pass
