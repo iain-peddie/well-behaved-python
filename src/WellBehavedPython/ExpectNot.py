@@ -18,20 +18,29 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .BaseExpect import BaseExpect
-from .ExpectNot import ExpectNot
 
-class Expect(BaseExpect):
-    """Class used to indicate expected outcomes."""
+class ExpectNot(BaseExpect):
+    """Class used to indicate the opposite of expected outcomes."""
 
     def __init__(self, actual):
         BaseExpect.__init__(self, actual)
-        self.Not = ExpectNot(actual)
 
     def buildMessage(self, operation, expected):
-        return "Expected {} {} {}".format(self.actual, operation, expected)
+        """Builds the message passed to success and failure handling
+        methods."""
+        return "Expected {} not {} {}".format(self.actual, operation, expected)
 
     def fail(self, Message = ""):
-        raise AssertionError(Message)
+        """Indicate a failure.
+        
+        not fail should have the semantics of success."""
+        pass
 
     def success(self, Message = ""):
-        pass
+        """Opposite semantincs to fail. Would be pass if pass was not a 
+        reserved keyword.
+
+        Not success is actually a failure contition. This should have the
+        same semantics as Expect.fail()"""
+        raise AssertionError(Message)
+

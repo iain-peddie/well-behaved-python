@@ -4,7 +4,7 @@
 # 
 #    This file is part of WellBehavedPython
 #
-#    WellBehavedPython is free softwaree: you can redistribute it and/or modify
+#    WellBehavedPython is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
@@ -34,7 +34,8 @@ class ExpectTests(TestCase):
             "test_equals_doesnt_raise_if_numeric_items_are_equal",
             "test_equals_raises_with_right_message_if_numeric_items_not_equal",
             "test_equals_doesnt_raise_if_string_items_are_equal",
-            "test_equals_raises_with_right_message_if_string_items_not_equal"
+            "test_equals_raises_with_right_message_if_string_items_not_equal",
+            "test_expects_not_toequal_behaves_correctly"
             ]
         
         suite = TestSuite()
@@ -76,7 +77,8 @@ class ExpectTests(TestCase):
         except AssertionError as ex:
             # We use a manual assert here, otherwise we assume that toEqual works
             # in the test that's checking that it works
-            assert ex.args[0] == "Expected 2 but actual value is 1"
+            print("exception message was {}".format(ex.args[0]))
+            assert ex.args[0] == "Expected 1 to equal 2", ex.args[0]
         
         assert flag, "Expected exception to be thrown"
 
@@ -91,9 +93,12 @@ class ExpectTests(TestCase):
         except AssertionError as ex:
             # We use a manual assert here. Otherwise we're assuming the code we're
             # testing here is already working. Which would be crazy.
-            assert ex.args[0] == "Expected world but actual value is hello"
+            assert ex.args[0] == "Expected hello to equal world", ex.args[0]
         
         assert flag, "Expected exception to be thrown"        
+
+    def test_expects_not_toequal_behaves_correctly(self):
+        Expect(1).Not.toEqual(2)
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
