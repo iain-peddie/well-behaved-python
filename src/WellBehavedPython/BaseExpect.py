@@ -22,11 +22,27 @@ class BaseExpect:
     def __init__(self, actual):
         self.actual = actual
 
-    def toEqual(self, expected):        
+    def toEqual(self, expected):
+        self.compareTypes(expected)
         message = self.buildMessage("to equal", expected);
         if self.actual == expected:
             self.success(message)
         else:        
             self.fail(message)
+
+    def compareTypes(self, expected):
+        
+        # We want to compare types first. We also want this to
+        # bypass the usual overriding of type comparison semantics.
+        # Otherwise Expect(5).Not.toBeGreaterThan("6") will pass, when
+        # it should really fail not (5 > "6") would throw an exception
+        # and we should keep the same sematics here.
+
+        actualType = type(self.actual)
+        expectedType = type(expected)
+
+        message = "Cannot compare instance of {} to instance of {} because their types differ".format(
+            actualType, expectedType)
+        assert actualType == expectedType, message
 
 

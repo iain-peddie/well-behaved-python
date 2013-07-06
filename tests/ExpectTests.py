@@ -35,7 +35,8 @@ class ExpectTests(TestCase):
             "test_equals_raises_with_right_message_if_numeric_items_not_equal",
             "test_equals_doesnt_raise_if_string_items_are_equal",
             "test_equals_raises_with_right_message_if_string_items_not_equal",
-            "test_expects_not_toequal_behaves_correctly"
+            "test_expects_not_toequal_behaves_correctly",
+            "test_expecting_string1_to_equal_double1_fails",
             ]
         
         suite = TestSuite()
@@ -99,6 +100,17 @@ class ExpectTests(TestCase):
 
     def test_expects_not_toequal_behaves_correctly(self):
         Expect(1).Not.toEqual(2)
+
+    def test_expecting_string1_to_equal_double1_fails(self):
+        caught = False
+        try:
+            Expect("1").toEqual(1)
+        except AssertionError as ex:
+            caught = True
+            Expect(ex.args[0]).toEqual("Cannot compare instance of <class 'str'> to "
+                                       + "instance of <class 'int'> because their types differ")
+        
+        assert caught, "Expected expect to fail"
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
