@@ -18,12 +18,14 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .BaseExpect import BaseExpect
+from .ExpectNot import ExpectNot
 
 class Expect(BaseExpect):
     """Class used to indicate expected outcomes."""
 
     def __init__(self, actual):
         BaseExpect.__init__(self, actual)
+        self.Not = ExpectNot(actual)
 
     def buildMessage(self, operation, expected):
         return "Expected {} {} {}".format(self.actual, operation, expected)

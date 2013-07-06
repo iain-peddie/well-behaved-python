@@ -34,7 +34,8 @@ class ExpectTests(TestCase):
             "test_equals_doesnt_raise_if_numeric_items_are_equal",
             "test_equals_raises_with_right_message_if_numeric_items_not_equal",
             "test_equals_doesnt_raise_if_string_items_are_equal",
-            "test_equals_raises_with_right_message_if_string_items_not_equal"
+            "test_equals_raises_with_right_message_if_string_items_not_equal",
+            "test_expects_not_toequal_behaves_correctly"
             ]
         
         suite = TestSuite()
@@ -95,6 +96,9 @@ class ExpectTests(TestCase):
             assert ex.args[0] == "Expected hello to equal world", ex.args[0]
         
         assert flag, "Expected exception to be thrown"        
+
+    def test_expects_not_toequal_behaves_correctly(self):
+        Expect(1).Not.toEqual(2)
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
