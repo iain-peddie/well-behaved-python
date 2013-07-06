@@ -35,7 +35,8 @@ class ExpectNotTests(TestCase):
             "test_equals_doesnt_raise_if_numbers_unequal",
             "test_equals_raises_correctly_if_numbers_equal",
             "test_equals_doesnt_raise_if_two_strings_unequal",
-            "test_equals_raises_correctly_if_strings_equal"
+            "test_equals_raises_correctly_if_strings_equal",
+            "test_expecting_string1_not_to_equal_double1_fails"
             ]
         
         suite = TestSuite()
@@ -87,6 +88,18 @@ class ExpectNotTests(TestCase):
         
         assert raised, "Expected exception to be thrown"
         Expect(message).toEqual("Expected asdf not to equal asdf")        
+
+    def test_expecting_string1_not_to_equal_double1_fails(self):
+        caught = False
+        try:
+            Expect("1").toEqual(1)
+        except AssertionError as ex:
+            caught = True
+            Expect(ex.args[0]).toEqual("Cannot compare instance of <class 'str'> to "
+                                       + "instance of <class 'int'> because their types differ")
+        
+        assert caught, "Expected expect to fail"
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
