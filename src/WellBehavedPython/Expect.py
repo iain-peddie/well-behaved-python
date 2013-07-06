@@ -28,7 +28,20 @@ class Expect(BaseExpect):
         self.Not = ExpectNot(actual)
 
     def buildMessage(self, operation, expected):
-        return "Expected {} {} {}".format(self.actual, operation, expected)
+        """Build the message that will be put into the AssertionError
+        if the condition fails. The message will contain the actual
+        values, the expected value and the operation being performed."""
+        formattedActual = self.formatForMessage(self.actual);
+        formattedExpected = self.formatForMessage(expected)
+        return "Expected {} {} {}".format(formattedActual, operation,
+                                          formattedExpected)
+
+    def formatForMessage(self, unformatted):
+        """Perform formatting for special types which need to be formatted
+        differently, e.g. strings to indicate where their start and ends are."""
+        if isinstance(unformatted, str):
+            return "'{}'".format(unformatted)
+        return unformatted
 
     def fail(self, Message = ""):
         raise AssertionError(Message)
