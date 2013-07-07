@@ -36,7 +36,7 @@ class ExpectNotTests(TestCase):
             "test_equals_raises_correctly_if_numbers_equal",
             "test_equals_doesnt_raise_if_two_strings_unequal",
             "test_equals_raises_correctly_if_strings_equal",
-            "test_expecting_string1_not_to_equal_double1_fails"
+            "test_expecting_string1_not_to_equal_double1_fails",
             ]
         
         suite = TestSuite()
@@ -99,6 +99,8 @@ class ExpectNotTests(TestCase):
                                        + "instance of <class 'int'> because their types differ")
         
         assert caught, "Expected expect to fail"
+
+    # IGNORE
 
 
 if __name__ == "__main__":

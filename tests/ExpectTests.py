@@ -39,7 +39,8 @@ class ExpectTests(TestCase):
             "test_expects_not_toequal_behaves_correctly",
             "test_expecting_string1_to_equal_double1_fails",
             "test_expect_truthy_values_to_be_true_succeeds",
-            "test_expect_falsy_values_to_be_true_fails"
+            "test_expect_falsy_values_to_be_true_fails",
+            "test_expect_falsy_values_to_be_false_succeeds",
             ]
         
         suite = TestSuite()
@@ -137,9 +138,9 @@ class ExpectTests(TestCase):
     def test_expect_falsy_values_to_be_true_fails(self):
         values = (False, 0, ())
         actualMessages = []
-        expectedMessages = ("Expected False to be true", 
-                            "Expected 0 to be true",
-                            "Expected () to be true")
+        expectedMessages = ("Expected False to be True", 
+                            "Expected 0 to be True",
+                            "Expected () to be True")
         for value in values:
             try:
                 Expect(value).toBeTrue()
@@ -150,6 +151,27 @@ class ExpectTests(TestCase):
         for i in range(0,2):
             Expect(actualMessages[i]).toEqual(expectedMessages[i], "i = {}".format(i))
 
+    def test_expect_falsy_values_to_be_true_fails(self):
+        values = (True, 1, (1))
+        actualMessages = []
+        expectedMessages = ("Expected True to be False",
+                            "Expected 1 to be False",
+                            "Expected (1) to be False")
+
+        for value in values:
+            try:
+                Expect(value).toBeFalse()
+            except AssertionError as ex:
+                actualMessages.append(ex.args[0])
+
+        Expect(len(actualMessages)).toEqual(3)
+        for i in range(0, 2):
+            Expect(actualMessages[i]).toEqual(expectedMessages[i], "i = {}".format(i))
+
+    def test_expect_falsy_values_to_be_false_succeeds(self):
+        values = (False, 0, ())
+        for value in values:
+            Expect(value).toBeFalse()
 
 
 if __name__ == "__main__":

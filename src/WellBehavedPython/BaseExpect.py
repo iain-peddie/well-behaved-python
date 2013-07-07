@@ -46,12 +46,16 @@ class BaseExpect:
         assert actualType == expectedType, message
 
     def toBeTrue(self):
-        message = self.buildMessage("to be true", None, "")
+        message = self.buildMessage("to be True", None, "")
         if self.actual:
             pass
         else:
             self.fail(message)
-            
+
+    def toBeFalse(self):
+        message = self.buildMessage("to be False", None, "")
+        if self.actual:
+           self.fail(message)                        
             
 
     def formatForMessage(self, unformatted):
