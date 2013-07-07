@@ -29,7 +29,11 @@ class ExpectNot(BaseExpect):
         """Builds the message passed to success and failure handling
         methods."""
         formattedActual = self.formatForMessage(self.actual)
-        formattedExpected = self.formatForMessage(expected)
+        if expected:
+            formattedExpected = self.formatForMessage(expected)
+        else:
+            formattedExpected = ""
+
         return "Expected {} not {}{}".format(formattedActual, operation,
                                               formattedExpected)
 

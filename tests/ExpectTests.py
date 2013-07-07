@@ -40,6 +40,7 @@ class ExpectTests(TestCase):
             "test_expecting_string1_to_equal_double1_fails",
             "test_expect_truthy_values_to_be_true_succeeds",
             "test_expect_falsy_values_to_be_true_fails",
+            "test_expect_truthy_values_to_be_false_fails",
             "test_expect_falsy_values_to_be_false_succeeds",
             ]
         
@@ -151,7 +152,7 @@ class ExpectTests(TestCase):
         for i in range(0,2):
             Expect(actualMessages[i]).toEqual(expectedMessages[i], "i = {}".format(i))
 
-    def test_expect_falsy_values_to_be_true_fails(self):
+    def test_expect_truthy_values_to_be_false_fails(self):
         values = (True, 1, (1))
         actualMessages = []
         expectedMessages = ("Expected True to be False",

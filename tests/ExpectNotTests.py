@@ -37,6 +37,11 @@ class ExpectNotTests(TestCase):
             "test_equals_doesnt_raise_if_two_strings_unequal",
             "test_equals_raises_correctly_if_strings_equal",
             "test_expecting_string1_not_to_equal_double1_fails",
+            "test_expect_truthy_values_not_to_be_true_fails",
+            "test_expect_falsy_values_not_to_be_true_succeeds",
+            "test_expect_truthy_values_not_to_be_false_succeeds",
+            "test_expect_falsy_values_not_to_be_false_fails",
+
             ]
         
         suite = TestSuite()
@@ -100,8 +105,47 @@ class ExpectNotTests(TestCase):
         
         assert caught, "Expected expect to fail"
 
-    # IGNORE
+    def test_expect_truthy_values_not_to_be_true_fails(self):
+        values = (True, 1, (1))
+        actualMessages = []
+        expectedMessages = ("Expected True not to be True",
+                          "Expected 1 not to be True", 
+                          "Expected (1) not to be True")
+        for value in values:
+            try:
+                ExpectNot(value).toBeTrue()
+            except AssertionError as ex:
+                actualMessages.append(ex.args[0])
 
+        Expect(len(actualMessages)).toEqual(len(expectedMessages))
+        for i in range(0, len(expectedMessages) - 1):
+            Expect(actualMessages[i]).toEqual(expectedMessages[i])
+
+    def test_expect_falsy_values_not_to_be_true_succeeds(self):
+        values = (False, 0, ())
+        for value in values:
+            ExpectNot(value).toBeTrue()
+
+    def test_expect_truthy_values_not_to_be_false_succeeds(self):
+        values = (True, 1, (1))
+        for value in values:
+            ExpectNot(value).toBeFalse()
+
+    def test_expect_falsy_values_not_to_be_false_fails(self):
+        values = (False, 0, ())
+        actualMessages = []
+        expectedMessages = ("Expected False not to be False",
+                          "Expected 0 not to be False", 
+                          "Expected () not to be False")
+        for value in values:
+            try:
+                ExpectNot(value).toBeFalse()
+            except AssertionError as ex:
+                actualMessages.append(ex.args[0])
+
+        Expect(len(actualMessages)).toEqual(len(expectedMessages))
+        for i in range(0, len(expectedMessages) - 1):
+            Expect(actualMessages[i]).toEqual(expectedMessages[i])
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

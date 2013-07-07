@@ -48,14 +48,16 @@ class BaseExpect:
     def toBeTrue(self):
         message = self.buildMessage("to be True", None, "")
         if self.actual:
-            pass
+            self.success(message)
         else:
             self.fail(message)
 
     def toBeFalse(self):
         message = self.buildMessage("to be False", None, "")
         if self.actual:
-           self.fail(message)                        
+            self.fail(message)
+        else:
+            self.success(message)
             
 
     def formatForMessage(self, unformatted):
