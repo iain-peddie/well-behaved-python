@@ -22,9 +22,9 @@ class BaseExpect:
     def __init__(self, actual):
         self.actual = actual
 
-    def toEqual(self, expected):
+    def toEqual(self, expected, userMessage = None):
         self.compareTypes(expected)
-        message = self.buildMessage("to equal", expected);
+        message = self.buildMessage("to equal ", expected, userMessage);
         if self.actual == expected:
             self.success(message)
         else:        
@@ -44,6 +44,15 @@ class BaseExpect:
         message = "Cannot compare instance of {} to instance of {} because their types differ".format(
             actualType, expectedType)
         assert actualType == expectedType, message
+
+    def toBeTrue(self):
+        message = self.buildMessage("to be true", None, "")
+        if self.actual:
+            pass
+        else:
+            self.fail(message)
+            
+            
 
     def formatForMessage(self, unformatted):
         """Perform formatting for special types which need to be formatted
