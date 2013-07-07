@@ -28,16 +28,7 @@ class ExpectNot(BaseExpect):
     def buildMessage(self, operation, expected, userMessage):
         """Builds the message passed to success and failure handling
         methods."""
-        formattedActual = self.formatForMessage(self.actual)
-        if expected:
-            formattedExpected = self.formatForMessage(expected)
-        else:
-            formattedExpected = ""
-
-        return "Expected {} not {}{}".format(formattedActual, operation,
-                                              formattedExpected)
-
-
+        return self._buildMessage("not " + operation, expected, userMessage)
 
     def fail(self, Message = ""):
         """Indicate a failure.

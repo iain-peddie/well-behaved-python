@@ -41,7 +41,7 @@ class ExpectNotTests(TestCase):
             "test_expect_falsy_values_not_to_be_true_succeeds",
             "test_expect_truthy_values_not_to_be_false_succeeds",
             "test_expect_falsy_values_not_to_be_false_fails",
-
+            "test_expect_not_true_prepends_usermessage_to_assertion",
             ]
         
         suite = TestSuite()
@@ -146,6 +146,18 @@ class ExpectNotTests(TestCase):
         Expect(len(actualMessages)).toEqual(len(expectedMessages))
         for i in range(0, len(expectedMessages) - 1):
             Expect(actualMessages[i]).toEqual(expectedMessages[i])
+
+    def test_expect_not_true_prepends_usermessage_to_assertion(self):
+        try:
+            ExpectNot(True).toBeTrue("user message")
+        except AssertionError as ex:
+            Expect(ex.args[0]).toEqual("user message: Expected True not to be True")
+
+    def test_expect_not_false_prepends_usermessage_to_assertion(self):
+        try:
+            ExpectNot(False).toBeFalse("user message")
+        except AssertionError as ex:
+            Expect(ex.args[0]).toEqual("user message: Expected False not to be False")
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

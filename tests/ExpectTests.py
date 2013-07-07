@@ -42,6 +42,8 @@ class ExpectTests(TestCase):
             "test_expect_falsy_values_to_be_true_fails",
             "test_expect_truthy_values_to_be_false_fails",
             "test_expect_falsy_values_to_be_false_succeeds",
+            "test_expect_true_prepends_usermessage_to_assertion",
+            "test_expect_false_prepends_usermessage_to_assertion",
             ]
         
         suite = TestSuite()
@@ -174,6 +176,17 @@ class ExpectTests(TestCase):
         for value in values:
             Expect(value).toBeFalse()
 
+    def test_expect_true_prepends_usermessage_to_assertion(self):
+        try:
+            Expect(False).toBeTrue("user message")
+        except AssertionError as ex:
+            Expect(ex.args[0]).toEqual("user message: Expected False to be True")
+
+    def test_expect_false_prepends_usermessage_to_assertion(self):
+        try:
+            Expect(True).toBeFalse("user message")
+        except AssertionError as ex:
+            Expect(ex.args[0]).toEqual("user message: Expected True to be False")
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

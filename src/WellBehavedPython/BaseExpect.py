@@ -45,15 +45,15 @@ class BaseExpect:
             actualType, expectedType)
         assert actualType == expectedType, message
 
-    def toBeTrue(self):
-        message = self.buildMessage("to be True", None, "")
+    def toBeTrue(self, userMessage = ""):
+        message = self.buildMessage("to be True", None, userMessage)
         if self.actual:
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeFalse(self):
-        message = self.buildMessage("to be False", None, "")
+    def toBeFalse(self, userMessage = ""):
+        message = self.buildMessage("to be False", None, userMessage)
         if self.actual:
             self.fail(message)
         else:
@@ -66,4 +66,22 @@ class BaseExpect:
         if isinstance(unformatted, str):
             return "'{}'".format(unformatted)
         return unformatted
+
+    def _buildMessage(self, operation, expected, userMessage):
+        formattedActual = self.formatForMessage(self.actual);
+        if expected:
+            formattedExpected = self.formatForMessage(expected)
+        else:
+            formattedExpected = ""
+
+        if userMessage and len(userMessage) > 0:
+            prepend = userMessage + ": "
+        else:
+            prepend = ""
+
+        return "{}Expected {} {}{}".format(prepend, 
+                                            formattedActual, 
+                                            operation,
+                                            formattedExpected)
+
 
