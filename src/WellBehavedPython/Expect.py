@@ -27,14 +27,11 @@ class Expect(BaseExpect):
         BaseExpect.__init__(self, actual)
         self.Not = ExpectNot(actual)
 
-    def buildMessage(self, operation, expected):
+    def buildMessage(self, operation, expected, userMessage):
         """Build the message that will be put into the AssertionError
         if the condition fails. The message will contain the actual
         values, the expected value and the operation being performed."""
-        formattedActual = self.formatForMessage(self.actual);
-        formattedExpected = self.formatForMessage(expected)
-        return "Expected {} {} {}".format(formattedActual, operation,
-                                          formattedExpected)
+        return self._buildMessage(operation, expected, userMessage)
 
     def fail(self, Message = ""):
         raise AssertionError(Message)

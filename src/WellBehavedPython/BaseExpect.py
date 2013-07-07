@@ -22,9 +22,9 @@ class BaseExpect:
     def __init__(self, actual):
         self.actual = actual
 
-    def toEqual(self, expected):
+    def toEqual(self, expected, userMessage = None):
         self.compareTypes(expected)
-        message = self.buildMessage("to equal", expected);
+        message = self.buildMessage("to equal ", expected, userMessage);
         if self.actual == expected:
             self.success(message)
         else:        
@@ -45,10 +45,43 @@ class BaseExpect:
             actualType, expectedType)
         assert actualType == expectedType, message
 
+    def toBeTrue(self, userMessage = ""):
+        message = self.buildMessage("to be True", None, userMessage)
+        if self.actual:
+            self.success(message)
+        else:
+            self.fail(message)
+
+    def toBeFalse(self, userMessage = ""):
+        message = self.buildMessage("to be False", None, userMessage)
+        if self.actual:
+            self.fail(message)
+        else:
+            self.success(message)
+            
+
     def formatForMessage(self, unformatted):
         """Perform formatting for special types which need to be formatted
         differently, e.g. strings to indicate where their start and ends are."""
         if isinstance(unformatted, str):
             return "'{}'".format(unformatted)
         return unformatted
+
+    def _buildMessage(self, operation, expected, userMessage):
+        formattedActual = self.formatForMessage(self.actual);
+        if expected:
+            formattedExpected = self.formatForMessage(expected)
+        else:
+            formattedExpected = ""
+
+        if userMessage and len(userMessage) > 0:
+            prepend = userMessage + ": "
+        else:
+            prepend = ""
+
+        return "{}Expected {} {}{}".format(prepend, 
+                                            formattedActual, 
+                                            operation,
+                                            formattedExpected)
+
 
