@@ -27,29 +27,6 @@ class ExpectNotTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
-    @staticmethod
-    def suite():
-        testMethods = [
-            "test_fail_doesnt_raise_anything",
-            "test_success_raises_AssertionError",
-            "test_equals_doesnt_raise_if_numbers_unequal",
-            "test_equals_raises_correctly_if_numbers_equal",
-            "test_equals_doesnt_raise_if_two_strings_unequal",
-            "test_equals_raises_correctly_if_strings_equal",
-            "test_expecting_string1_not_to_equal_double1_fails",
-            "test_expect_truthy_values_not_to_be_true_fails",
-            "test_expect_falsy_values_not_to_be_true_succeeds",
-            "test_expect_truthy_values_not_to_be_false_succeeds",
-            "test_expect_falsy_values_not_to_be_false_fails",
-            "test_expect_not_true_prepends_usermessage_to_assertion",
-            ]
-        
-        suite = TestSuite()
-    
-        for testMethod in testMethods:
-            suite.add(ExpectNotTests(testMethod))
-        return suite
-
     def test_fail_doesnt_raise_anything(self):
         ExpectNot(True).fail()
         # pass condition should be that we get to this point
