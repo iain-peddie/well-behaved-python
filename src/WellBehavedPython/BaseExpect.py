@@ -147,6 +147,11 @@ class BaseExpect:
             self.fail(message)
         else:
             self.success(message)
+
+    def toBeNone(self):
+        message = self.buildMessage("to be None", None, "")
+        if self.actual is not None:
+            self.fail(message)
             
 
     def formatForMessage(self, unformatted):
