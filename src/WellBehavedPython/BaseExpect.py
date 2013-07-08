@@ -116,7 +116,7 @@ class BaseExpect:
 
         Exceptions
         ----------
-        AssertionError : raised if self.actual does not evaluate as true
+        AssertionError : may be raised by success or fail
 """
 
         message = self.buildMessage("to be True", None, userMessage)
@@ -139,7 +139,7 @@ class BaseExpect:
 
         Exceptions
         ----------
-        AssertionError : raised if self.actual does not evaluate as false
+        AssertionError : may be raised by success or fail
 """
 
         message = self.buildMessage("to be False", None, userMessage)
@@ -148,8 +148,23 @@ class BaseExpect:
         else:
             self.success(message)
 
-    def toBeNone(self):
-        message = self.buildMessage("to be None", None, "")
+    def toBeNone(self, userMessage = ""):
+        """Indicates a success case if self.actual is None, and a failure otherwise        
+
+        Inputs
+        ------
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : may be raised by success or fail
+"""
+
+        message = self.buildMessage("to be None", None, userMessage)
         if self.actual is not None:
             self.fail(message)
         else:

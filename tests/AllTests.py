@@ -24,3 +24,4 @@ if __name__ == "__main__":
     suite.run(results)
 
     print(results.summary())
+    exit(results.failCount > 0)

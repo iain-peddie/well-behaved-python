@@ -148,6 +148,16 @@ class ExpectNotTests(TestCase):
         
         Expect(message).toEqual("Expected None not to be None")
 
+    def test_expect_not_toBeNone_prepends_userMessage(self):
+        message = ""
+        try:
+            ExpectNot(None).toBeNone("user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected None not to be None")
+            
+            
+
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
     results = TestResults()
