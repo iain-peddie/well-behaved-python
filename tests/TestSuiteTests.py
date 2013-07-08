@@ -25,22 +25,23 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.Expect import *
 
+class MockTestCase(TestCase):
+    """This class should never be run directly.
+
+    It is used to test the auto-detection of test cases."""
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    def test_example1(self):
+        print("test_example1")
+
+    def test_example2(self):
+        print("test_example2")
+
 class TestSuiteTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
-
-    @staticmethod
-    def suite():
-        testMethods = [
-            "test_running_suite_with_one_test_runs_one_test", 
-            "test_running_suite_with_two_tests_runs_both"        ]
-        suite = TestSuite()
-    
-        for testMethod in testMethods:
-            suite.add(TestSuiteTests(testMethod))
-        
-        return suite
 
     def before(self):
         self.testMethodCount = 0
@@ -70,6 +71,18 @@ class TestSuiteTests(TestCase):
         Expect(test1.testMethodCount).toEqual(1)
         Expect(test2.testMethodCount).toEqual(1)
         Expect(self.results.summary()).toEqual("0 failed from 2 tests")
+
+    def test_autosuite_discovers_correct_tests(self):
+        suite = MockTestCase.suite()
+        Expect(len(suite.tests)).toEqual(2)
+        expectedTestMethodNames = ["test_example1", "test_example2" ];
+        for i in range(2):
+            # we use naked asserts while waiting for isInstanceOf and
+            # toBeIn
+            assert isinstance(suite.tests[i], MockTestCase), "TODO: isInstanceOf"
+            assert suite.tests[i].testMethodName == expectedTestMethodNames[i], "TODO: toBeIn"
+
+        
 
 if __name__ == "__main__":
     # Let's hand craft a test suite

@@ -20,6 +20,7 @@
 import traceback
 
 from .TestResults import TestResults
+from .TestSuite import TestSuite
 
 class TestCase:
     """Base class for TestCases. 
@@ -38,6 +39,7 @@ class TestCase:
             run when run is called.
 """
         self.testMethod = getattr(self, testMethodName)
+        self.testMethodName = testMethodName
 
     def before(self):
         """Override this to create the setup logic which should run
@@ -80,6 +82,21 @@ class TestCase:
         """
         print("Test of {} encountered error".format(self.testMethod))
         traceback.print_exc()
+
+    @classmethod
+    def suite(klass):
+        testMethods = [
+            ];
+
+        for key in klass.__dict__.keys():
+            if key.startswith("test"):
+                testMethods.append(key)
+        
+        suite = TestSuite();
+        for testMethod in testMethods:
+            suite.add(klass(testMethod))
+
+        return suite
 
 
 

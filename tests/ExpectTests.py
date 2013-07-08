@@ -25,32 +25,6 @@ class ExpectTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
-    
-    @staticmethod
-    def suite():
-        testMethods = [
-            "test_expects_fail_throws_AssertionError",
-            "test_failure_stores_message_if_provided",
-            "test_equals_doesnt_raise_if_numeric_items_are_equal",
-            "test_equals_raises_with_right_message_if_numeric_items_not_equal",
-            "test_equals_message_prepended_to_assert_message",
-            "test_equals_doesnt_raise_if_string_items_are_equal",
-            "test_equals_raises_with_right_message_if_string_items_not_equal",
-            "test_expects_not_toequal_behaves_correctly",
-            "test_expecting_string1_to_equal_double1_fails",
-            "test_expect_truthy_values_to_be_true_succeeds",
-            "test_expect_falsy_values_to_be_true_fails",
-            "test_expect_truthy_values_to_be_false_fails",
-            "test_expect_falsy_values_to_be_false_succeeds",
-            "test_expect_true_prepends_usermessage_to_assertion",
-            "test_expect_false_prepends_usermessage_to_assertion",
-            ]
-        
-        suite = TestSuite()
-    
-        for testMethod in testMethods:
-            suite.add(ExpectTests(testMethod))
-        return suite
 
     def test_expects_fail_throws_AssertionError(self):
         # This would be easier if there was an expected exception,
