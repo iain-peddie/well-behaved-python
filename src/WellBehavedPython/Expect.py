@@ -24,17 +24,49 @@ class Expect(BaseExpect):
     """Class used to indicate expected outcomes."""
 
     def __init__(self, actual):
+        """Constructor
+
+        Inputs
+        ------
+        actual : the actual value to be compared against.
+        """
+
         BaseExpect.__init__(self, actual)
         self.Not = ExpectNot(actual)
 
     def buildMessage(self, operation, expected, userMessage):
-        """Build the message that will be put into the AssertionError
-        if the condition fails. The message will contain the actual
-        values, the expected value and the operation being performed."""
+        """Builds the message that goes into assertion messages
+
+        Inputs
+        ------
+        operation : a string containing the comparison operation,
+            .e.g 'to equal'
+        expected : the expected value in the comparison (if there
+            is one)
+        userMessage: message from the user to be prepended onto the
+            whole message.
+
+        Returns
+        -------
+        The full, built message to go into AssertionError if one
+        is raised.
+"""
         return self._buildMessage(operation, expected, userMessage)
 
     def fail(self, Message = ""):
+        """Indicate a failure, or handle a failed comparison operation.
+
+        Inputs
+        ------
+        message(optional) : Message to be passed to the raised AssertionError.
+        """
         raise AssertionError(Message)
 
     def success(self, Message = ""):
+        """Indicate a success, or handle a succesful comparison operation.
+
+        Inputs
+        ------
+        message(optional) : ignored. Part of the BaseExpect interface.
+        """
         pass
