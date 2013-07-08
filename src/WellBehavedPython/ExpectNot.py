@@ -23,24 +23,56 @@ class ExpectNot(BaseExpect):
     """Class used to indicate the opposite of expected outcomes."""
 
     def __init__(self, actual):
+        """Constructor
+
+        Inputs
+        ------
+        actual : the actual value to be compared against.
+        """
         BaseExpect.__init__(self, actual)
 
     def buildMessage(self, operation, expected, userMessage):
-        """Builds the message passed to success and failure handling
-        methods."""
+        """Builds the message that goes into assertion messages
+
+        Inputs
+        ------
+        operation : a string containing the comparison operation,
+            .e.g 'to equal'
+        expected : the expected value in the comparison (if there
+            is one)
+        userMessage: message from the user to be prepended onto the
+            whole message.
+
+        Returns
+        -------
+        The full, built message to go into AssertionError if one
+        is raised.
+"""
         return self._buildMessage("not " + operation, expected, userMessage)
 
-    def fail(self, Message = ""):
-        """Indicate a failure.
+    def fail(self, message = ""):
+        """Indicate a failure, or handle a failed comparison operation.
+
+        ExpectNot has the opposite semantics to expect, that is a failure
+        behaves like a success and a success behaves like a failure.
+
+        Inputs
+        ------
+        message(optional) : ignored. Part of the BaseExpect interface.
+        """
         
-        not fail should have the semantics of success."""
+        #not fail should have the semantics of success
         pass
 
     def success(self, Message = ""):
-        """Opposite semantincs to fail. Would be pass if pass was not a 
-        reserved keyword.
+        """Indicate a success, or handle a succesful comparison operation.
 
-        Not success is actually a failure contition. This should have the
-        same semantics as Expect.fail()"""
+        ExpectNot has the opposite semantics to expect, that is a failure
+        behaves like a success and a success behaves like a failure.
+
+        Inputs
+        ------
+        message(optional) : Message to be passed to the raised AssertionError.
+        """
         raise AssertionError(Message)
 

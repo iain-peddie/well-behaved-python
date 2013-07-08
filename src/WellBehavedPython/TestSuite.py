@@ -18,13 +18,27 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 class TestSuite:
+    """Class for containing multiple tests.
+
+    A TestSuite can contain anything that has a run method consistent
+    with test case, so a full suite can be constructed out of other
+    TestSuties and TestCases."""
 
     def __init__(self):
+        """Constructor."""
         self.tests = []
     
     def add(self, test):
+        """Adds a test or other runnable to the suite.
+
+        Inputs
+        ------
+        test : An object which has a run method consistent with
+            TestCase.              
+"""
         self.tests.append(test)
 
     def run(self, results):
+        """Runs all the tests in the suite."""
         for test in self.tests:
             test.run(results)        

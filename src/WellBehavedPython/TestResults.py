@@ -18,18 +18,29 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 class TestResults:
+    """Class containing the results of a test run.
+
+    A test run may be an individual test, or the results of runinng
+    multiple tests through a suite."""
 
     def __init__(self):
+        """Constructor."""
         self.testCount = 0
         self.failCount = 0
 
     def registerTestStarted(self):
+        """Register the fact that a test started running."""
         self.testCount += 1
 
     def registerTestFailed(self):
+        """Register the fact that a test failed."""
         self.failCount += 1
     
     def summary(self):
+        """Build a summary of the tests.
+
+        This will construct a string describing the overall results
+        of the test."""
         if self.testCount > 1:
             plural = "s"
         else:

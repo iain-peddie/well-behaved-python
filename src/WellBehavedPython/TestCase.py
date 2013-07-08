@@ -22,10 +22,21 @@ import traceback
 from .TestResults import TestResults
 
 class TestCase:
+    """Base class for TestCases. 
+
+    At the moment, all test methods have to be in classes derived from
+    TestCase. There may be a more convenient method based on decorators
+    implemented in the future."""
     
     def __init__(self, testMethodName):
         """Creates an instance of this test class configured
-        to run the method testMethodName in the actual test object."""
+        to run the method testMethodName in the actual test object.
+
+        Inputs
+        ------
+        testMethodName: the name of the method within the class to
+            run when run is called.
+"""
         self.testMethod = getattr(self, testMethodName)
 
     def before(self):
@@ -38,7 +49,14 @@ class TestCase:
 
     def run(self, results):
         """Command to organise a single test run of a single
-           test function."""
+           test function.
+
+           Inputs
+           ------
+           results : Expected to be an instance of TestResults. Runs
+                     the test and calls methods on TestResults to indicate
+                     the results of the test.
+"""
         
         results.registerTestStarted()
         self.before()
@@ -54,6 +72,12 @@ class TestCase:
             self.after()
 
     def handleError(self, error):
+        """Handles the case of an error in running a test.
+
+        Inputs
+        ------
+        error : the error condition that occurred.
+        """
         print("Test of {} encountered error".format(self.testMethod))
         traceback.print_exc()
 

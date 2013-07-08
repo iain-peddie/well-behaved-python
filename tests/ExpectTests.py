@@ -55,60 +55,63 @@ class ExpectTests(TestCase):
     def test_expects_fail_throws_AssertionError(self):
         # This would be easier if there was an expected exception,
         # but that comes later
-        flag = True
+        raised = True
         try:
             Expect(True).fail()
-            flag = False
+            raised = False
         except AssertionError:
             pass
         
-        assert flag, "Expected exception was not thrown"
+        # Fail is so fundamental that we don't bootstrap
+        # the asertion with Expect.toBeTrue() as that uses fail
+        assert raised, "Expected an AssertionError to have been thrown"
 
     def test_failure_stores_message_if_provided(self):
-        flag = True
+        raised = True
         try:
             Expect(True).fail("ExpectedMessage")
-            flag = False
+            raised = False
         except AssertionError as ex:
             assert ex.args[0] == "ExpectedMessage"
         
-        assert flag, "expected message not stored in exception"
+        assert raised, "expected message not stored in exception"
 
     def test_equals_doesnt_raise_if_numeric_items_are_equal(self):
         Expect(1).toEqual(1)
 
     def test_equals_raises_with_right_message_if_numeric_items_not_equal(self):
-        flag = True
+        raised = True
         try:
             Expect(1).toEqual(2)
-            flag = False
+            raised = False
         except AssertionError as ex:
             # We use a manual assert here, otherwise we assume that toEqual works
             # in the test that's checking that it works
             assert ex.args[0] == "Expected 1 to equal 2", ex.args[0]
         
-        assert flag, "Expected exception to be thrown"
+        
+        Expect(raised).toBeTrue("Expected exception to be thrown")
 
     def test_equals_message_prepended_to_assert_message(self):
-        flag = True
+        raised = True
         try:
             Expect(1).toEqual(2, "first assert")
-            flag = False
+            raised = False
         except AssertionError as ex:
             # We use a manual assert here, otherwise we assume that toEqual works
             # in the test that's checking that it works
             assert ex.args[0] == "first assert: Expected 1 to equal 2", ex.args[0]
         
-        assert flag, "Expected exception to be thrown"
+        Expect(raised).toBeTrue("Expected AssertionError to be raised")
 
     def test_equals_doesnt_raise_if_string_items_are_equal(self):
         Expect("hello").toEqual("hello")
 
     def test_equals_raises_with_right_message_if_string_items_not_equal(self):
-        flag = True
+        raised = True
         try:
             Expect("hello").toEqual("world")
-            flag = False
+            raised = False
         except AssertionError as ex:
             # We use a manual assert here. Otherwise we're assuming the code we're
             # testing here is already working. Which would be crazy.
@@ -117,21 +120,21 @@ class ExpectTests(TestCase):
             message = "'{}' != '{}'".format(expected, ex.args[0])
             assert actual == expected, message
         
-        assert flag, "Expected exception to be thrown"        
+        Expect(raised).toBeTrue("Expected exception to be thrown")
 
     def test_expects_not_toequal_behaves_correctly(self):
         Expect(1).Not.toEqual(2)
 
     def test_expecting_string1_to_equal_double1_fails(self):
-        caught = False
+        raised = False
         try:
             Expect("1").toEqual(1)
         except AssertionError as ex:
-            caught = True
+            raised = True
             Expect(ex.args[0]).toEqual("Cannot compare instance of <class 'str'> to "
                                        + "instance of <class 'int'> because their types differ")
         
-        assert caught, "Expected expect to fail"
+        Expect(raised).toBeTrue("Expected AssertionError to be raised")
 
     def test_expect_truthy_values_to_be_true_succeeds(self):
         Expect(True).toBeTrue()
