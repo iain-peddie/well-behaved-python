@@ -55,13 +55,13 @@ class ExpectNotTests(TestCase):
         # pass condition should be that we get to this point
 
     def test_success_raises_AssertionError(self):
-        flag = True
+        raised = True
         try:
             ExpectNot(True).success("Message")
-            flag = False
+            raised = False
         except AssertionError as ex:
             Expect(ex.args[0]).toEqual("Message")
-        assert flag, "Expected AssertionError to have been thrown, but nothing was"
+        Expect(raised).toBeTrue("Expected an AssertionError to be raised")
 
     def test_equals_doesnt_raise_if_numbers_unequal(self):
         ExpectNot(1).toEqual(2)
@@ -76,7 +76,7 @@ class ExpectNotTests(TestCase):
             raised = True
             message = ex.args[0]
         
-        assert raised, "Expected exception to be thrown"
+        Expect(raised).toBeTrue("Expected an AssertionError to be raised")
         Expect(message).toEqual("Expected 1 not to equal 1")
 
     def test_equals_doesnt_raise_if_two_strings_unequal(self):
@@ -91,19 +91,19 @@ class ExpectNotTests(TestCase):
             raised = True
             message = ex.args[0]
         
-        assert raised, "Expected exception to be thrown"
+        Expect(raised).toBeTrue("Expected an AssertionError to be raised")
         Expect(message).toEqual("Expected 'asdf' not to equal 'asdf'")        
 
     def test_expecting_string1_not_to_equal_double1_fails(self):
-        caught = False
+        raised = False
         try:
             Expect("1").toEqual(1)
         except AssertionError as ex:
-            caught = True
+            raised = True
             Expect(ex.args[0]).toEqual("Cannot compare instance of <class 'str'> to "
                                        + "instance of <class 'int'> because their types differ")
         
-        assert caught, "Expected expect to fail"
+        Expect(raised).toBeTrue("Expected an AssertionError to be raised")
 
     def test_expect_truthy_values_not_to_be_true_fails(self):
         values = (True, 1, (1))

@@ -56,7 +56,7 @@ class TestSuiteTests(TestCase):
 
         self.suite.run(self.results)
         Expect(test.testMethodCount).toEqual(1)
-        assert(self.results.summary() == "0 failed from 1 test")
+        Expect(self.results.summary()).toEqual("0 failed from 1 test")
 
     def test_running_suite_with_two_tests_runs_both(self):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
@@ -69,7 +69,7 @@ class TestSuiteTests(TestCase):
 
         Expect(test1.testMethodCount).toEqual(1)
         Expect(test2.testMethodCount).toEqual(1)
-        assert(self.results.summary() == "0 failed from 2 tests")
+        Expect(self.results.summary()).toEqual("0 failed from 2 tests")
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
