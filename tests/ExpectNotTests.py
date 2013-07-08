@@ -136,6 +136,18 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             Expect(ex.args[0]).toEqual("user message: Expected False not to be False")
 
+    def test_expect_not_False_toBeNone_passes(self):
+        ExpectNot(False).toBeNone()
+
+    def test_expect_not_None_toBeNone_fails_with_correct_message(self):
+        message = ""
+        try:
+            ExpectNot(None).toBeNone()
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("Expected None not to be None")
+
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
     results = TestResults()
