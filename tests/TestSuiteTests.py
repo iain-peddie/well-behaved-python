@@ -74,13 +74,13 @@ class TestSuiteTests(TestCase):
 
     def test_autosuite_discovers_correct_tests(self):
         suite = MockTestCase.suite()
-        Expect(len(suite.tests)).toEqual(2)
         expectedTestMethodNames = ["test_example1", "test_example2" ];
+        Expect(len(suite.tests)).toEqual(2)
         for i in range(2):
             # we use naked asserts while waiting for isInstanceOf and
             # toBeIn
             assert isinstance(suite.tests[i], MockTestCase), "TODO: isInstanceOf"
-            assert suite.tests[i].testMethodName == expectedTestMethodNames[i], "TODO: toBeIn"
+            assert suite.tests[i].testMethodName in expectedTestMethodNames[i], "TODO: toBeIn"
 
         
 
