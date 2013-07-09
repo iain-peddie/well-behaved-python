@@ -210,6 +210,16 @@ class ExpectNotTests(TestCase):
         
         Expect(message).toEqual("Expected [601, 602, 603] not to contain 602")
         
+    def test_expect_not_y_to_contain_x_prepends_usermessage(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(y).toContain(x, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("user message: Expected [601, 602, 603] not to contain 602")
         
             
 

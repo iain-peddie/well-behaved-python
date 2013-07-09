@@ -211,7 +211,7 @@ class BaseExpect:
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to contain ", expectedContainee, "")
+        message = self.buildMessage("to contain ", expectedContainee, userMessage)
         if expectedContainee in self.actual:
             self.success(message)
         else:

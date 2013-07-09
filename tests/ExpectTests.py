@@ -241,6 +241,16 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("Expected [601, 603, 605] to contain 602")    
 
+    def test_expect_y_to_contain_x_prepends_usermessage_to_message(self):
+        x = 602
+        y = [601, 603, 605]
+        message = ""
+        try:
+            Expect(y).toContain(x, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected [601, 603, 605] to contain 602")
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
