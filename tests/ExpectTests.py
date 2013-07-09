@@ -221,6 +221,26 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("user message: Expected 602 to be in [601, 603, 605]")
 
+    def expect_y_to_contain_x_passes_when_x_in_y(self):
+        x = 602
+        y = [601, x, 603]
+        Expect(y).toContain(x)
+
+    def expect_y_to_contain_x_passes_when_item_equal_to_x_in_y(self):
+        x = 602
+        y = [601, 602, 603]
+        Expect(y).toContain(x)
+
+    def test_expect_y_to_contain_x_fails_when_x_not_in_y(self):
+        x = 602
+        y = [601, 603, 605]
+        message = ""
+        try:
+            Expect(y).toContain(x)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected [601, 603, 605] to contain 602")    
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()

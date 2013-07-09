@@ -193,6 +193,24 @@ class ExpectNotTests(TestCase):
             message = ex.args[0]
         
         Expect(message).toEqual("user message: Expected 602 not to be in [601, 602, 603]")
+
+    def test_expect_not_y_to_contain_x_passes_when_x_not_in_y(self):
+        x = 602
+        y = [601, 603, 605]
+        ExpectNot(y).toContain(x)
+
+    def test_expect_not_y_to_contain_x_fails_when_x_in_y(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(y).toContain(x)
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("Expected [601, 602, 603] not to contain 602")
+        
+        
             
 
 if __name__ == "__main__":
