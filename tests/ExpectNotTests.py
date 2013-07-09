@@ -157,20 +157,20 @@ class ExpectNotTests(TestCase):
         Expect(message).toEqual("user message: Expected None not to be None")
 
     def test_expect_not_x_to_be_in_y_passes_when_x_is_not_in_y(self):
-        x = 2
-        y = [1, 3, 5]
+        x = 602
+        y = [601, 603, 605]
         ExpectNot(x).toBeIn(y)
 
     def test_expect_not_x_to_be_in_y_raises_AssertionError_when_x_in_y(self):
-        x = 2
-        y = [1, x, 3]
+        x = 602
+        y = [601, x, 603]
         message = ""
         try:
             ExpectNot(x).toBeIn(y)
         except AssertionError as ex:
             message = ex.args[0]
         
-        Expect(message).toEqual("Expected 2 not to be in [1, 2, 3]")
+        Expect(message).toEqual("Expected 602 not to be in [601, 602, 603]")
 
     def test_expect_not_x_to_be_in_y_raises_AssertionError_when_item_equal_to_x_in_y(self):
         x = 602

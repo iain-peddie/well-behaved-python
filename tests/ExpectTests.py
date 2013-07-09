@@ -186,8 +186,8 @@ class ExpectTests(TestCase):
         Expect(message).toEqual("user message: Expected False to be None")
 
     def test_expect_x_to_be_in_y_passes_when_x_is_in_y(self):
-        x = 2
-        y = [1, x, 3]
+        x = 602
+        y = [601, x, 603]
         Expect(x).toBeIn(y)
 
     def test_expect_x_to_be_in_y_passes_when_item_equal_to_x_in_y(self):
@@ -202,25 +202,24 @@ class ExpectTests(TestCase):
         Expect(x).toBeIn(y)
 
     def test_expect_x_to_be_in_y_raises_AssertionError_when_x_not_in_y(self):
-        x = 2
-        y = [1, 3, 5]
+        x = 602
+        y = [601, 603, 605]
         message = ""
         try:
             Expect(x).toBeIn(y)
         except AssertionError as ex:
             message = ex.args[0]
-        Expect(message).toEqual("Expected 2 to be in [1, 3, 5]")
+        Expect(message).toEqual("Expected 602 to be in [601, 603, 605]")
 
     def test_expect_x_to_be_in_y_prepends_usermessage_when_condition_fails(self):
-        x = 2
-        y = [1, 3, 5]
+        x = 602
+        y = [601, 603, 605]
         message = ""
         try:
             Expect(x).toBeIn(y, "user message")
         except AssertionError as ex:
             message = ex.args[0]
-        Expect(message).toEqual("user message: Expected 2 to be in [1, 3, 5]")
-        
+        Expect(message).toEqual("user message: Expected 602 to be in [601, 603, 605]")
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
