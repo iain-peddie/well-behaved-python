@@ -185,6 +185,72 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("user message: Expected False to be None")
 
+    def test_expect_x_to_be_in_y_passes_when_x_is_in_y(self):
+        x = 602
+        y = [601, x, 603]
+        Expect(x).toBeIn(y)
+
+    def test_expect_x_to_be_in_y_passes_when_item_equal_to_x_in_y(self):
+        # use numbers > 256 because of python internal behavior:
+        # all numbers < 255 are declared in the machine runtime and are always
+        # the same as each other. So x = 1; y = 1; least to x is y being true
+
+        # We don't want that in this test (otherwise we'd be duplicating tests
+        # so we pick larger inteers to do this with
+        x = 602
+        y = [601, 602, 603]
+        Expect(x).toBeIn(y)
+
+    def test_expect_x_to_be_in_y_raises_AssertionError_when_x_not_in_y(self):
+        x = 602
+        y = [601, 603, 605]
+        message = ""
+        try:
+            Expect(x).toBeIn(y)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected 602 to be in [601, 603, 605]")
+
+    def test_expect_x_to_be_in_y_prepends_usermessage_when_condition_fails(self):
+        x = 602
+        y = [601, 603, 605]
+        message = ""
+        try:
+            Expect(x).toBeIn(y, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected 602 to be in [601, 603, 605]")
+
+    def expect_y_to_contain_x_passes_when_x_in_y(self):
+        x = 602
+        y = [601, x, 603]
+        Expect(y).toContain(x)
+
+    def expect_y_to_contain_x_passes_when_item_equal_to_x_in_y(self):
+        x = 602
+        y = [601, 602, 603]
+        Expect(y).toContain(x)
+
+    def test_expect_y_to_contain_x_fails_when_x_not_in_y(self):
+        x = 602
+        y = [601, 603, 605]
+        message = ""
+        try:
+            Expect(y).toContain(x)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected [601, 603, 605] to contain 602")    
+
+    def test_expect_y_to_contain_x_prepends_usermessage_to_message(self):
+        x = 602
+        y = [601, 603, 605]
+        message = ""
+        try:
+            Expect(y).toContain(x, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected [601, 603, 605] to contain 602")
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()

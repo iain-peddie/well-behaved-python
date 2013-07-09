@@ -155,7 +155,72 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             message = ex.args[0]
         Expect(message).toEqual("user message: Expected None not to be None")
-            
+
+    def test_expect_not_x_to_be_in_y_passes_when_x_is_not_in_y(self):
+        x = 602
+        y = [601, 603, 605]
+        ExpectNot(x).toBeIn(y)
+
+    def test_expect_not_x_to_be_in_y_raises_AssertionError_when_x_in_y(self):
+        x = 602
+        y = [601, x, 603]
+        message = ""
+        try:
+            ExpectNot(x).toBeIn(y)
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("Expected 602 not to be in [601, 602, 603]")
+
+    def test_expect_not_x_to_be_in_y_raises_AssertionError_when_item_equal_to_x_in_y(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(x).toBeIn(y)
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("Expected 602 not to be in [601, 602, 603]")
+    
+    def test_expect_not_x_to_be_in_y_prepends_usermessage_on_failure(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(x).toBeIn(y, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("user message: Expected 602 not to be in [601, 602, 603]")
+
+    def test_expect_not_y_to_contain_x_passes_when_x_not_in_y(self):
+        x = 602
+        y = [601, 603, 605]
+        ExpectNot(y).toContain(x)
+
+    def test_expect_not_y_to_contain_x_fails_when_x_in_y(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(y).toContain(x)
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("Expected [601, 602, 603] not to contain 602")
+        
+    def test_expect_not_y_to_contain_x_prepends_usermessage(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(y).toContain(x, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("user message: Expected [601, 602, 603] not to contain 602")
+        
             
 
 if __name__ == "__main__":
