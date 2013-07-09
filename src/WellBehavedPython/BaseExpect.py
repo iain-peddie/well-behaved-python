@@ -169,6 +169,13 @@ class BaseExpect:
             self.fail(message)
         else:
             self.success(message)
+
+    def toBeIn(self, expectedContainer):
+        message = self.buildMessage("to be in ", expectedContainer, "")
+        if self.actual in expectedContainer:
+            self.success(message)
+        else:
+            self.fail(message)
             
 
     def formatForMessage(self, unformatted):
