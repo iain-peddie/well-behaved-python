@@ -38,7 +38,7 @@ class TestCaseTests(TestCase):
     def after(self):
         self.log += "after "
 
-    def ignoreError(self, error):
+    def ignoreError(self, error, errorType):
         pass
 
     def targetGoodMethod(self):

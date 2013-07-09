@@ -66,21 +66,22 @@ class TestCase:
             self.testMethod()
         except AssertionError as ex:
             results.registerTestFailed()
-            raise
+            self.handleError(ex, "failure")
+#            raise
         except Exception as ex:
             results.registerTestFailed()
-            self.handleError(ex)
+            self.handleError(ex, "error")
         finally:
             self.after()
 
-    def handleError(self, error):
+    def handleError(self, error, errorType):
         """Handles the case of an error in running a test.
 
         Inputs
         ------
         error : the error condition that occurred.
         """
-        print("Test of {} encountered error".format(self.testMethod))
+        print("Test of {} encountered {}".format(self.testMethod, errorType))
         traceback.print_exc()
 
     @classmethod
