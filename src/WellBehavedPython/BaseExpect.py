@@ -170,8 +170,8 @@ class BaseExpect:
         else:
             self.success(message)
 
-    def toBeIn(self, expectedContainer):
-        message = self.buildMessage("to be in ", expectedContainer, "")
+    def toBeIn(self, expectedContainer, userMessage = ""):
+        message = self.buildMessage("to be in ", expectedContainer, userMessage)
         if self.actual in expectedContainer:
             self.success(message)
         else:

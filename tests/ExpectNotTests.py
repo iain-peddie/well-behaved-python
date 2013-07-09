@@ -182,7 +182,17 @@ class ExpectNotTests(TestCase):
             message = ex.args[0]
         
         Expect(message).toEqual("Expected 602 not to be in [601, 602, 603]")
-            
+    
+    def test_expect_not_x_to_be_in_y_prepends_usermessage_on_failure(self):
+        x = 602
+        y = [601, 602, 603]
+        message = ""
+        try:
+            ExpectNot(x).toBeIn(y, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("user message: Expected 602 not to be in [601, 602, 603]")
             
 
 if __name__ == "__main__":

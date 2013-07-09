@@ -211,6 +211,17 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("Expected 2 to be in [1, 3, 5]")
 
+    def test_expect_x_to_be_in_y_prepends_usermessage_when_condition_fails(self):
+        x = 2
+        y = [1, 3, 5]
+        message = ""
+        try:
+            Expect(x).toBeIn(y, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected 2 to be in [1, 3, 5]")
+        
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
