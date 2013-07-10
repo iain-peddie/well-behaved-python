@@ -224,7 +224,7 @@ class BaseExpect:
                                      " but was an instance of {}".format(
                 type(self.actual)))
         if isinstance(self.actual, klass):
-            pass
+            self.success(message)
         else:
             self.fail(message)
 
