@@ -219,8 +219,8 @@ class BaseExpect:
         else:
             self.fail(message)
 
-    def toBeAnInstanceOf(self, klass):
-        message = self.buildMessage("to be an instance of ", klass, "",
+    def toBeAnInstanceOf(self, klass, userMessage = ""):
+        message = self.buildMessage("to be an instance of ", klass, userMessage,
                                      " but was an instance of {}".format(
                 type(self.actual)))
         if isinstance(self.actual, klass):

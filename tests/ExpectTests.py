@@ -276,6 +276,15 @@ class ExpectTests(TestCase):
     def test_instance_of_derived_class_matches_base_class(self):
         Expect(self).toBeAnInstanceOf(TestCase)
 
+    def test_instance_of_prepends_usermessage(self):
+        message = ""
+        try:
+            Expect(1).toBeAnInstanceOf(float, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
+
+
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

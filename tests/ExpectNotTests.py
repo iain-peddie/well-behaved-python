@@ -250,6 +250,14 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             message = ex.args[0]
         Expect(message).toEqual("Expected <ExpectNotTests.ExpectNotTests object> not to be an instance of <class 'WellBehavedPython.TestCase.TestCase'> but was an instance of <class 'ExpectNotTests.ExpectNotTests'>")        
+
+    def test_instance_of_prepends_usermessage(self):
+        message = ""
+        try:
+            ExpectNot(1).toBeAnInstanceOf(int, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected 1 not to be an instance of <class 'int'> but was an instance of <class 'int'>")
         
 
 if __name__ == "__main__":
