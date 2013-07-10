@@ -221,7 +221,44 @@ class ExpectNotTests(TestCase):
         
         Expect(message).toEqual("user message: Expected [601, 602, 603] not to contain 602")
         
-            
+    def test_expect_not_1_instanceof_float_passes(self):
+        ExpectNot(1).toBeAnInstanceOf(float)
+
+    def test_expect_not_1_instanceof_int_fails(self):
+        message = ""
+        try:
+            ExpectNot(1).toBeAnInstanceOf(int)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected 1 not to be an instance of <class 'int'> but was an instance of <class 'int'>")
+
+    def test_expect_not_self_instanceof_TestResults_passes(self):
+        ExpectNot(self).toBeAnInstanceOf(TestResults)
+
+    def test_expect_not_self_instanceof_ExpectNotTests_fails(self):
+        message = ""
+        try:
+            ExpectNot(self).toBeAnInstanceOf(ExpectNotTests)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected <ExpectNotTests.ExpectNotTests object> not to be an instance of <class 'ExpectNotTests.ExpectNotTests'> but was an instance of <class 'ExpectNotTests.ExpectNotTests'>")
+
+    def expect_not_self_instanceof_TestCase_fails(self):
+        message = ""
+        try:
+            ExpectNot(self).toBeAnInstanceOf(TestCase)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected <ExpectNotTests.ExpectNotTests object> not to be an instance of <class 'WellBehavedPython.TestCase.TestCase'> but was an instance of <class 'ExpectNotTests.ExpectNotTests'>")        
+
+    def test_instance_of_prepends_usermessage(self):
+        message = ""
+        try:
+            ExpectNot(1).toBeAnInstanceOf(int, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected 1 not to be an instance of <class 'int'> but was an instance of <class 'int'>")
+        
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

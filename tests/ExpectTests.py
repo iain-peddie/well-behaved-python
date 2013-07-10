@@ -251,10 +251,46 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("user message: Expected [601, 603, 605] to contain 602")
 
+    def test_1_instanceof_int_passes(self):
+        Expect(1).toBeAnInstanceOf(int)
+
+    def test_1_instanceof_float_fails(self):
+        message = ""
+        try:
+            Expect(1).toBeAnInstanceOf(float)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
+
+    def test_instance_of_userclass_passes(self):
+        Expect(TestResults()).toBeAnInstanceOf(TestResults)
+
+    def test_instance_of_wrong_userclass_fails(self):
+        message = ""
+        try:
+            Expect(TestResults()).toBeAnInstanceOf(TestSuite)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected <WellBehavedPython.TestResults.TestResults object> to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'> but was an instance of <class 'WellBehavedPython.TestResults.TestResults'>")
+
+    def test_instance_of_derived_class_matches_base_class(self):
+        Expect(self).toBeAnInstanceOf(TestCase)
+
+    def test_instance_of_prepends_usermessage(self):
+        message = ""
+        try:
+            Expect(1).toBeAnInstanceOf(float, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
+
+
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
     suite.run(results)
     
     print(results.summary())
+
 

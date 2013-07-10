@@ -34,7 +34,7 @@ class Expect(BaseExpect):
         BaseExpect.__init__(self, actual)
         self.Not = ExpectNot(actual)
 
-    def buildMessage(self, operation, expected, userMessage):
+    def buildMessage(self, operation, expected, userMessage, extra = ""):
         """Builds the message that goes into assertion messages
 
         Inputs
@@ -51,7 +51,7 @@ class Expect(BaseExpect):
         The full, built message to go into AssertionError if one
         is raised.
 """
-        return self._buildMessage(operation, expected, userMessage)
+        return self._buildMessage(operation, expected, userMessage, extra)
 
     def fail(self, Message = ""):
         """Indicate a failure, or handle a failed comparison operation.

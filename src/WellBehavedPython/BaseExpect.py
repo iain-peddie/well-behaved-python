@@ -17,6 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+import re;
+
 class BaseExpect:
     """Base class for handling expectation logic, which is our
     equivalent of asserting in standard TDD frameworks.
@@ -217,6 +219,15 @@ class BaseExpect:
         else:
             self.fail(message)
 
+    def toBeAnInstanceOf(self, klass, userMessage = ""):
+        message = self.buildMessage("to be an instance of ", klass, userMessage,
+                                     " but was an instance of {}".format(
+                type(self.actual)))
+        if isinstance(self.actual, klass):
+            self.success(message)
+        else:
+            self.fail(message)
+
     def formatForMessage(self, unformatted):
         """Perform formatting for special types which need to be formatted
         differently, e.g. strings to indicate where their start and ends are.
@@ -232,9 +243,13 @@ class BaseExpect:
 """
         if isinstance(unformatted, str):
             return "'{}'".format(unformatted)
-        return unformatted
+        formatted = "{}".format(unformatted)
+        match = re.match("(<.* object) at[^>]*(>)", formatted)
+        if match:
+            formatted = "".join(match.groups([1,2]))
+        return formatted
 
-    def _buildMessage(self, operation, expected, userMessage):
+    def _buildMessage(self, operation, expected, userMessage, extra):
         """Builds the message that goes into assertion messages
 
         Inputs
@@ -245,6 +260,7 @@ class BaseExpect:
             is one)
         userMessage: message from the user to be prepended onto the
             whole message.
+        extra: appended to the message
 
         Returns
         -------
@@ -263,9 +279,10 @@ class BaseExpect:
         else:
             prepend = ""
 
-        return "{}Expected {} {}{}".format(prepend, 
+        return "{}Expected {} {}{}{}".format(prepend, 
                                             formattedActual, 
                                             operation,
-                                            formattedExpected)
+                                            formattedExpected,
+                                            extra)
 
 
