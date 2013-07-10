@@ -273,6 +273,9 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("Expected <WellBehavedPython.TestResults.TestResults object> to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'> but was an instance of <class 'WellBehavedPython.TestResults.TestResults'>")
 
+    def test_instance_of_derived_class_matches_base_class(self):
+        Expect(self).toBeAnInstanceOf(TestCase)
+
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
