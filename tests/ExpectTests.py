@@ -284,6 +284,28 @@ class ExpectTests(TestCase):
             message = ex.args[0]
         Expect(message).toEqual("user message: Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
 
+    def test_expected_exception_passes_when_exception_matches(self):
+        def raise_error():
+            raise KeyError("asfd")
+        Expect(raise_error).toRaise(KeyError)
+
+    def test_expected_exception_passes_when_exception_is_derived_from_match(self):
+        def raise_error():
+            raise KeyError("asfd")
+        Expect(raise_error).toRaise(LookupError)
+        
+
+    def test_expected_exception_fails_if_exception_not_raised(self):
+        # We have to use a manual expected exception here to check that
+        # expected exception raises the right exception
+        message = ""
+        try:
+            Expect(lambda: None).toRaise(Exception)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected <function <lambda>> to raise an instance of <class 'Exception'>, but none was")
+
+
 
 
 if __name__ == "__main__":
