@@ -21,6 +21,10 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.Expect import *
 
+def raise_error():
+    raise KeyError("asfd")
+
+
 class ExpectTests(TestCase):
 
     def __init__(self, testFunctionName):
@@ -285,13 +289,11 @@ class ExpectTests(TestCase):
         Expect(message).toEqual("user message: Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
 
     def test_expected_exception_passes_when_exception_matches(self):
-        def raise_error():
-            raise KeyError("asfd")
         Expect(raise_error).toRaise(KeyError)
 
     def test_expected_exception_passes_when_exception_is_derived_from_match(self):
-        def raise_error():
-            raise KeyError("asfd")
+#        def raise_error():
+ #           raise KeyError("asfd")
         Expect(raise_error).toRaise(LookupError)
         
 
@@ -304,9 +306,39 @@ class ExpectTests(TestCase):
         except AssertionError as ex:
             message = ex.args[0]
         Expect(message).toEqual("Expected <function <lambda>> to raise an instance of <class 'Exception'>, but none was")
+    
 
+    def test_expected_exception_fails_if_wrong_exception_raised(self):
+        message = ""
+        try:
+            Expect(raise_error).toRaise(FloatingPointError)
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("Expected <function raise_error> "
+                                "to raise an instance of <class 'FloatingPointError'>, "
+                                "but it raised an instance of <class 'KeyError'>")
 
+    def test_expected_exception_prepends_usermessage_on_wrong_exception(self):
+        message = ""
+        try:
+            Expect(raise_error).toRaise(FloatingPointError, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: "
+                                "Expected <function raise_error> "
+                                "to raise an instance of <class 'FloatingPointError'>, "
+                                "but it raised an instance of <class 'KeyError'>")
 
+    def test_expected_exception_prepends_usermessage_on_no_exception(self):
+        message = ""
+        try:
+            Expect(lambda: None).toRaise(KeyError, "user message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        Expect(message).toEqual("user message: "
+                                "Expected <function <lambda>> "
+                                "to raise an instance of <class 'KeyError'>"
+                                ", but none was"                                )
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

@@ -244,14 +244,19 @@ class BaseExpect:
         else:
             self.fail(message)
 
-    def toRaise(self, exceptionClass):
-        message = self.buildMessage("to raise an instance of ", exceptionClass,
-                                    "", ", but none was")
+    def toRaise(self, exceptionClass, userMessage = ""):
         try:
             self.actual()
-        except BaseException as ex:            
-            return
+        except BaseException as ex:
+            message = self.buildMessage("to raise an instance of ", exceptionClass,
+                                         userMessage, ", but it raised an instance of {}".format(type(ex)))
+            if isinstance(ex, exceptionClass):
+                self.success(message)
+                return
+            self.fail(message)
 
+        message = self.buildMessage("to raise an instance of ", exceptionClass,
+                                    userMessage, ", but none was")
         self.fail(message)
 
         

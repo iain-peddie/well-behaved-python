@@ -258,6 +258,20 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             message = ex.args[0]
         Expect(message).toEqual("user message: Expected 1 not to be an instance of <class 'int'> but was an instance of <class 'int'>")
+
+    def test_expect_not_exception_raised_passes_if_exception_not_raised(self):
+        ExpectNot(lambda: None).toRaise(Exception)
+
+    def test_expect_not_exception_fails_if_exact_exception_raised(self):
+        def raise_keyerror():
+            raise KeyError("test message")
+        message = ""
+        try:
+            ExpectNot(raise_keyerror).toRaise(KeyError)
+        except AssertionError as ex:
+            message = ex.args[0]
+
+        Expect(message).toEqual("Expected <function raise_keyerror> not to raise an instance of <class 'KeyError'>, but it raised an instance of <class 'KeyError'>")
         
 
 if __name__ == "__main__":
@@ -266,3 +280,5 @@ if __name__ == "__main__":
     suite.run(results)
     
     print(results.summary())
+
+
