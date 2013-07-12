@@ -220,6 +220,22 @@ class BaseExpect:
             self.fail(message)
 
     def toBeAnInstanceOf(self, klass, userMessage = ""):
+        """Indicates a success case if self.actual is an instance of klass,
+        and a failure otherwise        
+
+        Inputs
+        ------
+        klass     : The expected class/type of the actual item
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : may be raised by success or fail
+"""
         message = self.buildMessage("to be an instance of ", klass, userMessage,
                                      " but was an instance of {}".format(
                 type(self.actual)))
@@ -227,6 +243,24 @@ class BaseExpect:
             self.success(message)
         else:
             self.fail(message)
+
+    def toRaise(self, exceptionClass, userMessage = ""):
+        try:
+            self.actual()
+        except BaseException as ex:
+            message = self.buildMessage("to raise an instance of ", exceptionClass,
+                                         userMessage, ", but it raised an instance of {}".format(type(ex)))
+            if isinstance(ex, exceptionClass):
+                self.success(message)
+                return
+            self.fail(message)
+
+        message = self.buildMessage("to raise an instance of ", exceptionClass,
+                                    userMessage, ", but none was")
+        self.fail(message)
+
+        
+        
 
     def formatForMessage(self, unformatted):
         """Perform formatting for special types which need to be formatted
@@ -244,9 +278,9 @@ class BaseExpect:
         if isinstance(unformatted, str):
             return "'{}'".format(unformatted)
         formatted = "{}".format(unformatted)
-        match = re.match("(<.* object) at[^>]*(>)", formatted)
+        match = re.match("(<.*) at[^>]*(>)", formatted)
         if match:
-            formatted = "".join(match.groups([1,2]))
+            formatted =  "".join(match.groups([1,2]))
         return formatted
 
     def _buildMessage(self, operation, expected, userMessage, extra):
