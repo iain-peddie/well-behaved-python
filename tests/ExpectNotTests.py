@@ -22,8 +22,8 @@ from WellBehavedPython.TestSuite import *
 from WellBehavedPython.ExpectNot import *
 from WellBehavedPython.Expect import *
 
-def raise_keyerror():
-    raise KeyError("test message")
+def raise_error():
+    raise KeyError("The wrong key was presented")
 
 
 class ExpectNotTests(TestCase):
@@ -269,23 +269,40 @@ class ExpectNotTests(TestCase):
     def test_expect_not_exception_fails_if_exact_exception_raised(self):
         message = ""
         try:
-            ExpectNot(raise_keyerror).toRaise(KeyError)
+            ExpectNot(raise_error).toRaise(KeyError)
         except AssertionError as ex:
             message = ex.args[0]
 
-        Expect(message).toEqual("Expected <function raise_keyerror> not to raise an instance of <class 'KeyError'>, but it raised an instance of <class 'KeyError'>")
+        Expect(message).toEqual("Expected <function raise_error> not to raise an instance of <class 'KeyError'>, but it raised an instance of <class 'KeyError'>")
 
     def test_expect_not_exception_prepends_usermessage_when_exact_exception_raised(self):
         message = ""
         try:
-            ExpectNot(raise_keyerror).toRaise(KeyError, "user message")
+            ExpectNot(raise_error).toRaise(KeyError, "user message")
         except AssertionError as ex:
             message = ex.args[0]
 
         Expect(message).toEqual("user message: "
-                                "Expected <function raise_keyerror>"
+                                "Expected <function raise_error>"
                                 " not to raise an instance of <class 'KeyError'>"
                                 ", but it raised an instance of <class 'KeyError'>")
+
+    def test_expected_exception_with_unexpected_message_passes(self):
+
+        ExpectNot(raise_error).toRaise(KeyError, expectedMessage = "This is not the right message")
+
+    def test_expected_exception_with_expected_message_fails(self):
+        message = ""
+        try:
+            ExpectNot(raise_error).toRaise(KeyError, expectedMessage = "The wrong key was presented")
+        except AssertionError as ex:
+            message = ex.args[0]
+
+        Expect(message).toEqual("Expected <function raise_error>"
+                                " not to raise an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'"
+                                ", but it raised an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'")
         
         
 
