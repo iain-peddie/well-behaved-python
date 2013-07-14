@@ -244,17 +244,18 @@ class BaseExpect:
         else:
             self.fail(message)
 
-    def toRaise(self, exceptionClass, userMessage = "", expectedMessage = None):
+    def toRaise(self, exceptionClass, userMessage = "", expectedMessage = None, expectedMessageMatches = None):
         from .Expect import Expect
         try:
             self.actual()
         except BaseException as ex:
-            message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, userMessage)
+            message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
 
             if isinstance(ex, exceptionClass):
 
                 if expectedMessage != None and expectedMessage != ex.args[0]:
-                    message = message
+                    self.fail(message)
+                elif expectedMessageMatches != None and not re.search(expectedMessageMatches, ex.args[0]):                    
                     self.fail(message)
                 else:
                     self.success(message)
@@ -266,16 +267,22 @@ class BaseExpect:
         self.fail(message)
 
 
-    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, userMessage):
+    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage):
         extra = ", but it raised an instance of {}".format(type(ex))
         
-        if expectedMessage == None:
+        if expectedMessage == None and expectedMessageMatches == None:
             operation = "to raise an instance of "
             comparison = exceptionClass
-        else:
+        
+        else: 
             operation = "to raise an instance of {} with message ".format(exceptionClass)
             comparison = expectedMessage
-            extra = extra + " with message {}".format(self.formatForMessage(ex.args[0]))
+            if expectedMessageMatches != None:
+                operation = operation + "matching regular expression "
+                comparison = expectedMessageMatches
+                
+
+            extra = extra + " with message {}".format(self.formatForMessage(ex.args[0]))            
 
         message = self.buildMessage(operation, comparison, 
                                         userMessage, extra)

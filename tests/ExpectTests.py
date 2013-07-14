@@ -355,6 +355,22 @@ class ExpectTests(TestCase):
                                 " with message 'This is not the right message'"
                                 ", but it raised an instance of <class 'KeyError'>"
                                 " with message 'The wrong key was presented'")
+
+    def test_expected_exception_with_message_matching_regexp_passes(self):
+        Expect(raise_error).toRaise(KeyError, expectedMessageMatches = ".*")
+
+    def test_expected_exceptin_with_message_not_matching_regexp_fails(self):
+        message = ""
+        try:
+            Expect(raise_error).toRaise(KeyError, expectedMessageMatches = "^not")
+        except AssertionError as ex:
+            message = ex.args[0]
+            
+        Expect(message).toEqual("Expected <function raise_error>"
+                                " to raise an instance of <class 'KeyError'>"
+                                " with message matching regular expression '^not'"
+                                ", but it raised an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'")
                                 
 
 if __name__ == "__main__":

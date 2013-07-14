@@ -288,7 +288,6 @@ class ExpectNotTests(TestCase):
                                 ", but it raised an instance of <class 'KeyError'>")
 
     def test_expected_exception_with_unexpected_message_passes(self):
-
         ExpectNot(raise_error).toRaise(KeyError, expectedMessage = "This is not the right message")
 
     def test_expected_exception_with_expected_message_fails(self):
@@ -303,8 +302,22 @@ class ExpectNotTests(TestCase):
                                 " with message 'The wrong key was presented'"
                                 ", but it raised an instance of <class 'KeyError'>"
                                 " with message 'The wrong key was presented'")
-        
-        
+
+    def test_expect_not_exception_with_message_not_matching_regexp_passes(self):
+        ExpectNot(raise_error).toRaise(KeyError, expectedMessageMatches = "^not")
+
+    def test_expect_not_raises_fails_if_error_matches_and_message_matches_regexap(self):
+        message = ""
+        try:
+            ExpectNot(raise_error).toRaise(KeyError, expectedMessageMatches = ".*")
+        except AssertionError as ex:
+            message = ex.args[0]
+
+        Expect(message).toEqual("Expected <function raise_error>"
+                                " not to raise an instance of <class 'KeyError'>"
+                                " with message matching regular expression '.*'"
+                                ", but it raised an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'")                                
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
