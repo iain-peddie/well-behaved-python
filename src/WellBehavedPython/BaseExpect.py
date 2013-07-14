@@ -244,22 +244,49 @@ class BaseExpect:
         else:
             self.fail(message)
 
-    def toRaise(self, exceptionClass, userMessage = ""):
+    def toRaise(self, exceptionClass, userMessage = "", expectedMessage = None, expectedMessageMatches = None):
+        from .Expect import Expect
         try:
             self.actual()
         except BaseException as ex:
-            message = self.buildMessage("to raise an instance of ", exceptionClass,
-                                         userMessage, ", but it raised an instance of {}".format(type(ex)))
+            message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
+
             if isinstance(ex, exceptionClass):
-                self.success(message)
+
+                if expectedMessage != None and expectedMessage != ex.args[0]:
+                    self.fail(message)
+                elif expectedMessageMatches != None and not re.search(expectedMessageMatches, ex.args[0]):                    
+                    self.fail(message)
+                else:
+                    self.success(message)
                 return
             self.fail(message)
 
         message = self.buildMessage("to raise an instance of ", exceptionClass,
-                                    userMessage, ", but none was")
+                                        userMessage, ", but none was")
         self.fail(message)
 
+
+    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage):
+        extra = ", but it raised an instance of {}".format(type(ex))
         
+        if expectedMessage == None and expectedMessageMatches == None:
+            operation = "to raise an instance of "
+            comparison = exceptionClass
+        
+        else: 
+            operation = "to raise an instance of {} with message ".format(exceptionClass)
+            comparison = expectedMessage
+            if expectedMessageMatches != None:
+                operation = operation + "matching regular expression "
+                comparison = expectedMessageMatches
+                
+
+            extra = extra + " with message {}".format(self.formatForMessage(ex.args[0]))            
+
+        message = self.buildMessage(operation, comparison, 
+                                        userMessage, extra)
+        return message
         
 
     def formatForMessage(self, unformatted):
@@ -275,6 +302,10 @@ class BaseExpect:
         The correctly formatted output, if the standard python formatting will
         not be acceptable.
 """
+
+        if type(unformatted) == "_sre.SRE_Pattern":
+            unformatted = unformatted.pattern
+
         if isinstance(unformatted, str):
             return "'{}'".format(unformatted)
         formatted = "{}".format(unformatted)

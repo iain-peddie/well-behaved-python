@@ -21,8 +21,10 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.Expect import *
 
+import re
+
 def raise_error():
-    raise KeyError("asfd")
+    raise KeyError("The wrong key was presented")
 
 
 class ExpectTests(TestCase):
@@ -339,6 +341,56 @@ class ExpectTests(TestCase):
                                 "Expected <function <lambda>> "
                                 "to raise an instance of <class 'KeyError'>"
                                 ", but none was"                                )
+
+    def test_expect_exception_with_expected_message_passes(self):
+        Expect(raise_error).toRaise(KeyError, expectedMessage = "The wrong key was presented")
+
+    def test_expect_exception_with_unexpected_message_fails(self):
+        message = ""
+        try:
+            Expect(raise_error).toRaise(KeyError, expectedMessage = "This is not the right message")
+        except AssertionError as ex:
+            message = ex.args[0]
+        
+        Expect(message).toEqual("Expected <function raise_error>"
+                                " to raise an instance of <class 'KeyError'>"
+                                " with message 'This is not the right message'"
+                                ", but it raised an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'")
+
+    def test_expected_exception_with_message_matching_regexp_passes(self):
+        Expect(raise_error).toRaise(KeyError, expectedMessageMatches = ".*")
+
+    def test_expected_exception_with_message_not_matching_regexp_fails(self):
+        message = ""
+        try:
+            Expect(raise_error).toRaise(KeyError, expectedMessageMatches = "^not")
+        except AssertionError as ex:
+            message = ex.args[0]
+            
+        Expect(message).toEqual("Expected <function raise_error>"
+                                " to raise an instance of <class 'KeyError'>"
+                                " with message matching regular expression '^not'"
+                                ", but it raised an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'")
+
+    def test_expected_exception_with_message_matching_compiled_regexp_passes(self):
+        regexp = re.compile(".*")
+        Expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
+
+    def xtest_expected_exception_with_message_not_matching_compiled_regexp_fails(self):
+        message = ""
+        regexp = re.compile("^not")
+        try:
+            Expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
+        except AssertionError as ex:
+            message = ex.args[0]
+            
+        Expect(message).toEqual("Expected <function raise_error>"
+                                " to raise an instance of <class 'KeyError'>"
+                                " with message matching regular expression '^not'"
+                                ", but it raised an instance of <class 'KeyError'>"
+                                " with message 'The wrong key was presented'")
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
