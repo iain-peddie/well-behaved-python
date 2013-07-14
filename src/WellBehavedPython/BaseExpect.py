@@ -302,6 +302,10 @@ class BaseExpect:
         The correctly formatted output, if the standard python formatting will
         not be acceptable.
 """
+
+        if type(unformatted) == "_sre.SRE_Pattern":
+            unformatted = unformatted.pattern
+
         if isinstance(unformatted, str):
             return "'{}'".format(unformatted)
         formatted = "{}".format(unformatted)
