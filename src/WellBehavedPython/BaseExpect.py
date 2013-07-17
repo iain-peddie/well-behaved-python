@@ -246,11 +246,16 @@ class BaseExpect:
 
     def toRaise(self, exceptionClass, userMessage = "", expectedMessage = None, expectedMessageMatches = None):
         from .Expect import Expect
+        ex = None
+
         try:
             self.actual()
-        except BaseException as ex:
-            message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
+        except BaseException as _ex:
+            ex = _ex
 
+        message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
+
+        if ex is not None:
             if isinstance(ex, exceptionClass):
 
                 if expectedMessage != None and expectedMessage != ex.args[0]:
@@ -259,12 +264,13 @@ class BaseExpect:
                     self.fail(message)
                 else:
                     self.success(message)
-                return
-            self.fail(message)
-
-        message = self.buildMessage("to raise an instance of ", exceptionClass,
+            else:
+                self.fail(message)
+            
+        else:    
+            message = self.buildMessage("to raise an instance of ", exceptionClass,
                                         userMessage, ", but none was")
-        self.fail(message)
+            self.fail(message)
 
 
     def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage):

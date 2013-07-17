@@ -17,13 +17,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-
 import os
 import os.path
 import sys
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.Expect import *
+from WellBehavedPython.api import *
 
 class MockTestCase(TestCase):
     """This class should never be run directly.
@@ -75,12 +75,15 @@ class TestSuiteTests(TestCase):
     def test_autosuite_discovers_correct_tests(self):
         suite = MockTestCase.suite()
         expectedTestMethodNames = ["test_example1", "test_example2" ];
-        Expect(len(suite.tests)).toEqual(2)
+
+        # TODO : toHaveLength(2) ?
+        expect(len(suite.tests)).toEqual(2)
         for i in range(2):
             # we use naked asserts while waiting for isInstanceOf and
             # toBeIn
-            assert isinstance(suite.tests[i], MockTestCase), "TODO: isInstanceOf"
-            assert suite.tests[i].testMethodName in expectedTestMethodNames[i], "TODO: toBeIn"
+            message = "Test index {}".format(i)
+            expect(suite.tests[i]).toBeAnInstanceOf(MockTestCase, message)
+            expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames, message)
 
         
 

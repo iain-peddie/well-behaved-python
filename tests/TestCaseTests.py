@@ -23,8 +23,7 @@ import os.path
 import sys
 
 from WellBehavedPython.TestCase import *
-from WellBehavedPython.TestSuite import *
-from WellBehavedPython.Expect import *
+from WellBehavedPython.api import *
 
 class TestCaseTests(TestCase):
 
@@ -56,7 +55,7 @@ class TestCaseTests(TestCase):
         test = TestCaseTests("targetGoodMethod")
         test.run(TestResults())
         
-        Expect(test.log).toEqual("before targetMethod after ")
+        expect(test.log).toEqual("before targetMethod after ")
 
     def test_run_template_on_error_method(self):
         # bypass usual error handling, because we want to
@@ -65,14 +64,14 @@ class TestCaseTests(TestCase):
         test.handleError = test.ignoreError
         test.run(TestResults())
 
-        Expect(test.log).toEqual("before after ")
+        expect(test.log).toEqual("before after ")
 
     def test_good_method_summary(self):
         test = TestCaseTests("targetGoodMethod")
         results = TestResults()
         test.run(results)
         
-        Expect(results.summary()).toEqual("0 failed from 1 test")
+        expect(results.summary()).toEqual("0 failed from 1 test")
 
     def test_error_method_summary(self):
         test = TestCaseTests("targetErrorMethod")
@@ -81,7 +80,7 @@ class TestCaseTests(TestCase):
 
         test.run(results)
 
-        Expect(results.summary()).toEqual("1 failed from 1 test")
+        expect(results.summary()).toEqual("1 failed from 1 test")
         
         
 if __name__ == "__main__":

@@ -18,14 +18,12 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from WellBehavedPython.TestCase import *
-from WellBehavedPython.TestSuite import *
-from WellBehavedPython.Expect import *
+from WellBehavedPython.api import *
 
 import re
 
 def raise_error():
     raise KeyError("The wrong key was presented")
-
 
 class ExpectTests(TestCase):
 
@@ -33,11 +31,18 @@ class ExpectTests(TestCase):
         TestCase.__init__(self, testFunctionName)
 
     def test_expects_fail_throws_AssertionError(self):
-        # This would be easier if there was an expected exception,
-        # but that comes later
+        # DON'T USE EXPECTED EXCEPTION
+        # The test for fail is so fundamental, that it has to be
+        # performed with tests outside the framework itself
+        # 
+        # Otherwise, we're assuming fail works while testing the
+        # exceptino based behavior of fail. The test for the 
+        # expected message is different, as that is testing the
+        # message structure, and not the fundamental pass/fail
+        # behavior.
         raised = True
         try:
-            Expect(True).fail()
+            expect(True).fail()
             raised = False
         except AssertionError:
             pass
@@ -47,154 +52,96 @@ class ExpectTests(TestCase):
         assert raised, "Expected an AssertionError to have been thrown"
 
     def test_failure_stores_message_if_provided(self):
-        raised = True
-        try:
-            Expect(True).fail("ExpectedMessage")
-            raised = False
-        except AssertionError as ex:
-            assert ex.args[0] == "ExpectedMessage"
+        expect(lambda: expect(True).fail("ExpectedMessage")).toRaise(
+            AssertionError,
+            expectedMessage = "ExpectedMessage")
         
-        assert raised, "expected message not stored in exception"
-
     def test_equals_doesnt_raise_if_numeric_items_are_equal(self):
-        Expect(1).toEqual(1)
+        expect(1).toEqual(1)
 
     def test_equals_raises_with_right_message_if_numeric_items_not_equal(self):
-        raised = True
-        try:
-            Expect(1).toEqual(2)
-            raised = False
-        except AssertionError as ex:
-            # We use a manual assert here, otherwise we assume that toEqual works
-            # in the test that's checking that it works
-            assert ex.args[0] == "Expected 1 to equal 2", ex.args[0]
-        
-        
-        Expect(raised).toBeTrue("Expected exception to be thrown")
+        expect(lambda: expect(1).toEqual(2)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to equal 2")
 
     def test_equals_message_prepended_to_assert_message(self):
-        raised = True
-        try:
-            Expect(1).toEqual(2, "first assert")
-            raised = False
-        except AssertionError as ex:
-            # We use a manual assert here, otherwise we assume that toEqual works
-            # in the test that's checking that it works
-            assert ex.args[0] == "first assert: Expected 1 to equal 2", ex.args[0]
-        
-        Expect(raised).toBeTrue("Expected AssertionError to be raised")
+        expect(lambda: expect(1).toEqual(2, "user message")).toRaise(
+                AssertionError,
+                expectedMessageMatches = "^user message")
 
     def test_equals_doesnt_raise_if_string_items_are_equal(self):
-        Expect("hello").toEqual("hello")
+        expect("hello").toEqual("hello")
 
     def test_equals_raises_with_right_message_if_string_items_not_equal(self):
-        raised = True
-        try:
-            Expect("hello").toEqual("world")
-            raised = False
-        except AssertionError as ex:
-            # We use a manual assert here. Otherwise we're assuming the code we're
-            # testing here is already working. Which would be crazy.
-            expected = "Expected 'hello' to equal 'world'"
-            actual = ex.args[0]
-            message = "'{}' != '{}'".format(expected, ex.args[0])
-            assert actual == expected, message
-        
-        Expect(raised).toBeTrue("Expected exception to be thrown")
-
-    def test_expects_not_toequal_behaves_correctly(self):
-        Expect(1).Not.toEqual(2)
+        expect(lambda: expect("hello").toEqual("world")).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'hello' to equal 'world'")
 
     def test_expecting_string1_to_equal_double1_fails(self):
-        raised = False
-        try:
-            Expect("1").toEqual(1)
-        except AssertionError as ex:
-            raised = True
-            Expect(ex.args[0]).toEqual("Cannot compare instance of <class 'str'> to "
-                                       + "instance of <class 'int'> because their types differ")
+        expect(lambda: expect("1").toEqual(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Cannot compare instance of <class 'str'> to "
+            "instance of <class 'int'> because their types differ")
         
-        Expect(raised).toBeTrue("Expected AssertionError to be raised")
 
     def test_expect_truthy_values_to_be_true_succeeds(self):
-        Expect(True).toBeTrue()
-        Expect(1).toBeTrue()
-        Expect((1)).toBeTrue()
+        expect(True).toBeTrue()
+        expect(1).toBeTrue()
+        expect((1)).toBeTrue()
 
     def test_expect_falsy_values_to_be_true_fails(self):
         values = (False, 0, ())
-        actualMessages = []
         expectedMessages = ("Expected False to be True", 
                             "Expected 0 to be True",
                             "Expected () to be True")
-        for value in values:
-            try:
-                Expect(value).toBeTrue()
-            except AssertionError as ex:
-                actualMessages.append(ex.args[0])
-        
-        Expect(len(actualMessages)).toEqual(3)
-        for i in range(0,2):
-            Expect(actualMessages[i]).toEqual(expectedMessages[i], "i = {}".format(i))
+        for i in range(0, len(values) - 1):
+            expect(lambda: expect(values[i]).toBeTrue()).toRaise(
+                AssertionError,
+                expectedMessage = expectedMessages[i])
 
     def test_expect_truthy_values_to_be_false_fails(self):
         values = (True, 1, (1))
-        actualMessages = []
         expectedMessages = ("Expected True to be False",
                             "Expected 1 to be False",
                             "Expected (1) to be False")
 
-        for value in values:
-            try:
-                Expect(value).toBeFalse()
-            except AssertionError as ex:
-                actualMessages.append(ex.args[0])
-
-        Expect(len(actualMessages)).toEqual(3)
-        for i in range(0, 2):
-            Expect(actualMessages[i]).toEqual(expectedMessages[i], "i = {}".format(i))
+        for i in range(0, len(values) - 1):
+            expect(lambda: expect(values[i]).toBeFalse()).toRaise(
+                AssertionError,
+                expectedMessage = expectedMessages[i])
 
     def test_expect_falsy_values_to_be_false_succeeds(self):
         values = (False, 0, ())
         for value in values:
-            Expect(value).toBeFalse()
+            expect(value).toBeFalse()
 
     def test_expect_true_prepends_usermessage_to_assertion(self):
-        try:
-            Expect(False).toBeTrue("user message")
-        except AssertionError as ex:
-            Expect(ex.args[0]).toEqual("user message: Expected False to be True")
+        expect(lambda: expect(False).toBeTrue("user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
     def test_expect_false_prepends_usermessage_to_assertion(self):
-        try:
-            Expect(True).toBeFalse("user message")
-        except AssertionError as ex:
-            Expect(ex.args[0]).toEqual("user message: Expected True to be False")
+        expect(lambda: expect(True).toBeFalse("user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
     def test_expecting_None_toBeNone_passes(self):
-        Expect(None).toBeNone()
+        expect(None).toBeNone()
 
     def test_expecting_False_toBeNone_fails(self):
-        message = ""
-        try:
-            Expect(False).toBeNone()
-        except AssertionError as ex:
-            message = ex.args[0];
-        
-        Expect(message).toEqual("Expected False to be None")
+        expect(lambda: expect(False).toBeNone()).toRaise(
+            AssertionError,
+            expectedMessage = "Expected False to be None")
 
     def test_expect_toBeNone_prepends_user_message(self):
-        message = ""
-        try:
-            Expect(False).toBeNone("user message")
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("user message: Expected False to be None")
+        expect(lambda: expect(False).toBeNone("user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
     def test_expect_x_to_be_in_y_passes_when_x_is_in_y(self):
         x = 602
         y = [601, x, 603]
-        Expect(x).toBeIn(y)
+        expect(x).toBeIn(y)
 
     def test_expect_x_to_be_in_y_passes_when_item_equal_to_x_in_y(self):
         # use numbers > 256 because of python internal behavior:
@@ -205,98 +152,78 @@ class ExpectTests(TestCase):
         # so we pick larger inteers to do this with
         x = 602
         y = [601, 602, 603]
-        Expect(x).toBeIn(y)
+        expect(x).toBeIn(y)
 
     def test_expect_x_to_be_in_y_raises_AssertionError_when_x_not_in_y(self):
         x = 602
         y = [601, 603, 605]
-        message = ""
-        try:
-            Expect(x).toBeIn(y)
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("Expected 602 to be in [601, 603, 605]")
+        expect(lambda: expect(x).toBeIn(y)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 602 to be in [601, 603, 605]")
 
     def test_expect_x_to_be_in_y_prepends_usermessage_when_condition_fails(self):
         x = 602
         y = [601, 603, 605]
-        message = ""
-        try:
-            Expect(x).toBeIn(y, "user message")
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("user message: Expected 602 to be in [601, 603, 605]")
+        expect(lambda: expect(x).toBeIn(y, "user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
     def expect_y_to_contain_x_passes_when_x_in_y(self):
         x = 602
         y = [601, x, 603]
-        Expect(y).toContain(x)
+        expect(y).toContain(x)
 
     def expect_y_to_contain_x_passes_when_item_equal_to_x_in_y(self):
         x = 602
         y = [601, 602, 603]
-        Expect(y).toContain(x)
+        expect(y).toContain(x)
 
     def test_expect_y_to_contain_x_fails_when_x_not_in_y(self):
         x = 602
         y = [601, 603, 605]
-        message = ""
-        try:
-            Expect(y).toContain(x)
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("Expected [601, 603, 605] to contain 602")    
+        expect(lambda: expect(y).toContain(x)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [601, 603, 605] to contain 602")    
 
     def test_expect_y_to_contain_x_prepends_usermessage_to_message(self):
         x = 602
         y = [601, 603, 605]
-        message = ""
-        try:
-            Expect(y).toContain(x, "user message")
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("user message: Expected [601, 603, 605] to contain 602")
+        expect(lambda: expect(y).toContain(x, "user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
     def test_1_instanceof_int_passes(self):
-        Expect(1).toBeAnInstanceOf(int)
+        expect(1).toBeAnInstanceOf(int)
 
     def test_1_instanceof_float_fails(self):
-        message = ""
-        try:
-            Expect(1).toBeAnInstanceOf(float)
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
+        expect(lambda: expect(1).toBeAnInstanceOf(float)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
 
     def test_instance_of_userclass_passes(self):
-        Expect(TestResults()).toBeAnInstanceOf(TestResults)
+        expect(TestResults()).toBeAnInstanceOf(TestResults)
 
     def test_instance_of_wrong_userclass_fails(self):
-        message = ""
-        try:
-            Expect(TestResults()).toBeAnInstanceOf(TestSuite)
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("Expected <WellBehavedPython.TestResults.TestResults object> to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'> but was an instance of <class 'WellBehavedPython.TestResults.TestResults'>")
+        expect(lambda: expect(TestResults()).toBeAnInstanceOf(TestSuite)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected <WellBehavedPython.TestResults.TestResults object>"
+            " to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'>"
+            " but was an instance of <class 'WellBehavedPython.TestResults.TestResults'>")
 
     def test_instance_of_derived_class_matches_base_class(self):
-        Expect(self).toBeAnInstanceOf(TestCase)
+        expect(self).toBeAnInstanceOf(TestCase)
 
     def test_instance_of_prepends_usermessage(self):
-        message = ""
-        try:
-            Expect(1).toBeAnInstanceOf(float, "user message")
-        except AssertionError as ex:
-            message = ex.args[0]
-        Expect(message).toEqual("user message: Expected 1 to be an instance of <class 'float'> but was an instance of <class 'int'>")
+        expect(lambda: 
+               expect(1).toBeAnInstanceOf(float, "user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
     def test_expected_exception_passes_when_exception_matches(self):
-        Expect(raise_error).toRaise(KeyError)
+        expect(raise_error).toRaise(KeyError)
 
     def test_expected_exception_passes_when_exception_is_derived_from_match(self):
-#        def raise_error():
- #           raise KeyError("asfd")
-        Expect(raise_error).toRaise(LookupError)
+        expect(raise_error).toRaise(LookupError)
         
 
     def test_expected_exception_fails_if_exception_not_raised(self):
@@ -304,29 +231,29 @@ class ExpectTests(TestCase):
         # expected exception raises the right exception
         message = ""
         try:
-            Expect(lambda: None).toRaise(Exception)
+            expect(lambda: None).toRaise(Exception)
         except AssertionError as ex:
             message = ex.args[0]
-        Expect(message).toEqual("Expected <function <lambda>> to raise an instance of <class 'Exception'>, but none was")
+        expect(message).toEqual("Expected <function <lambda>> to raise an instance of <class 'Exception'>, but none was")
     
 
     def test_expected_exception_fails_if_wrong_exception_raised(self):
         message = ""
         try:
-            Expect(raise_error).toRaise(FloatingPointError)
+            expect(raise_error).toRaise(FloatingPointError)
         except AssertionError as ex:
             message = ex.args[0]
-        Expect(message).toEqual("Expected <function raise_error> "
+        expect(message).toEqual("Expected <function raise_error> "
                                 "to raise an instance of <class 'FloatingPointError'>, "
                                 "but it raised an instance of <class 'KeyError'>")
 
     def test_expected_exception_prepends_usermessage_on_wrong_exception(self):
         message = ""
         try:
-            Expect(raise_error).toRaise(FloatingPointError, "user message")
+            expect(raise_error).toRaise(FloatingPointError, "user message")
         except AssertionError as ex:
             message = ex.args[0]
-        Expect(message).toEqual("user message: "
+        expect(message).toEqual("user message: "
                                 "Expected <function raise_error> "
                                 "to raise an instance of <class 'FloatingPointError'>, "
                                 "but it raised an instance of <class 'KeyError'>")
@@ -334,41 +261,45 @@ class ExpectTests(TestCase):
     def test_expected_exception_prepends_usermessage_on_no_exception(self):
         message = ""
         try:
-            Expect(lambda: None).toRaise(KeyError, "user message")
+            expect(lambda: None).toRaise(KeyError, "user message")
         except AssertionError as ex:
             message = ex.args[0]
-        Expect(message).toEqual("user message: "
+        expect(message).toEqual("user message: "
                                 "Expected <function <lambda>> "
                                 "to raise an instance of <class 'KeyError'>"
                                 ", but none was"                                )
 
     def test_expect_exception_with_expected_message_passes(self):
-        Expect(raise_error).toRaise(KeyError, expectedMessage = "The wrong key was presented")
+        expect(raise_error).toRaise(
+            KeyError,
+            expectedMessage = "The wrong key was presented")
 
     def test_expect_exception_with_unexpected_message_fails(self):
         message = ""
         try:
-            Expect(raise_error).toRaise(KeyError, expectedMessage = "This is not the right message")
+            expect(raise_error).toRaise(KeyError, expectedMessage = "This is not the right message")
         except AssertionError as ex:
             message = ex.args[0]
         
-        Expect(message).toEqual("Expected <function raise_error>"
+        expect(message).toEqual("Expected <function raise_error>"
                                 " to raise an instance of <class 'KeyError'>"
                                 " with message 'This is not the right message'"
                                 ", but it raised an instance of <class 'KeyError'>"
                                 " with message 'The wrong key was presented'")
 
     def test_expected_exception_with_message_matching_regexp_passes(self):
-        Expect(raise_error).toRaise(KeyError, expectedMessageMatches = ".*")
+        expect(raise_error).toRaise(KeyError, expectedMessageMatches = ".*")
 
     def test_expected_exception_with_message_not_matching_regexp_fails(self):
         message = ""
         try:
-            Expect(raise_error).toRaise(KeyError, expectedMessageMatches = "^not")
+            expect(raise_error).toRaise(
+                KeyError,
+                expectedMessageMatches = "^not")
         except AssertionError as ex:
             message = ex.args[0]
             
-        Expect(message).toEqual("Expected <function raise_error>"
+        expect(message).toEqual("Expected <function raise_error>"
                                 " to raise an instance of <class 'KeyError'>"
                                 " with message matching regular expression '^not'"
                                 ", but it raised an instance of <class 'KeyError'>"
@@ -376,17 +307,17 @@ class ExpectTests(TestCase):
 
     def test_expected_exception_with_message_matching_compiled_regexp_passes(self):
         regexp = re.compile(".*")
-        Expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
+        expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
 
     def xtest_expected_exception_with_message_not_matching_compiled_regexp_fails(self):
         message = ""
         regexp = re.compile("^not")
         try:
-            Expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
+            expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
         except AssertionError as ex:
             message = ex.args[0]
             
-        Expect(message).toEqual("Expected <function raise_error>"
+        expect(message).toEqual("Expected <function raise_error>"
                                 " to raise an instance of <class 'KeyError'>"
                                 " with message matching regular expression '^not'"
                                 ", but it raised an instance of <class 'KeyError'>"

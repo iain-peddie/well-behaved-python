@@ -67,7 +67,6 @@ class TestCase:
         except AssertionError as ex:
             results.registerTestFailed()
             self.handleError(ex, "failure")
-#            raise
         except Exception as ex:
             results.registerTestFailed()
             self.handleError(ex, "error")
