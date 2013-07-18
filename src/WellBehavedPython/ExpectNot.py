@@ -17,9 +17,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .BaseExpect import BaseExpect
+from .DefaultExpectations import DefaultExpectations
 
-class ExpectNot(BaseExpect):
+class ExpectNot(DefaultExpectations):
     """Class used to indicate the opposite of expected outcomes."""
 
     def __init__(self, actual):
@@ -29,7 +29,7 @@ class ExpectNot(BaseExpect):
         ------
         actual : the actual value to be compared against.
         """
-        BaseExpect.__init__(self, actual)
+        DefaultExpectations.__init__(self, actual)
 
     def buildMessage(self, operation, expected, userMessage, extra = ""):
         """Builds the message that goes into assertion messages
