@@ -22,7 +22,7 @@ import os.path
 import sys
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
-from WellBehavedPython.Expect import *
+#from WellBehavedPython.Expect import *
 from WellBehavedPython.api import *
 
 class MockTestCase(TestCase):
@@ -56,8 +56,8 @@ class TestSuiteTests(TestCase):
         self.suite.add(test)
 
         self.suite.run(self.results)
-        Expect(test.testMethodCount).toEqual(1)
-        Expect(self.results.summary()).toEqual("0 failed from 1 test")
+        expect(test.testMethodCount).toEqual(1)
+        expect(self.results.summary()).toEqual("0 failed from 1 test")
 
     def test_running_suite_with_two_tests_runs_both(self):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
@@ -68,9 +68,9 @@ class TestSuiteTests(TestCase):
         
         self.suite.run(self.results)
 
-        Expect(test1.testMethodCount).toEqual(1)
-        Expect(test2.testMethodCount).toEqual(1)
-        Expect(self.results.summary()).toEqual("0 failed from 2 tests")
+        expect(test1.testMethodCount).toEqual(1)
+        expect(test2.testMethodCount).toEqual(1)
+        expect(self.results.summary()).toEqual("0 failed from 2 tests")
 
     def test_autosuite_discovers_correct_tests(self):
         suite = MockTestCase.suite()

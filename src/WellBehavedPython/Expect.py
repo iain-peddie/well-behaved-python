@@ -20,19 +20,16 @@
 from .DefaultExpectations import DefaultExpectations
 from .ExpectNot import ExpectNot
 
-class Expect(DefaultExpectations):
+class Expect:
     """Class used to indicate expected outcomes."""
 
-    def __init__(self, actual):
+    def __init__(self):
         """Constructor
 
         Inputs
         ------
         actual : the actual value to be compared against.
         """
-
-        DefaultExpectations.__init__(self, actual, self)
-        self.Not = ExpectNot(actual)
 
     def fail(self, Message = ""):
         """Indicate a failure, or handle a failed comparison operation.

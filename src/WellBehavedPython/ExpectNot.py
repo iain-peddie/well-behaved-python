@@ -17,19 +17,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .DefaultExpectations import DefaultExpectations
-
-class ExpectNot(DefaultExpectations):
+class ExpectNot:
     """Class used to indicate the opposite of expected outcomes."""
 
-    def __init__(self, actual):
+    def __init__(self):
         """Constructor
 
         Inputs
         ------
         actual : the actual value to be compared against.
         """
-        DefaultExpectations.__init__(self, actual, self)
 
     def fail(self, message = ""):
         """Indicate a failure, or handle a failed comparison operation.

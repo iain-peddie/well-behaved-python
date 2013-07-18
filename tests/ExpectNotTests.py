@@ -217,7 +217,7 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             message = ex.args[0]
 
-        Expect(message).toEqual("user message: "
+        expect(message).toEqual("user message: "
                                 "Expected <function raise_error>"
                                 " not to raise an instance of <class 'KeyError'>"
                                 ", but it raised an instance of <class 'KeyError'>")

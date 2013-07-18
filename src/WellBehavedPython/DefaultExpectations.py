@@ -25,7 +25,7 @@ from .BaseExpect import BaseExpect
 
 class DefaultExpectations(BaseExpect):
     
-    def __init__(self, actual, strategy):
+    def __init__(self, actual, strategy, reverseExpecter = None):
         """Constructor
 
         Inputs
@@ -33,7 +33,7 @@ class DefaultExpectations(BaseExpect):
         actual : the actual value to be compared against.
         """
 
-        BaseExpect.__init__(self, actual, strategy)
+        BaseExpect.__init__(self, actual, strategy, reverseExpecter)
 
     def toEqual(self, expected, userMessage = None):
         """Compares the actual value to the expected value
