@@ -31,27 +31,8 @@ class Expect(DefaultExpectations):
         actual : the actual value to be compared against.
         """
 
-        DefaultExpectations.__init__(self, actual)
+        DefaultExpectations.__init__(self, actual, self)
         self.Not = ExpectNot(actual)
-
-    def buildMessage(self, operation, expected, userMessage, extra = ""):
-        """Builds the message that goes into assertion messages
-
-        Inputs
-        ------
-        operation : a string containing the comparison operation,
-            .e.g 'to equal'
-        expected : the expected value in the comparison (if there
-            is one)
-        userMessage: message from the user to be prepended onto the
-            whole message.
-
-        Returns
-        -------
-        The full, built message to go into AssertionError if one
-        is raised.
-"""
-        return self._buildMessage(operation, expected, userMessage, extra)
 
     def fail(self, Message = ""):
         """Indicate a failure, or handle a failed comparison operation.
@@ -70,3 +51,7 @@ class Expect(DefaultExpectations):
         message(optional) : ignored. Part of the BaseExpect interface.
         """
         pass
+
+    def decorateOperation(self, operation):
+        return operation
+

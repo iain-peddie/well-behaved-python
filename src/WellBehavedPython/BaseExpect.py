@@ -29,13 +29,14 @@ class BaseExpect:
     a = 2
     Expect(a).toEqual(2)."""
     
-    def __init__(self, actual):
+    def __init__(self, actual, strategy):
         """Constructor
 
         Inputs
         ------
         actual : the actual value to be considered."""
         self.actual = actual
+        self.strategy = strategy
 
 
     def _compareTypes(self, expected):
@@ -78,9 +79,7 @@ class BaseExpect:
         # fail as that indicates a more fundamental problem with the test
 
         assert actualType == expectedType, message
-
         
-
     def formatForMessage(self, unformatted):
         """Perform formatting for special types which need to be formatted
         differently, e.g. strings to indicate where their start and ends are.
@@ -106,7 +105,7 @@ class BaseExpect:
             formatted =  "".join(match.groups([1,2]))
         return formatted
 
-    def _buildMessage(self, operation, expected, userMessage, extra):
+    def buildMessage(self, operation, expected, userMessage, extra = ""):
         """Builds the message that goes into assertion messages
 
         Inputs
@@ -124,8 +123,10 @@ class BaseExpect:
         The full, built message to go into AssertionError if one
         is raised.
 """
+
+        operation = self.strategy.decorateOperation(operation)
            
-        formattedActual = self.formatForMessage(self.actual);
+        formattedActual = self.formatForMessage(self.actual)
         if expected:
             formattedExpected = self.formatForMessage(expected)
         else:
@@ -141,5 +142,6 @@ class BaseExpect:
                                             operation,
                                             formattedExpected,
                                             extra)
+
 
 
