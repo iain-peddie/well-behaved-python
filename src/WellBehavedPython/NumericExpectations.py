@@ -41,3 +41,10 @@ class NumericExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def toBeGreaterThanOrEqualTo(self, expected, userMessage = ""):
+        message = self.buildMessage("to be greater than or equal to ", expected, userMessage);
+        if self.actual >= expected:
+            self.success(message)
+        else:
+            self.fail(message)
