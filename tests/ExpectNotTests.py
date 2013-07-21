@@ -241,7 +241,7 @@ class ExpectNotTests(TestCase):
     def test_expect_not_exception_with_message_not_matching_regexp_passes(self):
         expect(raise_error).Not.toRaise(KeyError, expectedMessageMatches = "^not")
 
-    def test_expect_not_raises_fails_if_error_matches_and_message_matches_regexap(self):
+    def test_expect_not_raises_fails_if_error_matches_and_message_matches_regexp(self):
         message = ""
         try:
             expect(raise_error).Not.toRaise(KeyError, expectedMessageMatches = ".*")
@@ -264,14 +264,7 @@ class ExpectNotTests(TestCase):
         expect(lambda: 
                expect(1).Not.toBeGreaterThan(0)).toRaise(
             AssertionError,
-            "Expected 1 not to be greater than 0")
-
-    def test_expect_1_not_greater_than_0_fails(self):
-        expect(lambda: 
-               expect(1).Not.toBeGreaterThan(0)).toRaise(
-            AssertionError,
             expectedMessage = "Expected 1 not to be greater than 0")
-
 
     def test_not_greater_than_prepends_usermessage_to_message(self):
         expect(lambda: 
@@ -291,6 +284,24 @@ class ExpectNotTests(TestCase):
     def test_expect_not_greater_than_or_equal_prepends_userMessae_to_message(self):
         expect(lambda:
                    expect(1).Not.toBeGreaterThanOrEqualTo(1, "user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
+
+    def test_expect_1_not_less_than_1_passes(self):
+        expect(1).Not.toBeLessThan(1)
+
+    def test_expect_2_not_less_than_1_passes(self):
+        expect(2).Not.toBeLessThan(1)        
+
+    def test_expect_0_not_less_than_1_fails(self):
+        expect(lambda: 
+               expect(0).Not.toBeLessThan(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 0 not to be less than 1")
+
+    def test_not_less_than_prepends_usermessage_to_message(self):
+        expect(lambda: 
+               expect(0).Not.toBeLessThan(1, "user message")).toRaise(
             AssertionError,
             expectedMessageMatches = "^user message")
 
