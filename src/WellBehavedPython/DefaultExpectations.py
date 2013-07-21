@@ -214,9 +214,8 @@ class DefaultExpectations(BaseExpect):
         except BaseException as _ex:
             ex = _ex
 
-        message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
-
         if ex is not None:
+            message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
             if isinstance(ex, exceptionClass):
 
                 if expectedMessage != None and expectedMessage != ex.args[0]:

@@ -326,6 +326,21 @@ class ExpectTests(TestCase):
     def test_expect_1_greater_than_0_passes(self):
         expect(1).toBeGreaterThan(0)    
 
+    def test_expect_1_point_0_greater_than_0_passes(self):
+        expect(1.0).toBeGreaterThan(0)
+
+    def test_expect_1_greater_than_1_fails(self):
+        expect(lambda:
+                   expect(1).toBeGreaterThan(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to be greater than 1")
+
+    def test_expect_1_greater_than_2_fails(self):
+        expect(lambda:
+                   expect(1).toBeGreaterThan(2)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to be greater than 2")
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()

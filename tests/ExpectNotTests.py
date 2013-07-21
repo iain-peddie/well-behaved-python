@@ -252,7 +252,21 @@ class ExpectNotTests(TestCase):
                                 " not to raise an instance of <class 'KeyError'>"
                                 " with message matching regular expression '.*'"
                                 ", but it raised an instance of <class 'KeyError'>"
-                                " with message 'The wrong key was presented'")                                
+                                " with message 'The wrong key was presented'")
+
+    def test_expect_1_not_greater_than_1_passes(self):
+        expect(1).Not.toBeGreaterThan(1)
+
+    def test_expect_1_not_greater_than_2_passes(self):
+        expect(1).Not.toBeGreaterThan(2)        
+
+    def test_expect_1_not_greater_than_0_fails(self):
+        expect(lambda: 
+               expect(1).Not.toBeGreaterThan(0)).toRaise(
+            AssertionError,
+            "Expected 1 not to be greater than 0")
+
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
