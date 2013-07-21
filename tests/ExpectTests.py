@@ -368,8 +368,6 @@ class ExpectTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^user message")
 
-###
-
     def test_expect_0_less_than_1_passes(self):
         expect(0).toBeLessThan(1)    
 
@@ -394,7 +392,26 @@ class ExpectTests(TestCase):
         AssertionError,
         expectedMessageMatches = "^user message")
 
+    def test_expect_1_less_than_or_equal_to_0_passes(self):
+        expect(0).toBeLessThanOrEqualTo(1)    
 
+    def test_expect_0_point_0_less_than_or_Equal_to_1_passes(self):
+        expect(0.0).toBeLessThanOrEqualTo(1)
+
+    def test_expect_1_less_than_or_equal_to_1_passes(self):
+        expect(1).toBeLessThanOrEqualTo(1)
+
+    def test_expect_2_less_than_or_equal_to_1_fails(self):
+        expect(lambda:
+                   expect(2).toBeLessThanOrEqualTo(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 2 to be less than or equal to 1")
+
+    def test_expect_less_than_or_equal_to_prepends_userMessage_to_message(self):
+        expect(lambda:
+                   expect(2).toBeLessThanOrEqualTo(1, "user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

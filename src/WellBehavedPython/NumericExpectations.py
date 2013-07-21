@@ -55,3 +55,11 @@ class NumericExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def toBeLessThanOrEqualTo(self, expected, userMessage = ""):
+        message = self.buildMessage("to be less than or equal to ", expected, userMessage)
+        if self.actual <= expected:
+            self.success(message)
+        else:
+            self.fail(message)
+        
