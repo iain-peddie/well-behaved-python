@@ -31,6 +31,10 @@ class DefaultExpectations(BaseExpect):
         Inputs
         ------
         actual : the actual value to be compared against.
+        strategy: the strategy to take on pass or fail methods
+        reverseExpecter (optional) : an expecter that has the opposite semantics.
+                  BaseExpect will store this in the Not field, allowing expect(a).Not...
+                  to behave in the obvious way.
         """
 
         BaseExpect.__init__(self, actual, strategy, reverseExpecter)

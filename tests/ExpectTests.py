@@ -323,6 +323,9 @@ class ExpectTests(TestCase):
                                 ", but it raised an instance of <class 'KeyError'>"
                                 " with message 'The wrong key was presented'")
 
+    def test_expect_1_greater_than_0_passes(self):
+        expect(1).toBeGreaterThan(0)    
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()

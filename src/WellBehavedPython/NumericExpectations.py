@@ -17,28 +17,23 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .Expect import *
-from .ExpectNot import *
-from .NumericExpectations import *
+from .DefaultExpectations import *;
 
-def expect(actual, normal = True):
-    """Facade for creating expectation objects.
+class NumericExpectations(DefaultExpectations):
 
-    This will eventually create a specialised expectation object
-    based on the class type."""
+    def __init__(self, actual, strategy, reverseExpecter = None):
+        """Constructor
 
-    if normal:
-        strategy = Expect()
-        reverseStrategy = ExpectNot()
-    else:
-        strategy = ExpectNot()
-        reverseStrategy = Expect()
+        Inputs
+        ------
+        actual : the actual value to be compared against.
+        strategy: the strategy to take on pass or fail methods
+        reverseExpecter (optional) : an expecter that has the opposite semantics.
+                  BaseExpect will store this in the Not field, allowing expect(a).Not...
+                  to behave in the obvious way.
+        """
 
-    if isinstance(actual, float) or isinstance(actual, int):
-        reverser = NumericExpectations(actual, reverseStrategy)
-        return NumericExpectations(actual, strategy, reverser)
-    else:
-        reverser = DefaultExpectations(actual, reverseStrategy)
-        return DefaultExpectations(actual, strategy, reverser)    
+        DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
-
+    def toBeGreaterThan(self, expected):
+        pass
