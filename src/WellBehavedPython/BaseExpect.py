@@ -59,6 +59,7 @@ class BaseExpect:
         not be acceptable.
 """
 
+
         if type(unformatted) == "_sre.SRE_Pattern":
             unformatted = unformatted.pattern
 
@@ -92,7 +93,7 @@ class BaseExpect:
         operation = self.strategy.decorateOperation(operation)
            
         formattedActual = self.formatForMessage(self.actual)
-        if expected:
+        if expected is not None:
             formattedExpected = self.formatForMessage(expected)
         else:
             formattedExpected = ""

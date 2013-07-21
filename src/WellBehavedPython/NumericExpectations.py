@@ -35,8 +35,8 @@ class NumericExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
-    def toBeGreaterThan(self, expected):
-        message = self.buildMessage("to be greater than ", expected, "");
+    def toBeGreaterThan(self, expected, userMessage = ""):
+        message = self.buildMessage("to be greater than ", expected, userMessage);
         if self.actual > expected:
             self.success(message)
         else:

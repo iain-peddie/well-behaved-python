@@ -341,6 +341,12 @@ class ExpectTests(TestCase):
             AssertionError,
             expectedMessage = "Expected 1 to be greater than 2")
 
+    def test_greaterthan_prepends_usermessage_to_message(self):
+        expect(lambda:
+                   expect(1).toBeGreaterThan(2, "user message")).toRaise(
+        AssertionError,
+        expectedMessageMatches = "^user message")
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
