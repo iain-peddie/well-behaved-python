@@ -217,7 +217,7 @@ class ExpectNotTests(TestCase):
         except AssertionError as ex:
             message = ex.args[0]
 
-        Expect(message).toEqual("user message: "
+        expect(message).toEqual("user message: "
                                 "Expected <function raise_error>"
                                 " not to raise an instance of <class 'KeyError'>"
                                 ", but it raised an instance of <class 'KeyError'>")
@@ -252,7 +252,33 @@ class ExpectNotTests(TestCase):
                                 " not to raise an instance of <class 'KeyError'>"
                                 " with message matching regular expression '.*'"
                                 ", but it raised an instance of <class 'KeyError'>"
-                                " with message 'The wrong key was presented'")                                
+                                " with message 'The wrong key was presented'")
+
+    def test_expect_1_not_greater_than_1_passes(self):
+        expect(1).Not.toBeGreaterThan(1)
+
+    def test_expect_1_not_greater_than_2_passes(self):
+        expect(1).Not.toBeGreaterThan(2)        
+
+    def test_expect_1_not_greater_than_0_fails(self):
+        expect(lambda: 
+               expect(1).Not.toBeGreaterThan(0)).toRaise(
+            AssertionError,
+            "Expected 1 not to be greater than 0")
+
+    def test_expect_1_not_greater_than_0_fails(self):
+        expect(lambda: 
+               expect(1).Not.toBeGreaterThan(0)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 not to be greater than 0")
+
+
+    def test_not_greater_than_prepends_usermessage_to_message(self):
+        expect(lambda: 
+               expect(1).Not.toBeGreaterThan(0, "user message")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^user message")
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

@@ -309,7 +309,7 @@ class ExpectTests(TestCase):
         regexp = re.compile(".*")
         expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
 
-    def xtest_expected_exception_with_message_not_matching_compiled_regexp_fails(self):
+    def test_expected_exception_with_message_not_matching_compiled_regexp_fails(self):
         message = ""
         regexp = re.compile("^not")
         try:
@@ -322,6 +322,30 @@ class ExpectTests(TestCase):
                                 " with message matching regular expression '^not'"
                                 ", but it raised an instance of <class 'KeyError'>"
                                 " with message 'The wrong key was presented'")
+
+    def test_expect_1_greater_than_0_passes(self):
+        expect(1).toBeGreaterThan(0)    
+
+    def test_expect_1_point_0_greater_than_0_passes(self):
+        expect(1.0).toBeGreaterThan(0)
+
+    def test_expect_1_greater_than_1_fails(self):
+        expect(lambda:
+                   expect(1).toBeGreaterThan(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to be greater than 1")
+
+    def test_expect_1_greater_than_2_fails(self):
+        expect(lambda:
+                   expect(1).toBeGreaterThan(2)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to be greater than 2")
+
+    def test_greaterthan_prepends_usermessage_to_message(self):
+        expect(lambda:
+                   expect(1).toBeGreaterThan(2, "user message")).toRaise(
+        AssertionError,
+        expectedMessageMatches = "^user message")
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

@@ -17,38 +17,27 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .DefaultExpectations import DefaultExpectations
-from .ExpectNot import ExpectNot
+from .DefaultExpectations import *;
 
-class Expect:
-    """Class used to indicate expected outcomes."""
+class NumericExpectations(DefaultExpectations):
 
-    def __init__(self):
+    def __init__(self, actual, strategy, reverseExpecter = None):
         """Constructor
 
         Inputs
         ------
         actual : the actual value to be compared against.
+        strategy: the strategy to take on pass or fail methods
+        reverseExpecter (optional) : an expecter that has the opposite semantics.
+                  BaseExpect will store this in the Not field, allowing expect(a).Not...
+                  to behave in the obvious way.
         """
 
-    def fail(self, Message = ""):
-        """Indicate a failure, or handle a failed comparison operation.
+        DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
-        Inputs
-        ------
-        message(optional) : Message to be passed to the raised AssertionError.
-        """
-        raise AssertionError(Message)
-
-    def success(self, Message = ""):
-        """Indicate a success, or handle a succesful comparison operation.
-
-        Inputs
-        ------
-        message(optional) : ignored. Part of the BaseExpect interface.
-        """
-        pass
-
-    def decorateOperation(self, operation):
-        return operation
-
+    def toBeGreaterThan(self, expected, userMessage = ""):
+        message = self.buildMessage("to be greater than ", expected, userMessage);
+        if self.actual > expected:
+            self.success(message)
+        else:
+            self.fail(message)

@@ -18,11 +18,27 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .Expect import *
+from .ExpectNot import *
+from .NumericExpectations import *
 
-def expect(actual):
+def expect(actual, normal = True):
     """Facade for creating expectation objects.
 
     This will eventually create a specialised expectation object
     based on the class type."""
 
-    return Expect(actual)
+    if normal:
+        strategy = Expect()
+        reverseStrategy = ExpectNot()
+    else:
+        strategy = ExpectNot()
+        reverseStrategy = Expect()
+
+    if isinstance(actual, float) or isinstance(actual, int):
+        reverser = NumericExpectations(actual, reverseStrategy)
+        return NumericExpectations(actual, strategy, reverser)
+    else:
+        reverser = DefaultExpectations(actual, reverseStrategy)
+        return DefaultExpectations(actual, strategy, reverser)    
+
+

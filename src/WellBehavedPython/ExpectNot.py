@@ -17,39 +17,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .BaseExpect import BaseExpect
-
-class ExpectNot(BaseExpect):
+class ExpectNot:
     """Class used to indicate the opposite of expected outcomes."""
 
-    def __init__(self, actual):
+    def __init__(self):
         """Constructor
 
         Inputs
         ------
         actual : the actual value to be compared against.
         """
-        BaseExpect.__init__(self, actual)
-
-    def buildMessage(self, operation, expected, userMessage, extra = ""):
-        """Builds the message that goes into assertion messages
-
-        Inputs
-        ------
-        operation : a string containing the comparison operation,
-            .e.g 'to equal'
-        expected : the expected value in the comparison (if there
-            is one)
-        userMessage: message from the user to be prepended onto the
-            whole message.
-
-        Returns
-        -------
-        The full, built message to go into AssertionError if one
-        is raised.
-"""
-        return self._buildMessage("not " + operation, expected, 
-                                  userMessage, extra)
 
     def fail(self, message = ""):
         """Indicate a failure, or handle a failed comparison operation.
@@ -76,4 +53,8 @@ class ExpectNot(BaseExpect):
         message(optional) : Message to be passed to the raised AssertionError.
         """
         raise AssertionError(Message)
+
+    def decorateOperation(self, operation):
+        return "not " + operation
+
 
