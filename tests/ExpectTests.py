@@ -309,7 +309,7 @@ class ExpectTests(TestCase):
         regexp = re.compile(".*")
         expect(raise_error).toRaise(KeyError, expectedMessageMatches = regexp)
 
-    def xtest_expected_exception_with_message_not_matching_compiled_regexp_fails(self):
+    def test_expected_exception_with_message_not_matching_compiled_regexp_fails(self):
         message = ""
         regexp = re.compile("^not")
         try:

@@ -242,7 +242,15 @@ class DefaultExpectations(BaseExpect):
             comparison = expectedMessage
             if expectedMessageMatches != None:
                 operation = operation + "matching regular expression "
-                comparison = expectedMessageMatches
+                if type(expectedMessageMatches) == str:
+                    comparison = expectedMessageMatches
+                elif str(type(expectedMessageMatches)) == "<class '_sre.SRE_Pattern'>":
+                    comparison = expectedMessageMatches.pattern
+                else:
+                    raise AssertionError("Expected message patterns must be strings or "
+                                         "compiled regex patterns. Object type is {}".format(
+                            type(expectedMessageMatches)))
+
                 
 
             extra = extra + " with message {}".format(self.formatForMessage(ex.args[0]))            
