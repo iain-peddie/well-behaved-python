@@ -234,6 +234,24 @@ class DefaultExpectations(BaseExpect):
 
 
     def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage):
+        """Builds the message that goes into expected exception assertion messages
+
+        Inputs
+        ------
+        exceptionClass: the expected class of the exception
+        ex: the actual exception object that was caught
+        expectedMessage: the complete expected exception message
+        expectedMessageMatches: a string or compiled regular expression
+              which the exception message is expected to match
+        userMessage: message from the user to be prepended onto the
+            whole message.
+
+        Returns
+        -------
+        The full, built message to go into AssertionError if one
+        is raised."""
+
+
         extra = ", but it raised an instance of {}".format(type(ex))
         
         if expectedMessage == None and expectedMessageMatches == None:
