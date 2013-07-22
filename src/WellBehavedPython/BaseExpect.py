@@ -40,9 +40,24 @@ class BaseExpect:
         self.Not = reverseExpecter
 
     def fail(self, message = ""):
+        """Indicate a test condition has failed.
+
+        Responsibility is transferred to the strategy object.
+
+        Inputs
+        ------
+        message(optional) : Message to be passed to the raised AssertionError.
+        """
+
         self.strategy.fail(message)
 
     def success(self, message = ""):
+        """Indicate a test condition has succeeded.
+
+        Inputs
+        ------
+        message(optional) : ignored. Part of the BaseExpect interface.
+        """
         self.strategy.success(message)
 
     def formatForMessage(self, unformatted):

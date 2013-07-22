@@ -55,6 +55,18 @@ class ExpectNot:
         raise AssertionError(Message)
 
     def decorateOperation(self, operation):
+        """Add any extra text around the operation description string.
+
+        This is used in the assertion message building code.
+
+        Inputs
+        ------
+        operation: a text description of the operation being performed, eg. 'to equal'
+        
+        Returns
+        -------
+        An updated description of the operation being performed which is
+        more consistent with this being the strategy, , e.g. 'not to equal'."""
         return "not " + operation
 
 

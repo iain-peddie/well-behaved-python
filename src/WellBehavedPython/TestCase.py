@@ -85,6 +85,15 @@ class TestCase:
 
     @classmethod
     def suite(klass):
+        """Builds a default test suite by examining the members of the class
+
+        Inputs
+        ------
+        klass : the metaclass of the object being considered, e.g. TestCase
+
+        Returns
+        -------
+        A test suite configured with every method which start with 'test'."""
         testMethods = [
             ];
 
