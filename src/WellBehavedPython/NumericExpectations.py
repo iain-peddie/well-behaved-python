@@ -137,3 +137,13 @@ class NumericExpectations(DefaultExpectations):
         else:
             self.fail(message)
         
+    def toEqual(self, expected, userMessage = ""):
+        self._compareTypes(expected)
+        TOLERANCE = 1e-8;
+
+        message = self.buildMessage("to equal ", expected, userMessage, " within relative tolerance of {}".format(TOLERANCE))
+        if abs(self.actual -  expected)*2 / (abs(self.actual) + abs(expected)) < TOLERANCE:
+            self.success(message)
+        else:        
+            self.fail(message)
+
