@@ -111,13 +111,24 @@ So there is a rich set of assertions, which provide better messages:
 
 ~~~~~ python
     def test_equality(self):
-        # We can test for equality
         expect(1).toEqual(1)
         expect("hello").toEqual("hello")
 ~~~~~
 
-Compare the different output: "Expected True to be False", to
-"Expected 'world' to equal 'hello'". The latter usually makes abundantly
+The reason for using the more specific assertions is for clarity of
+failure message. Consider the following test with two otherwise
+equivalent expectations:
+
+~~~~~ python
+    def test_good_and_bad(self):
+        actual = "hello"
+        expect(actual == "hello").toBeTrue() # bad
+	expect(actual).toEqual("hello") # good 
+~~~~~
+
+Compare the different output: "Expected False to be True" to
+"Expected 'world' to equal 'hello'". The latter makes clear what the
+wrong value that actual has 
 clear exactly which condition has failed.
 
 We can also test for the opposites of conditions:
@@ -136,4 +147,64 @@ If the test had world rather than hello, the error message would be
 Expected Exceptions
 -------------------
 
-TODO
+When testing failure cases it is useful to catch certain exception types.
+While this can be done with a manual try-catch block, this ends up
+with a lot of boilerplate code. There is a more convenient alternative,
+the toRaise() method on expect objects:
+
+~~~~~ python
+    def test_expected_exceptions_lambda(self):
+        # We can expect exceptions to happen, using lambda
+        # expressions
+        expect(lambda: expect(True).toBeFalse()).toRaise(
+            AssertionError)
+
+    def test_expected_exception_inner(self):
+        # We can use nested functions as well
+        def inner():
+            raise KeyError("you are locked out")
+
+        expect(inner).toRaise(KeyError)
+
+~~~~~
+
+The constraint is that the function being tested must be argumentless.
+Lambda expressions or inner methods are very convenient ways of doing this.
+We can, of course, also use global functions:
+
+~~~~~ python
+def outer():
+    raise KeyError("you are locked out")
+
+class DemoTests(TestCase):
+      # ...
+      # ...
+      # ...
+
+    def test_expected_exception_inner(self):
+        expect(outer).toRaise(KeyError)
+
+~~~~~
+
+These methods will pass if an exception of the expected type is thrown,
+and fail otherwise. But sometimes the code could thrown the expected exception in more than one place, or we need to check the message being generated as well as the exception. In that case we can use either the optional expectedMessage argument (for explicit matching of full strings) or the expectedMessageMatches (which checks that the message matches the given regular expression):
+
+~~~~~ python
+
+    def test_expected_exception_exact_message(self):
+        # We can match exception messages as well
+        expect(outer).toRaise(KeyError, 
+                              expectedMessage = "you are locked out")
+
+    def test_expected_exception_message_matches(self):
+        # We can use regular expressions to match
+        # parts of exception messages:
+        expect(outer).toRaise(KeyError, expectedMessageMatches = "lock.d")
+
+        # And we can use compiled regular expressions as well:
+
+        import re
+        regexp = re.compile("you.*out")
+        expect(outer).toRaise(KeyError, expectedMessageMatches = regexp)
+
+~~~~~ 

@@ -88,9 +88,14 @@ class DemoTests(TestCase):
 
         expect(inner).toRaise(KeyError)
 
+    def test_expected_exception_inner(self):
+        # We can also, of course, use global scope functions
+        expect(outer).toRaise(KeyError)
+
     def test_expected_exception_exact_message(self):
-        # We can use nested functions as well
-        expect(outer).toRaise(KeyError, expectedMessage = "you are locked out")
+        # We can match exception messages as well
+        expect(outer).toRaise(KeyError, 
+                              expectedMessage = "you are locked out")
 
     def test_expected_exception_message_matches(self):
         # We can use regular expressions to match
