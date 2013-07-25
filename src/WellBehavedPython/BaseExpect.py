@@ -19,6 +19,14 @@
 
 import re
 
+# list of exceptions for comparing types. Each key is a type, and the value
+# is a tuple of types which are considered 'equivalent' for the purposes
+# of comparing values
+typeComparisonExceptions = {
+    int: (int, float),
+    float: (float, int) 
+}
+
 class BaseExpect:
     """Base class for handling expectation logic, which is our
     equivalent of asserting in standard TDD frameworks.
@@ -124,8 +132,6 @@ class BaseExpect:
                                             formattedExpected,
                                             extra)
 
-
-
     def _compareTypes(self, expected):
         """Asserts that the types of self and expected are equal.
 
@@ -164,6 +170,12 @@ class BaseExpect:
         # control over the failure semantics. ExpectNot(1).toEqual("1") should
         # still fail - a comparison of objects of different types should always
         # fail as that indicates a more fundamental problem with the test
+
+
+
+        if actualType in typeComparisonExceptions.keys():
+            if expectedType in typeComparisonExceptions[actualType]:
+                return
 
         assert actualType == expectedType, message
         

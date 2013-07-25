@@ -45,7 +45,7 @@ class ExpectNotTests(TestCase):
     def test_equals_raises_correctly_if_numbers_equal(self):
         expect(lambda: expect(1).Not.toEqual(1)).toRaise(
             AssertionError,
-            expectedMessage = "Expected 1 not to equal 1")
+            expectedMessage = "Expected 1 not to equal 1 within relative tolerance of 1e-08")
 
     def test_equals_doesnt_raise_if_two_strings_unequal(self):
         expect("asdf").Not.toEqual("zxc")

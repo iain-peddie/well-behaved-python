@@ -62,7 +62,7 @@ class ExpectTests(TestCase):
     def test_equals_raises_with_right_message_if_numeric_items_not_equal(self):
         expect(lambda: expect(1).toEqual(2)).toRaise(
             AssertionError,
-            expectedMessage = "Expected 1 to equal 2")
+            expectedMessage = "Expected 1 to equal 2 within relative tolerance of 1e-08")
 
     def test_equals_message_prepended_to_assert_message(self):
         expect(lambda: expect(1).toEqual(2, "user message")).toRaise(
@@ -412,6 +412,26 @@ class ExpectTests(TestCase):
                    expect(2).toBeLessThanOrEqualTo(1, "user message")).toRaise(
             AssertionError,
             expectedMessageMatches = "^user message")
+
+    def test_two_numbers_within_epsilon_are_equal(self):
+        expect(1).toEqual(1+1e-10)
+
+    def test_epsilon_does_not_equal_2_times_epsilon(self):
+        expect(lambda: expect(1e-10).toEqual(2e-10)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1e-10 to equal 2e-10 within relative tolerance of 1e-08")
+
+    def test_equality_tolerance_can_be_set(self):
+        expect(1).toEqual(1.1, tolerance=1)
+
+    def test_equality_tolernace_can_be_absolute(self):
+        expect(1e-10).toEqual(2e-10, toleranceType="absolute", tolerance=1e-8)
+
+    def test_0_equals_0_with_absolute_tolernace(self):
+        expect(0).toEqual(0, toleranceType="absolute")
+
+    def test_0_equals_0_with_relative_tolerance(self):
+        expect(0).toEqual(0)
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
