@@ -131,9 +131,6 @@ class BaseExpect:
                                             operation,
                                             formattedExpected,
                                             extra)
-    def buildCompareTypesExceptions(self):
-        exceptions = { int: (float),
-                       float: (int) }
 
     def _compareTypes(self, expected):
         """Asserts that the types of self and expected are equal.
