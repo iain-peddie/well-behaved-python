@@ -421,6 +421,18 @@ class ExpectTests(TestCase):
             AssertionError,
             expectedMessage = "Expected 1e-10 to equal 2e-10 within relative tolerance of 1e-08")
 
+    def test_equality_tolerance_can_be_set(self):
+        expect(1).toEqual(1.1, tolerance=1)
+
+    def test_equality_tolernace_can_be_absolute(self):
+        expect(1e-10).toEqual(2e-10, toleranceType="absolute", tolerance=1e-8)
+
+    def test_0_equals_0_with_absolute_tolernace(self):
+        expect(0).toEqual(0, toleranceType="absolute")
+
+    def test_0_equals_0_with_relative_tolerance(self):
+        expect(0).toEqual(0)
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
