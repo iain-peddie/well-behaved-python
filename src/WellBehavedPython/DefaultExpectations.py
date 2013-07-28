@@ -157,28 +157,6 @@ class DefaultExpectations(BaseExpect):
         else:
             self.fail(message)
 
-    def toContain(self, expectedContainee, userMessage = ""):
-        """Indicates a success case if self.actual contains expectedContainee,
-        and a failure otherwise        
-
-        Inputs
-        ------
-        expectedContainee      : The item that self.actual is expected to contain
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
-
-        Exceptions
-        ----------
-        AssertionError : may be raised by success or fail
-"""
-        message = self.buildMessage("to contain ", expectedContainee, userMessage)
-        if expectedContainee in self.actual:
-            self.success(message)
-        else:
-            self.fail(message)
 
     def toBeAnInstanceOf(self, klass, userMessage = ""):
         """Indicates a success case if self.actual is an instance of klass,

@@ -320,6 +320,27 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^user message")
 
+    def test_expect_0_not_to_be_a_superfset_of_empty_fails(self):
+        expect(lambda: expect([1]).Not.toBeASupersetOf(())).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [1] not to be a superset of ()")
+
+    def test_expect_01_to_be_superset_of_0_and_superset_of_1(self):
+        expect(lambda: expect([0, 1]).Not.toBeASupersetOf([0])).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [0, 1] not to be a superset of [0]")
+        expect(lambda: expect([0, 1]).Not.toBeASupersetOf([1])).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [0, 1] not to be a superset of [1]")
+
+    def test_expect_0_to_be_a_superset_of_1_fails(self):
+        expect([0]).Not.toBeASupersetOf(1)
+
+    def test_toBeASuperset_prepends_userMessage(self):
+        expect(lambda: expect([0, 1]).Not.toBeASupersetOf([0], "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage: ")
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
