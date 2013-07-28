@@ -336,6 +336,10 @@ class ExpectNotTests(TestCase):
     def test_expect_0_to_be_a_superset_of_1_fails(self):
         expect([0]).Not.toBeASupersetOf(1)
 
+    def test_toBeASuperset_prepends_userMessage(self):
+        expect(lambda: expect([0, 1]).Not.toBeASupersetOf([0], "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage: ")
 
 
 if __name__ == "__main__":

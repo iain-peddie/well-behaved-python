@@ -453,6 +453,10 @@ class ExpectTests(TestCase):
         expect([0, 0]).toBeASupersetOf([0])
 
     # TODO : handle repeated keys gracefully somehow
+    def test_toBeASuperset_prepends_userMessage(self):
+        expect(lambda: expect([0]).toBeASupersetOf(1, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage: ")
         
 
 if __name__ == "__main__":

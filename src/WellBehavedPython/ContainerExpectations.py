@@ -60,13 +60,13 @@ class ContainerExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toBeASupersetOf(self, expected):
+    def toBeASupersetOf(self, expected, userMessage = ""):
         if not isinstance(expected, Iterable):
             expected = [expected];
         expectedSet = frozenset(expected);
         actualSet = frozenset(self.actual);
 
-        message = self.buildMessage("to be a superset of ", expected, "")
+        message = self.buildMessage("to be a superset of ", expected, userMessage)
 
         if actualSet.issuperset(expectedSet):
             self.success(message)
