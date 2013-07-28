@@ -445,6 +445,13 @@ class ExpectTests(TestCase):
             AssertionError,
             expectedMessage = "Expected [0] to be a superset of [1]")
 
+    def test_expect_00_to_be_a_superset_of_empty_passes(self):
+        expect([0, 0]).toBeASupersetOf(())
+
+    def test_expect_0_to_be_a_superset_of_00_passes(self):
+        # duplicate keys are inplicitly folded away...
+        expect([0, 0]).toBeASupersetOf([0])
+
     # TODO : handle repeated keys gracefully somehow
         
 
