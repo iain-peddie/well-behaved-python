@@ -349,6 +349,12 @@ class ExpectNotTests(TestCase):
                 AssertionError,
                 expectedMessage = "Expected [0] not to be a subset of [0, 1]")
 
+    def test_not_to_beASubset_prepends_userMessage(self):
+        expect(lambda: expect([0]).Not.toBeASubsetOf([0, 1], "userMessage")).toRaise(
+                AssertionError,
+                expectedMessageMatches = "^userMessage: ")
+
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

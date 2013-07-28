@@ -467,6 +467,12 @@ class ExpectTests(TestCase):
         expect(lambda: expect([0]).toBeASubsetOf([1])).toRaise(
             AssertionError,
             expectedMessage = "Expected [0] to be a subset of [1]")
+
+    def test_toBeASubset_prepends_userMessage(self):
+        expect(lambda: expect([0]).toBeASubsetOf([1], "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage: ")
+
         
 
 if __name__ == "__main__":

@@ -86,7 +86,7 @@ class ContainerExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toBeASubsetOf(self, expected):
+    def toBeASubsetOf(self, expected, userMessage = ""):
         """Indicates a success case if every item in self.actual is in expected
 
         Inputs
@@ -105,7 +105,7 @@ class ContainerExpectations(DefaultExpectations):
         expectedSet = self._setFromObject(expected)
         actualSet = self._setFromObject(self.actual);
 
-        message = self.buildMessage("to be a subset of ", expected, "")
+        message = self.buildMessage("to be a subset of ", expected, userMessage)
 
         if actualSet.issubset(expectedSet):
             self.success(message)
