@@ -433,6 +433,21 @@ class ExpectTests(TestCase):
     def test_0_equals_0_with_relative_tolerance(self):
         expect(0).toEqual(0)
 
+    def test_expect_0_to_be_superset_of_empty_passes(self):
+        expect([1]).toBeASupersetOf(())
+
+    def test_expect_01_to_be_superset_of_0_and_superset_of_1(self):
+        expect([0, 1]).toBeASupersetOf([0])
+        expect([0, 1]).toBeASupersetOf([1])
+
+    def test_expect_0_to_be_a_superset_of_1_fails(self):
+        expect(lambda: expect([0]).toBeASupersetOf(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [0] to be a superset of [1]")
+
+    # TODO : handle repeated keys gracefully somehow
+        
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()

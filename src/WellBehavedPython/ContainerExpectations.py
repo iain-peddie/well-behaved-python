@@ -19,6 +19,8 @@
 
 from .DefaultExpectations import *;
 
+from collections import Iterable
+
 class ContainerExpectations(DefaultExpectations):
 
     def __init__(self, actual, strategy, reverseExpecter = None):
@@ -57,4 +59,28 @@ class ContainerExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def toBeASupersetOf(self, expected):
+        if not isinstance(expected, Iterable):
+            expected = [expected];
+        expectedSet = frozenset(expected);
+        actualSet = frozenset(self.actual);
+
+        message = self.buildMessage("to be a superset of ", expected, "")
+
+        if actualSet.issuperset(expectedSet):
+            self.success(message)
+        else:
+            self.fail(message)
+
+        
+
+
+
+
+
+
+
+
+
 
