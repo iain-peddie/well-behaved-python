@@ -61,10 +61,23 @@ class ContainerExpectations(DefaultExpectations):
             self.fail(message)
 
     def toBeASupersetOf(self, expected, userMessage = ""):
-        if not isinstance(expected, Iterable):
-            expected = [expected];
-        expectedSet = frozenset(expected);
-        actualSet = frozenset(self.actual);
+        """Indicates a success case if every item in expected is in self.actual
+
+        Inputs
+        ------
+        expected      : The container of items that should all be in self.actual
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : may be raised by success or fail
+"""
+        expectedSet = self._setFromObject(expected)
+        actualSet = self._setFromObject(self.actual);
 
         message = self.buildMessage("to be a superset of ", expected, userMessage)
 
@@ -73,7 +86,37 @@ class ContainerExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-        
+    def toBeASubsetOf(self, expected):
+        """Indicates a success case if every item in self.actual is in expected
+
+        Inputs
+        ------
+        expected      : The container of items some of which should be in self.actual
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : may be raised by success or fail
+"""
+        expectedSet = self._setFromObject(expected)
+        actualSet = self._setFromObject(self.actual);
+
+        message = self.buildMessage("to be a subset of ", expected, "")
+
+        if actualSet.issubset(expectedSet):
+            self.success(message)
+        else:
+            self.fail(message)
+
+    def _setFromObject(self, obj):
+        if not isinstance(obj, Iterable):
+            obj = [obj];
+        return frozenset(obj);
+
 
 
 
