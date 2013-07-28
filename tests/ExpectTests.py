@@ -443,20 +443,36 @@ class ExpectTests(TestCase):
     def test_expect_0_to_be_a_superset_of_1_fails(self):
         expect(lambda: expect([0]).toBeASupersetOf(1)).toRaise(
             AssertionError,
-            expectedMessage = "Expected [0] to be a superset of [1]")
+            expectedMessage = "Expected [0] to be a superset of 1")
 
     def test_expect_00_to_be_a_superset_of_empty_passes(self):
         expect([0, 0]).toBeASupersetOf(())
 
     def test_expect_0_to_be_a_superset_of_00_passes(self):
-        # duplicate keys are inplicitly folded away...
         expect([0, 0]).toBeASupersetOf([0])
 
-    # TODO : handle repeated keys gracefully somehow
     def test_toBeASuperset_prepends_userMessage(self):
         expect(lambda: expect([0]).toBeASupersetOf(1, "userMessage")).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage: ")
+
+    def test_expect_empty_list_to_be_a_subset_of_1_passes(self):
+        expect([]).toBeASubsetOf([1])
+
+    def test_expect_0_and_1_to_be_subsets_of_01_pass(self):
+        expect([0]).toBeASubsetOf([0, 1])
+        expect([1]).toBeASubsetOf([0, 1])
+
+    def test_expect_0_to_be_a_subset_of_1_fails(self):
+        expect(lambda: expect([0]).toBeASubsetOf([1])).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [0] to be a subset of [1]")
+
+    def test_toBeASubset_prepends_userMessage(self):
+        expect(lambda: expect([0]).toBeASubsetOf([1], "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage: ")
+
         
 
 if __name__ == "__main__":
