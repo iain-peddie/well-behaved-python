@@ -43,7 +43,7 @@ def expect(actual, normal = True):
     if isNumeric(actual): 
         reverser = NumericExpectations(actual, reverseStrategy)
         return NumericExpectations(actual, strategy, reverser)
-    elif isIterable(actual):
+    elif isIterable(actual) and not isinstance(actual, str):
         reverser = ContainerExpectations(actual, reverseStrategy)
         return ContainerExpectations(actual, strategy, reverser)
     else:
