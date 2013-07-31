@@ -473,6 +473,39 @@ class ExpectTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^userMessage: ")
 
+    def test_expect_two_empty_lists_to_be_equal_passes(self):
+        expect([]).toEqual([])
+
+    def test_expect_two_empty_tuplet_to_be_equal_passes(self):
+        expect(tuple()).toEqual(tuple())
+
+    def test_expect_two_nonempty_identical_lists_to_be_equal_passes(self):
+        expect([1]).toEqual([1])
+
+    def test_expect_two_nonempty_nonidentical_lists_of_the_same_length_to_be_equal_fails(self):
+        expect(lambda:
+                   expect([0]).toEqual([1])).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [0] to equal [1]")
+
+    def test_containers_of_unequal_length_get_length_mismatch_message(self):
+        expect(lambda: expect([0]).toEqual([])).toRaise(
+            AssertionError,
+            expectedMessage = "Expected [0] to be a container of length 0")
+
+    def test_expect_container_equals_prepends_user_message_when_containers_equal_length(self):
+        expect(lambda:
+                   expect([0]).toEqual([1], "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+
+    def test_expect_container_equals_prepends_user_message_when_containers_unequal_length(self):
+        expect(lambda:
+                   expect([0]).toEqual([], "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+        
+
         
 
 if __name__ == "__main__":
