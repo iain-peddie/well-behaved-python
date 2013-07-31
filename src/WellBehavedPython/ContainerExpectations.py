@@ -37,6 +37,33 @@ class ContainerExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
+    def toEqual(self, expected, userMessage = None):
+        """Compares the actual value to the expected value
+
+        Asserts that the actual value stored in the object is equal 
+        to the expected value.
+
+        Inputs
+        ------
+        expected : the value that the actual value is expected to equal
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected.
+"""
+        self._compareTypes(expected)
+        message = self.buildMessage("to be a container of length ", len(expected), userMessage);
+        if len(self.actual) == len(expected):
+            DefaultExpectations.toEqual(self, expected, userMessage)
+        else:        
+            self.fail(message)
+
+
     def toContain(self, expectedContainee, userMessage = ""):
         """Indicates a success case if self.actual contains expectedContainee,
         and a failure otherwise        
