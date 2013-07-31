@@ -24,7 +24,11 @@ import re
 # of comparing values
 typeComparisonExceptions = {
     int: (int, float),
-    float: (float, int) 
+    float: (float, int) ,
+    tuple: (tuple, list),
+    list: (list, tuple),
+    set: (set, frozenset),
+    frozenset: (frozenset, set)
 }
 
 class BaseExpect:

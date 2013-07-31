@@ -22,7 +22,7 @@ from collections import Iterable
 
 
 _numericTypes = (int, float)
-_containerTypes = (list, tuple)
+_containerTypes = (list, tuple, set, frozenset)
 
 
 def isNumeric(actual):

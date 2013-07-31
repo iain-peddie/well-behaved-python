@@ -57,10 +57,19 @@ class ContainerExpectations(DefaultExpectations):
         AssertionError : raised if self.actual does not equal expected.
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to be a container of length ", len(expected), userMessage);
         if len(self.actual) == len(expected):
-            DefaultExpectations.toEqual(self, expected, userMessage)
+            message = self.buildMessage("to equal ", expected, userMessage)
+            for i in range(0, len(self.actual)):
+                if self.actual[i] != expected[i]:
+                    message = message + "\nFirst difference at index {}: {} != {}".format(
+                        i, self.actual[i], expected[i])
+                    self.fail(message)
+                    return        
+
+
+            self.success(message)
         else:        
+            message = self.buildMessage("to be a container of length ", len(expected), userMessage);
             self.fail(message)
 
 

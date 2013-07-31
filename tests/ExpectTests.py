@@ -486,7 +486,8 @@ class ExpectTests(TestCase):
         expect(lambda:
                    expect([0]).toEqual([1])).toRaise(
             AssertionError,
-            expectedMessage = "Expected [0] to equal [1]")
+            expectedMessage = """Expected [0] to equal [1]
+First difference at index 0: 0 != 1""")
 
     def test_containers_of_unequal_length_get_length_mismatch_message(self):
         expect(lambda: expect([0]).toEqual([])).toRaise(
@@ -505,8 +506,9 @@ class ExpectTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
-
-        
+    def test_tuple_comparse_to_equivalent_list(self):
+        expect((1, 2)).toEqual([1, 2])
+                   
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
