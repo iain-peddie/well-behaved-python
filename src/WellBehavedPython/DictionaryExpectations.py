@@ -35,8 +35,8 @@ class DictionaryExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
     
-    def toContainKey(self, expected):
-        message = self.buildMessage('to contain key ', expected, '')
+    def toContainKey(self, expected, userMessage = ""):
+        message = self.buildMessage('to contain key ', expected, userMessage)
         if expected in self.actual:
             self.success(message)
         else:

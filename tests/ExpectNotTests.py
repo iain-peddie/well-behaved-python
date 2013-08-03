@@ -365,6 +365,13 @@ class ExpectNotTests(TestCase):
         data = {}
         expect(data).Not.toContainKey('a')
 
+    def test_dictionary_not_contains_key_prepends_userMessage(self):
+        data = { 'a' : 1 }
+        expect(lambda: expect(data).Not.toContainKey("a", "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage: ")
+        
+
 
 
 if __name__ == "__main__":

@@ -519,6 +519,11 @@ First difference at index 0: 0 != 1""")
             AssertionError,
             expectedMessage = "Expected {} to contain key 'a'")
                    
+    def test_dictionary_contains_key_prepends_userMessage(self):
+        data = {}
+        expect(lambda: expect(data).toContainKey("a", "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
