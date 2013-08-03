@@ -20,6 +20,7 @@
 from .Expect import *
 from .ExpectNot import *
 from .NumericExpectations import *
+from .DictionaryExpectations import *
 from .ContainerExpectations import *
 
 from .typeInference import *
@@ -43,6 +44,9 @@ def expect(actual, normal = True):
     if isNumeric(actual): 
         reverser = NumericExpectations(actual, reverseStrategy)
         return NumericExpectations(actual, strategy, reverser)
+    elif isDictionary(actual):
+        reverser = DictionaryExpectations(actual, reverseStrategy)
+        return DictionaryExpectations(actual, strategy, reverser)
     elif isIterable(actual) and not isinstance(actual, str):
         reverser = ContainerExpectations(actual, reverseStrategy)
         return ContainerExpectations(actual, strategy, reverser)

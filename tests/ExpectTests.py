@@ -20,6 +20,8 @@
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.api import *
 
+from collections import *
+
 import re
 
 def raise_error():
@@ -508,7 +510,27 @@ First difference at index 0: 0 != 1""")
         
     def test_tuple_comparse_to_equivalent_list(self):
         expect((1, 2)).toEqual([1, 2])
+
+    def test_dictionary_contains_key_passes_when_key_in_dictionary(self):
+        data = { 'a' : 1 }
+        expect(data).toContainKey('a')
+
+    def test_dictionary_contains_key_fails_when_key_not_in_dictionary(self):
+        data = {}
+        expect(lambda: expect(data).toContainKey('a')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {} to contain key 'a'")
                    
+    def test_dictionary_contains_key_prepends_userMessage(self):
+        data = {}
+        expect(lambda: expect(data).toContainKey("a", "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+
+    def test_default_dictionary_contains_key_passes_and_fails_as_dict(self):
+        data = defaultdict(list)
+        data['a'] = 1
+        expect(data).toContainKey('a')
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
