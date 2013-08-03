@@ -20,6 +20,8 @@
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.api import *
 
+from collections import *
+
 import re
 
 def raise_error():
@@ -524,6 +526,11 @@ First difference at index 0: 0 != 1""")
         expect(lambda: expect(data).toContainKey("a", "userMessage")).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
+
+    def test_default_dictionary_contains_key_passes_and_fails_as_dict(self):
+        data = defaultdict(list)
+        data['a'] = 1
+        expect(data).toContainKey('a')
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
