@@ -355,6 +355,17 @@ class ExpectNotTests(TestCase):
                 expectedMessageMatches = "^userMessage: ")
 
 
+    def test_dictionary_not_contains_key_fails_when_key_in_dictionary(self):
+        data = { 'a' : 1 }
+        expect(lambda: expect(data).Not.toContainKey('a')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to contain key 'a'")
+
+    def test_dictionary_not_contains_key_passes_when_key_not_in_dictionary(self):
+        data = {}
+        expect(data).Not.toContainKey('a')
+
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
