@@ -516,10 +516,10 @@ First difference at index 0: 0 != 1""")
         expect(data).toContainKey('a')
 
     def test_dictionary_contains_key_fails_when_key_not_in_dictionary(self):
-        data = {}
-        expect(lambda: expect(data).toContainKey('a')).toRaise(
+        data = {'a' : 1}
+        expect(lambda: expect(data).toContainKey('b')).toRaise(
             AssertionError,
-            expectedMessage = "Expected {} to contain key 'a'")
+            expectedMessage = "Expected {'a': 1} to contain key 'b'")
 
     def test_dictionary_contains_key_fails_when_expected_value_but_not_key(self):
         data = {'a': 1}
@@ -528,8 +528,8 @@ First difference at index 0: 0 != 1""")
             expectedMessage = "Expected {'a': 1} to contain key 1")
                    
     def test_dictionary_contains_key_prepends_userMessage(self):
-        data = {}
-        expect(lambda: expect(data).toContainKey("a", "userMessage")).toRaise(
+        data = {'a': 1}
+        expect(lambda: expect(data).toContainKey("b", "userMessage")).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -537,6 +537,16 @@ First difference at index 0: 0 != 1""")
         data = defaultdict(list)
         data['a'] = 1
         expect(data).toContainKey('a')
+
+    def test_dictionary_contains_value_passes_when_value_in_dict(self):
+        data = {'a': 1}
+        expect(data).toContainValue(1)
+
+    def test_dictionary_contains_value_fails_when_value_not_in_dict(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toContainValue(2)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} to contain value 2")
 
 
 

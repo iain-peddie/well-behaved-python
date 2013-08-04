@@ -362,14 +362,24 @@ class ExpectNotTests(TestCase):
             expectedMessage = "Expected {'a': 1} not to contain key 'a'")
 
     def test_dictionary_not_contains_key_passes_when_key_not_in_dictionary(self):
-        data = {}
-        expect(data).Not.toContainKey('a')
+        data = {'a': 1}
+        expect(data).Not.toContainKey('b')
 
     def test_dictionary_not_contains_key_prepends_userMessage(self):
         data = { 'a' : 1 }
         expect(lambda: expect(data).Not.toContainKey("a", "userMessage")).toRaise(
             AssertionError,
             expectedMessageMatches= "^userMessage: ")
+
+    def test_dictionary_not_contains_value_passes_when_value_not_in_dictionary(self):
+        data = { 'a': 1 }
+        expect(data).Not.toContainValue(2)
+
+    def test_dictionary_not_contains_value_fails_when_value_in_dictionary(self):
+        data = { 'a': 1 }
+        expect(lambda: expect(data).Not.toContainValue(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to contain value 1")
         
 
 
