@@ -42,10 +42,15 @@ class ExpectNotTests(TestCase):
         expect(1).Not.toEqual(2)
         # Pass condition if we get here with no exception
 
-    def test_equals_raises_correctly_if_numbers_equal(self):
+    def test_equals_raises_correctly_if_integers_equal(self):
         expect(lambda: expect(1).Not.toEqual(1)).toRaise(
             AssertionError,
-            expectedMessage = "Expected 1 not to equal 1 within relative tolerance of 1e-08")
+            expectedMessage = "Expected 1 not to equal 1")
+
+    def test_equals_raised_correctly_if_floats_equal(self):
+        expect(lambda: expect(1.0).Not.toEqual(1.0)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1.0 not to equal 1.0 within relative tolerance of 1e-08")
 
     def test_equals_doesnt_raise_if_two_strings_unequal(self):
         expect("asdf").Not.toEqual("zxc")

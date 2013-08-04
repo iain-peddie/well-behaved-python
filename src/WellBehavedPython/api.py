@@ -39,8 +39,6 @@ def expect(actual, normal = True):
         strategy = ExpectNot()
         reverseStrategy = Expect()
 
-    
-
     if isNumeric(actual): 
         reverser = NumericExpectations(actual, reverseStrategy)
         return NumericExpectations(actual, strategy, reverser)

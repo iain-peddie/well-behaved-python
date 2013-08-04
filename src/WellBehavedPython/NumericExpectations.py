@@ -149,8 +149,14 @@ class NumericExpectations(DefaultExpectations):
             difference = abs(self.actual -  expected)*2 / (abs(self.actual) + abs(expected) + FLOOR_TOLERANCE)
             toleranceType = "relative"
 
+
+        if isinstance(self.actual, int) and isinstance(expected, int):
+            toleranceMessage = ""
+        else:
+            toleranceMessage = " within {} tolerance of {}".format(toleranceType, tolerance)       
+
         message = self.buildMessage("to equal ", expected, userMessage,
-                                    " within {} tolerance of {}".format(toleranceType, tolerance))
+                                    toleranceMessage)
         if difference < tolerance:
             self.success(message)
         else:        

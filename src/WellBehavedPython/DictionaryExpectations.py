@@ -79,3 +79,21 @@ class DictionaryExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def toEqual(self, expected):
+        import WellBehavedPython.api;
+        
+        if len(self.actual) == len(expected):
+            message = self.buildMessage("to equal ", expected, '')
+            for key in self.actual.keys():
+                formattedKey = self.formatForMessage(key)
+                if key not in expected:
+                    message += "\nFirst missing key is {}".format(formattedKey)
+                    self.fail(message)
+                else:
+                    message += "\nValue differs at key {}".format(formattedKey)
+                    WellBehavedPython.api.expect(self.actual[key]).toEqual(expected[key], message)
+
+        else:
+            message = self.buildMessage("to be a dictionary containing ", len(expected), '', " items")
+            self.fail(message)
