@@ -410,6 +410,11 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessage = "Expected {'a': 1} not to equal {'a': 1}")
 
+    def test_dictionary_not_equal_prepends_userMessage_on_failure(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).Not.toEqual({'a': 1}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 
 

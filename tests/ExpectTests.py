@@ -590,6 +590,18 @@ First difference at index 0: 0 != 1""")
         data = {'a': 1}
         expect(data).toEqual({'a': 1})
 
+    def test_dictionary_equal_prepends_userMessage_to_allMessageTypes(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toEqual({}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage")
+        expect(lambda: expect(data).toEqual({'b': 1}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage")
+        expect(lambda: expect(data).toEqual({'a': 2}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage")
+
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

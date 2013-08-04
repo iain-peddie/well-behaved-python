@@ -81,16 +81,16 @@ class DictionaryExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toEqual(self, expected):        
+    def toEqual(self, expected, userMessage=""):        
         if len(self.actual) == len(expected):
-            message = self.buildMessage("to equal ", expected, '')
+            message = self.buildMessage("to equal ", expected, userMessage)
             failCount = 0
             for key in self.actual.keys():
                 failCount += self._checkKey(key, expected, message)
             if failCount == 0:
                 self.success(message)
         else:
-            message = self.buildMessage("to be a dictionary containing ", len(expected), '', " items")
+            message = self.buildMessage("to be a dictionary containing ", len(expected), userMessage, " items")
             self.fail(message)
 
     def _checkKey(self, key, expected, message):
