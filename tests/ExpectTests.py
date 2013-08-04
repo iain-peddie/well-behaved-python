@@ -61,10 +61,25 @@ class ExpectTests(TestCase):
     def test_equals_doesnt_raise_if_numeric_items_are_equal(self):
         expect(1).toEqual(1)
 
-    def test_equals_raises_with_right_message_if_numeric_items_not_equal(self):
+    def test_equals_raises_with_right_message_if_integer_items_not_equal(self):
         expect(lambda: expect(1).toEqual(2)).toRaise(
             AssertionError,
-            expectedMessage = "Expected 1 to equal 2 within relative tolerance of 1e-08")
+            expectedMessage = "Expected 1 to equal 2")
+
+    def test_equals_raises_with_right_message_if_float_items_not_equal(self):
+        expect(lambda: expect(1.0).toEqual(2.0)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1.0 to equal 2.0 within relative tolerance of 1e-08")
+
+    def test_equals_compares_float_to_int_with_tolerance(self):
+        expect(lambda: expect(1.0).toEqual(2)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1.0 to equal 2 within relative tolerance of 1e-08")
+
+    def test_equals_compares_int_to_float_with_tolerance(self):
+        expect(lambda: expect(1).toEqual(2.0)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1 to equal 2.0 within relative tolerance of 1e-08")
 
     def test_equals_message_prepended_to_assert_message(self):
         expect(lambda: expect(1).toEqual(2, "user message")).toRaise(
@@ -553,6 +568,39 @@ First difference at index 0: 0 != 1""")
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
+    def test_dictionary_equal_fails_if_number_of_items_is_different(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toEqual({})).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} to be a dictionary containing 0 items")
+
+    def test_dictionary_equal_fails_if_keys_are_equal_in_number_and_one_key_differs(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toEqual({'b': 1})).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} to equal {'b': 1}\nFirst missing key is 'a'")
+        
+    def test_dictionary_equal_fails_if_value_differs_under_same_key(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toEqual({'a': 2})).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} to equal {'a': 2}\nFirst difference at key 'a': Expected 1 to equal 2")
+
+    def test_dictionary_equal_passes_if_dictionaries_are_equal(self):
+        data = {'a': 1}
+        expect(data).toEqual({'a': 1})
+
+    def test_dictionary_equal_prepends_userMessage_to_allMessageTypes(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toEqual({}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage")
+        expect(lambda: expect(data).toEqual({'b': 1}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage")
+        expect(lambda: expect(data).toEqual({'a': 2}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage")
 
 
 if __name__ == "__main__":

@@ -18,6 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .DefaultExpectations import *;
+import WellBehavedPython.api;
 
 class DictionaryExpectations(DefaultExpectations):
     
@@ -79,3 +80,35 @@ class DictionaryExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def toEqual(self, expected, userMessage=""):        
+        if len(self.actual) == len(expected):
+            message = self.buildMessage("to equal ", expected, userMessage)
+            failCount = 0
+            for key in self.actual.keys():
+                failCount += self._checkKey(key, expected, message)
+            if failCount == 0:
+                self.success(message)
+        else:
+            message = self.buildMessage("to be a dictionary containing ", len(expected), userMessage, " items")
+            self.fail(message)
+
+    def _checkKey(self, key, expected, message):
+        formattedKey = self.formatForMessage(key)
+        if key not in expected:
+            message += "\nFirst missing key is {}".format(formattedKey)
+            self.fail(message)
+            return 1
+        else:
+            message += "\nFirst difference at key {}".format(formattedKey)
+            try:
+                # We use try/catch and a local fail clause so that
+                # if this is a expect.Not... then we have the correct
+                # strategy logic
+                WellBehavedPython.api.expect(self.actual[key]).toEqual(expected[key], message)
+            except AssertionError as ex:
+                self.fail(ex.args[0])
+                return 1
+
+        return 0
+                

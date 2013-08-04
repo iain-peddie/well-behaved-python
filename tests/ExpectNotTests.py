@@ -42,10 +42,15 @@ class ExpectNotTests(TestCase):
         expect(1).Not.toEqual(2)
         # Pass condition if we get here with no exception
 
-    def test_equals_raises_correctly_if_numbers_equal(self):
+    def test_equals_raises_correctly_if_integers_equal(self):
         expect(lambda: expect(1).Not.toEqual(1)).toRaise(
             AssertionError,
-            expectedMessage = "Expected 1 not to equal 1 within relative tolerance of 1e-08")
+            expectedMessage = "Expected 1 not to equal 1")
+
+    def test_equals_raised_correctly_if_floats_equal(self):
+        expect(lambda: expect(1.0).Not.toEqual(1.0)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 1.0 not to equal 1.0 within relative tolerance of 1e-08")
 
     def test_equals_doesnt_raise_if_two_strings_unequal(self):
         expect("asdf").Not.toEqual("zxc")
@@ -387,6 +392,29 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
+    def test_dictionary_not_equal_passes_if_number_of_items_is_different(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({})
+
+    def test_dictionary_not_equal_passes_if_keys_are_equal_in_number_and_one_key_differs(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({'b': 1})
+        
+    def test_dictionary_not_equal_passes_if_value_differs_under_same_key(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({'a': 2})
+
+    def test_dictionary_not_equal_fails_if_dictionaries_are_equal(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).Not.toEqual({'a': 1})).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to equal {'a': 1}")
+
+    def test_dictionary_not_equal_prepends_userMessage_on_failure(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).Not.toEqual({'a': 1}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 
 
