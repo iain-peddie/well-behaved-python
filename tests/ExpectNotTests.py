@@ -380,6 +380,12 @@ class ExpectNotTests(TestCase):
         expect(lambda: expect(data).Not.toContainValue(1)).toRaise(
             AssertionError,
             expectedMessage = "Expected {'a': 1} not to contain value 1")
+
+    def test_dictionary_not_contains_value_fails_when_value_in_dictionary(self):
+        data = { 'a': 1 }
+        expect(lambda: expect(data).Not.toContainValue(1, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
         
 
 

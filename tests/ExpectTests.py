@@ -236,8 +236,8 @@ class ExpectTests(TestCase):
             expect(lambda: None).toRaise(Exception)
         except AssertionError as ex:
             message = ex.args[0]
-        expect(message).toEqual("Expected <function <lambda>> to raise an instance of <class 'Exception'>, but none was")
-    
+        butNoneWas = ", but none was"
+        expect(message[-len(butNoneWas):]).toEqual(butNoneWas)    
 
     def test_expected_exception_fails_if_wrong_exception_raised(self):
         message = ""
@@ -262,14 +262,13 @@ class ExpectTests(TestCase):
 
     def test_expected_exception_prepends_usermessage_on_no_exception(self):
         message = ""
+        userMessage = "user message"
         try:
-            expect(lambda: None).toRaise(KeyError, "user message")
+            expect(lambda: None).toRaise(KeyError, userMessage)
         except AssertionError as ex:
             message = ex.args[0]
-        expect(message).toEqual("user message: "
-                                "Expected <function <lambda>> "
-                                "to raise an instance of <class 'KeyError'>"
-                                ", but none was"                                )
+        expect(len(message)).toBeGreaterThan(len(userMessage))
+        expect(message[0:len(userMessage) + 2]).toEqual("user message: ")
 
     def test_expect_exception_with_expected_message_passes(self):
         expect(raise_error).toRaise(
@@ -547,6 +546,12 @@ First difference at index 0: 0 != 1""")
         expect(lambda: expect(data).toContainValue(2)).toRaise(
             AssertionError,
             expectedMessage = "Expected {'a': 1} to contain value 2")
+
+    def test_dictionary_contains_value_prepends_userMessage(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).toContainValue(2, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 
 
