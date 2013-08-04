@@ -584,7 +584,11 @@ First difference at index 0: 0 != 1""")
         data = {'a': 1}
         expect(lambda: expect(data).toEqual({'a': 2})).toRaise(
             AssertionError,
-            expectedMessage = "Expected {'a': 1} to equal {'a': 2}\nValue differs at key 'a': Expected 1 to equal 2")
+            expectedMessage = "Expected {'a': 1} to equal {'a': 2}\nFirst difference at key 'a': Expected 1 to equal 2")
+
+    def test_dictionary_equal_passes_if_dictionaries_are_equal(self):
+        data = {'a': 1}
+        expect(data).toEqual({'a': 1})
 
 
 if __name__ == "__main__":

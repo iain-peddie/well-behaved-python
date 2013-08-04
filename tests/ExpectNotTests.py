@@ -392,6 +392,24 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
+    def test_dictionary_not_equal_passes_if_number_of_items_is_different(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({})
+
+    def test_dictionary_not_equal_passes_if_keys_are_equal_in_number_and_one_key_differs(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({'b': 1})
+        
+    def test_dictionary_not_equal_passes_if_value_differs_under_same_key(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({'a': 2})
+
+    def test_dictionary_not_equal_fails_if_dictionaries_are_equal(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).Not.toEqual({'a': 1})).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to equal {'a': 1}")
+
 
 
 
