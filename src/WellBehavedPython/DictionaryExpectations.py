@@ -58,9 +58,9 @@ class DictionaryExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toContainValue(self, expected):
+    def toContainValue(self, expected, userMessage = ""):
         """TODO"""
-        message = self.buildMessage('to contain value ', expected, '')
+        message = self.buildMessage('to contain value ', expected, userMessage)
         if expected in self.actual.values():
             self.success(message)
         else:
