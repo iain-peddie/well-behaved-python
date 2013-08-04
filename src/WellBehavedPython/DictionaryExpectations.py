@@ -36,8 +36,46 @@ class DictionaryExpectations(DefaultExpectations):
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
     
     def toContainKey(self, expected, userMessage = ""):
+        """Asserts that self.actual has expected as a key. 
+
+        Inputs
+        ------
+        expected: The key that is expected to be contained within self.actual
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : may be raised by success or fail
+"""
+
         message = self.buildMessage('to contain key ', expected, userMessage)
         if expected in self.actual:
+            self.success(message)
+        else:
+            self.fail(message)
+
+    def toContainValue(self, expected, userMessage = ""):
+        """Asserts that self.actual has expected as a value against any key. 
+
+        Inputs
+        ------
+        expected: The value that is expected to be contained within self.actual
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : may be raised by success or fail
+"""
+        message = self.buildMessage('to contain value ', expected, userMessage)
+        if expected in self.actual.values():
             self.success(message)
         else:
             self.fail(message)
