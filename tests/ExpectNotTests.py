@@ -416,6 +416,16 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
+    def test_string_not_to_start_with_passes_if_strings_start_differently(self):
+        data = 'asdf'
+        expect(data).Not.toStartWith('zzz')
+
+    def test_string_not_to_start_with_fails_if_strings_identical(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toStartWith('asdf')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string starting with 'asdf'.")
+
 
 
 if __name__ == "__main__":
