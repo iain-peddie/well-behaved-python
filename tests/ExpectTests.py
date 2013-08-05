@@ -602,6 +602,36 @@ First difference at index 0: 0 != 1""")
             AssertionError,
             expectedMessageMatches= "^userMessage")
 
+    def test_string_starts_with_passes_on_identical_short_strings(self):
+        data = 'asdf'
+        expect(data).toStartWith('asdf')
+
+    def test_string_starts_with_passes_when_actual_starts_with_shorter_expected_start(self):
+        data = 'asdf'
+        expect(data).toStartWith('as')
+
+    def test_string_starts_with_fails_if_expected_start_longer_than_actual(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toStartWith('asdfeee')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' to be a string starting with 'asdfeee', but it was too short")
+
+    def test_string_starts_with_fails_if_expected_start_not_matched(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toStartWith('zzz')).toRaise(
+            AssertionError,
+            expectedMessage = """Expected 'asdf' to be a string starting with 'zzz'
+Difference is:
+- asdf
++ zzz""")
+
+    def test_string_starts_with_prepends_userMessage_on_failure(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toStartWith('asdfeee', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+
+
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()

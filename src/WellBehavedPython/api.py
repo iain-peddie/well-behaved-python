@@ -17,11 +17,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+from .ContainerExpectations import *
+from .DictionaryExpectations import *
 from .Expect import *
 from .ExpectNot import *
 from .NumericExpectations import *
-from .DictionaryExpectations import *
-from .ContainerExpectations import *
+from .StringExpectations import *
 
 from .typeInference import *
 
@@ -42,6 +43,9 @@ def expect(actual, normal = True):
     if isNumeric(actual): 
         reverser = NumericExpectations(actual, reverseStrategy)
         return NumericExpectations(actual, strategy, reverser)
+    elif isinstance(actual, str):
+        reverser = StringExpectations(actual, reverseStrategy)
+        return StringExpectations(actual, strategy, reverser)
     elif isDictionary(actual):
         reverser = DictionaryExpectations(actual, reverseStrategy)
         return DictionaryExpectations(actual, strategy, reverser)
