@@ -432,6 +432,21 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessage = "Expected 'asdf' not to be a string starting with 'as'")
         
+    def test_string_not_to_end_with_passes_if_strings_end_differently(self):
+        data = 'asdf'
+        expect(data).Not.toEndWith('zzz')
+
+    def test_string_not_to_end_with_fails_if_strings_identical(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toEndWith('asdf')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string ending with 'asdf'")
+
+    def test_string_not_to_end_With_fails_if_expected_ends_with_expected_end(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toEndWith('df')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string ending with 'df'")
 
 
 

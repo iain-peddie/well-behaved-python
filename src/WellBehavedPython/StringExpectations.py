@@ -35,6 +35,18 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expectedStart, message)
             self.fail(message)
 
+    def toEndWith(self, expectedEnd, userMessage = ''):
+        message = self.buildMessage("to be a string ending with ", expectedEnd, userMessage)
+        if len(expectedEnd) > len(self.actual):
+            message += ", but it was too short"
+            self.fail(message)
+            return
+        if self.actual.endswith(expectedEnd):
+            self.success(message)
+        else:
+            message = self._diffStrings(self.actual, expectedEnd, message)
+            self.fail(message)
+
     def _diffStrings(self, a, b, originalMessage):
         from WellBehavedPython.api import expect
         aList = a.split('\n');

@@ -631,6 +631,34 @@ Difference is:
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
+    def test_string_ends_with_passes_on_identical_short_strings(self):
+        data = 'asdf'
+        expect(data).toEndWith('asdf')
+
+    def test_string_ends_with_passes_when_actual_ends_with_shorter_expected_end(self):
+        data = 'asdf'
+        expect(data).toEndWith('df')
+
+    def test_string_ends_with_fails_if_expected_end_longer_than_actual(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toEndWith('eeeasdf')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' to be a string ending with 'eeeasdf', but it was too short")
+
+    def test_string_ends_with_fails_if_expected_end_not_matched(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toEndWith('zzz')).toRaise(
+            AssertionError,
+            expectedMessage = """Expected 'asdf' to be a string ending with 'zzz'
+Difference is:
+- asdf
++ zzz""")
+
+    def test_string_starts_with_prepends_userMessage_on_failure(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toEndWith('eeeasdf', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 
 if __name__ == "__main__":
