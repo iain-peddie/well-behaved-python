@@ -614,16 +614,22 @@ First difference at index 0: 0 != 1""")
         data = 'asdf'
         expect(lambda: expect(data).toStartWith('asdfeee')).toRaise(
             AssertionError,
-            "Expected 'asdf' to be a string starting with 'asdfeee', but it was too short")
+            expectedMessage = "Expected 'asdf' to be a string starting with 'asdfeee', but it was too short")
 
     def test_string_starts_with_fails_if_expected_start_not_matched(self):
         data = 'asdf'
         expect(lambda: expect(data).toStartWith('zzz')).toRaise(
             AssertionError,
-            expectedMessage = """Expected 'asdf' to be a string starting with 'zzz'.
+            expectedMessage = """Expected 'asdf' to be a string starting with 'zzz'
 Difference is:
 - asdf
 + zzz""")
+
+    def test_string_starts_with_prepends_userMessage_on_failure(self):
+        data = 'asdf'
+        expect(lambda: expect(data).toStartWith('asdfeee', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 
 

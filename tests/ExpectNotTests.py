@@ -424,7 +424,14 @@ class ExpectNotTests(TestCase):
         data = 'asdf'
         expect(lambda: expect(data).Not.toStartWith('asdf')).toRaise(
             AssertionError,
-            expectedMessage = "Expected 'asdf' not to be a string starting with 'asdf'.")
+            expectedMessage = "Expected 'asdf' not to be a string starting with 'asdf'")
+
+    def test_string_not_to_start_With_fails_if_expected_starts_with_expected_start(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toStartWith('as')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string starting with 'as'")
+        
 
 
 

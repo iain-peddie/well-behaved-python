@@ -22,10 +22,10 @@ import difflib
 
 class StringExpectations(DefaultExpectations):
     
-    def toStartWith(self, expectedStart):
-        message = self.buildMessage("to be a string starting with ", expectedStart, '', '.')
+    def toStartWith(self, expectedStart, userMessage = ''):
+        message = self.buildMessage("to be a string starting with ", expectedStart, userMessage)
         if len(expectedStart) > len(self.actual):
-            message += " but it was too short"
+            message += ", but it was too short"
             self.fail(message)
             return
         truncatedActual = self.actual[0:len(expectedStart)]
