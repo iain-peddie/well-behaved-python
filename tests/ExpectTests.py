@@ -654,9 +654,9 @@ Difference is:
 - asdf
 + zzz""")
 
-    def xtest_string_starts_with_prepends_userMessage_on_failure(self):
+    def test_string_starts_with_prepends_userMessage_on_failure(self):
         data = 'asdf'
-        expect(lambda: expect(data).toStartWith('asdfeee', 'userMessage')).toRaise(
+        expect(lambda: expect(data).toEndWith('eeeasdf', 'userMessage')).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 

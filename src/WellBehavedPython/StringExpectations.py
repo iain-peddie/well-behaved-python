@@ -35,8 +35,8 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expectedStart, message)
             self.fail(message)
 
-    def toEndWith(self, expectedEnd):
-        message = self.buildMessage("to be a string ending with ", expectedEnd, '')
+    def toEndWith(self, expectedEnd, userMessage = ''):
+        message = self.buildMessage("to be a string ending with ", expectedEnd, userMessage)
         if len(expectedEnd) > len(self.actual):
             message += ", but it was too short"
             self.fail(message)
