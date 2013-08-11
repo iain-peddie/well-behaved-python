@@ -18,7 +18,9 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .DefaultExpectations import DefaultExpectations
+
 import difflib
+import re
 
 class StringExpectations(DefaultExpectations):
     
@@ -142,6 +144,17 @@ class StringExpectations(DefaultExpectations):
             self.success(message)
         else:
             message = self._diffStrings(self.actual, expected, message)
+            self.fail(message)
+
+    def toMatch(self, pattern):
+        message = self.buildMessage("to be a string matchin regular expression pattern ",
+                                    pattern, '')
+        if type(pattern) == str:
+            pattern = re.compile(pattern)
+
+        if pattern.search(self.actual):
+            self.success(message)
+        else:
             self.fail(message)
 
     def _diffStrings(self, a, b, originalMessage):
