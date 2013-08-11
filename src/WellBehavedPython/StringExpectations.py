@@ -146,11 +146,11 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expected, message)
             self.fail(message)
 
-    def toMatch(self, pattern):
-        message = self.buildMessage("to be a string matchin regular expression pattern ",
-                                    pattern, '')
+    def toMatch(self, pattern, userMessage = ''):
         if type(pattern) == str:
             pattern = re.compile(pattern)
+        message = self.buildMessage("to be a string matching regular expression pattern ",
+                                    pattern.pattern, userMessage)
 
         if pattern.search(self.actual):
             self.success(message)
