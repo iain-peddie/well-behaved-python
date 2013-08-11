@@ -114,9 +114,9 @@ class StringExpectations(DefaultExpectations):
         else:        
             self.fail(message)
 
-    def toEqual(self, expected):
+    def toEqual(self, expected, userMessage = ''):
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, '')
+        message = self.buildMessage("to equal ", expected, userMessage)
         if self.actual == expected:
             self.success(message)
         else:

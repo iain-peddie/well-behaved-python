@@ -52,19 +52,6 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessage = "Expected 1.0 not to equal 1.0 within relative tolerance of 1e-08")
 
-    def test_equals_doesnt_raise_if_two_strings_unequal(self):
-        expect("asdf").Not.toEqual("zxc")
-
-    def test_equals_raises_correctly_if_strings_equal(self):
-        expect(lambda: expect("asdf").Not.toEqual("asdf")).toRaise(
-            AssertionError,
-            expectedMessage = "Expected 'asdf' not to equal 'asdf'")
-
-    def test_expecting_string1_not_to_equal_double1_fails(self):
-        expect(lambda: expect("1").Not.toEqual(1)).toRaise(
-            AssertionError,
-            expectedMessage = ("Cannot compare instance of <class 'str'> to "
-                               "instance of <class 'int'> because their types differ"))
 
     def test_expect_truthy_values_not_to_be_true_fails(self):
         values = (True, 1, (1))
@@ -481,6 +468,30 @@ class ExpectNotTests(TestCase):
         expect(lambda: expect(actual).Not.toContain('sd', 'userMessage')).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
+
+    def test_equals_doesnt_raise_if_two_strings_unequal(self):
+        actual = 'asdf'
+        expect(actual).Not.toEqual("zxc")
+
+    def test_equals_raises_correctly_if_strings_equal(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toEqual("asdf")).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to equal 'asdf'")
+
+    def test_expecting_string1_not_to_equal_double1_fails(self):
+        expect(lambda: expect("1").Not.toEqual(1)).toRaise(
+            AssertionError,
+            expectedMessage = ("Cannot compare instance of <class 'str'> to " +
+                               "instance of <class 'int'> because their types differ"))
+
+
+    def test_string_not_equals_prepends_userMessage_on_failure(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toEqual('asdf', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
+
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
