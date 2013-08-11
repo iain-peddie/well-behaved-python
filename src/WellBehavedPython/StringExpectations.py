@@ -114,6 +114,15 @@ class StringExpectations(DefaultExpectations):
         else:        
             self.fail(message)
 
+    def toEqual(self, expected):
+        self._compareTypes(expected)
+        message = self.buildMessage("to equal ", expected, '')
+        if self.actual == expected:
+            self.success(message)
+        else:
+            message = self._diffStrings(self.actual, expected, message)
+            self.fail(message)
+
     def _diffStrings(self, a, b, originalMessage):
         """Compares the conents of two strins
         
