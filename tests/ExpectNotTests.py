@@ -494,14 +494,27 @@ class ExpectNotTests(TestCase):
 
     def test_string_not_matches_passes_when_string_doesnt_match_pattern(self):
         actual = 'asdf'
-        expect(actual).Not.toMatch('z+')
+        pattern = 'z+'
+        expect(actual).Not.toMatch(pattern)
 
     def test_string_not_matches_fails_when_string_matches_pattern(self):
         actual = 'asdf'
-        expect(lambda: expect(actual).Not.toMatch('.*')).toRaise(
+        pattern = '.*'
+        expect(lambda: expect(actual).Not.toMatch(pattern)).toRaise(
             AssertionError,
             "Expected 'asdf' not to match regular expression pattern '.*'")
 
+    def test_string_not_matches_passes_when_string_doesnt_match_compiled_pattern(self):
+        actual = 'asdf'
+        pattern = re.compile('z+')
+        expect(actual).Not.toMatch(pattern)
+
+    def test_string_not_matches_fails_when_string_matches_compiled_pattern(self):
+        actual = 'asdf'
+        pattern = re.compile('.*')
+        expect(lambda: expect(actual).Not.toMatch(pattern)).toRaise(
+            AssertionError,
+            "Expected 'asdf' not to match regular expression pattern '.*'")
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

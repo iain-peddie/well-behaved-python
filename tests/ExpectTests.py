@@ -712,6 +712,19 @@ Difference is:
             AssertionError,
             "Expected 'asdf' to be a string matching regular expression pattern '^[^asdf]+'")
 
+    def test_expect_string_to_match_compiled_regexp_passes_when_string_matches(self):
+        actual = 'asdf'
+        pattern = re.compile('a.*f')
+        expect(actual).toMatch(pattern)
+
+    def test_expect_string_to_match_compiled_regexp_fails_when_string_doesnt_match(self):
+        actual = 'asdf'
+        pattern = re.compile('^[^asdf]+$')
+        expect(lambda: expect(actual).toMatch(pattern)).toRaise(
+            AssertionError,
+            "Expected 'asdf' to be a string matching regular expression pattern '^[^asdf]+'")
+            
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
