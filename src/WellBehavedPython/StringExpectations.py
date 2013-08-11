@@ -46,7 +46,14 @@ class StringExpectations(DefaultExpectations):
         else:
             message = self._diffStrings(self.actual, expectedEnd, message)
             self.fail(message)
-
+    
+    def toContain(self, expectedContents):
+        message = self.buildMessage("to be a string containing ", expectedContents, '')
+        if self.actual.find(expectedContents) > -1:
+            self.success(message)
+        else:        
+            self.fail(message)
+            self.fail(message)
     def _diffStrings(self, a, b, originalMessage):
         from WellBehavedPython.api import expect
         aList = a.split('\n');
