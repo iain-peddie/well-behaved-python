@@ -86,21 +86,6 @@ class ExpectTests(TestCase):
                 AssertionError,
                 expectedMessageMatches = "^user message")
 
-    def test_equals_doesnt_raise_if_string_items_are_equal(self):
-        expect("hello").toEqual("hello")
-
-    def test_equals_raises_with_right_message_if_string_items_not_equal(self):
-        expect(lambda: expect("hello").toEqual("world")).toRaise(
-            AssertionError,
-            expectedMessage = "Expected 'hello' to equal 'world'")
-
-    def test_expecting_string1_to_equal_double1_fails(self):
-        expect(lambda: expect("1").toEqual(1)).toRaise(
-            AssertionError,
-            expectedMessage = "Cannot compare instance of <class 'str'> to "
-            "instance of <class 'int'> because their types differ")
-        
-
     def test_expect_truthy_values_to_be_true_succeeds(self):
         expect(True).toBeTrue()
         expect(1).toBeTrue()
@@ -687,6 +672,31 @@ Difference is:
         expect(lambda: expect(actual).toContain('zzz', 'userMessage')).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
+
+    def test_string_equals_doesnt_raise_if_string_items_are_equal(self):
+        expect("hello").toEqual("hello")
+
+    def test_string_equals_raises_with_right_message_if_string_items_not_equal(self):
+        expect(lambda: expect("hello").toEqual("world")).toRaise(
+            AssertionError,
+            expectedMessage = """Expected 'hello' to equal 'world'
+Difference is:
+- hello
++ world""")
+
+    def test_string_equals_prepends_userMessage_on_failure(self):
+        expect(lambda: expect('hello').toEqual('world', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+        
+
+    def test_expecting_string1_to_equal_double1_fails(self):
+        expect(lambda: expect("1").toEqual(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Cannot compare instance of <class 'str'> to "
+            "instance of <class 'int'> because their types differ")
+        
+
         
 
 if __name__ == "__main__":

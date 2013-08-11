@@ -114,6 +114,36 @@ class StringExpectations(DefaultExpectations):
         else:        
             self.fail(message)
 
+    def toEqual(self, expected, userMessage = ''):
+        """Compares the actual value to the expected value
+
+        Asserts that the actual value stored in the object is equal 
+        to the expected value.
+
+        Inputs
+        ------
+        expected : the value that the actual value is expected to equal
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected, in which
+                         case a diff of the strings is appended to the exception
+                         message
+"""
+
+        self._compareTypes(expected)
+        message = self.buildMessage("to equal ", expected, userMessage)
+        if self.actual == expected:
+            self.success(message)
+        else:
+            message = self._diffStrings(self.actual, expected, message)
+            self.fail(message)
+
     def _diffStrings(self, a, b, originalMessage):
         """Compares the conents of two strins
         
