@@ -476,6 +476,12 @@ class ExpectNotTests(TestCase):
         actual = 'asdf'
         expect(actual).Not.toContain('zzz')
 
+    def test_string_not_contains_prepends_userMessage(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('sd', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
+
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()
     results = TestResults()

@@ -47,8 +47,8 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expectedEnd, message)
             self.fail(message)
     
-    def toContain(self, expectedContents):
-        message = self.buildMessage("to be a string containing ", expectedContents, '')
+    def toContain(self, expectedContents, userMessage = ''):
+        message = self.buildMessage("to be a string containing ", expectedContents, userMessage)
         if self.actual.find(expectedContents) > -1:
             self.success(message)
         else:        

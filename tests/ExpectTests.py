@@ -682,6 +682,13 @@ Difference is:
             AssertionError,
             expectedMessage = "Expected 'asdf' to be a string containing 'zzz'")
 
+    def test_string_contains_prepends_userMessage(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).toContain('zzz', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
+        
+
 if __name__ == "__main__":
     suite = ExpectTests.suite()
     results = TestResults()
