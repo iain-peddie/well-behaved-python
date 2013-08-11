@@ -448,7 +448,39 @@ class ExpectNotTests(TestCase):
             AssertionError,
             expectedMessage = "Expected 'asdf' not to be a string ending with 'df'")
 
+    def test_string__not_contains_fails_on_identical_strings(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('asdf')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'asdf'")
 
+    def test_string_not_contains_fails_when_data_starts_with_expected(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('as')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'as'")
+
+    def test_string_not_contains_fails_when_actual_ends_with_expected(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('df')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'df'")
+
+    def test_string_notcontains_fails_when_expected_embedded_in_actual(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('sd')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'sd'")
+
+    def test_string_not_contains_passesfails_when_expected_not_in_actual(self):
+        actual = 'asdf'
+        expect(actual).Not.toContain('zzz')
+
+    def test_string_not_contains_prepends_userMessage(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('sd', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
 
 if __name__ == "__main__":
     suite = ExpectNotTests.suite()

@@ -23,6 +23,26 @@ import difflib
 class StringExpectations(DefaultExpectations):
     
     def toStartWith(self, expectedStart, userMessage = ''):
+        """Compares the actual value to the expected value
+
+        Asserts that the text of the string starts with the
+        expected start.
+
+        Inputs
+        ------
+        expectedStart : the value that the actual text is expected
+                        to start with
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected.
+"""
+
         message = self.buildMessage("to be a string starting with ", expectedStart, userMessage)
         if len(expectedStart) > len(self.actual):
             message += ", but it was too short"
@@ -36,6 +56,26 @@ class StringExpectations(DefaultExpectations):
             self.fail(message)
 
     def toEndWith(self, expectedEnd, userMessage = ''):
+        """Compares the actual value to the expected value
+
+        Asserts that the text of the string ends with the
+        expected end.
+
+        Inputs
+        ------
+        expectedEnd : the value that the actual text is expected
+                      to end with
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected.
+"""
+
         message = self.buildMessage("to be a string ending with ", expectedEnd, userMessage)
         if len(expectedEnd) > len(self.actual):
             message += ", but it was too short"
@@ -46,13 +86,55 @@ class StringExpectations(DefaultExpectations):
         else:
             message = self._diffStrings(self.actual, expectedEnd, message)
             self.fail(message)
+    
+    def toContain(self, expectedContents, userMessage = ''):
+        """Compares the actual text to the expected contents
+
+        Asserts that the text of the string containsh the
+        expected contents.
+
+        Inputs
+        ------
+        expectedConetnts : the value that the actual text is expected
+                           to contain
+        userMessage (optional) : a message that is prepended to the assertion
+                                 error message if the condition fails. This
+                                 allows users to get a quicker identification
+                                 of the line in a test which is failing if more
+                                 than one value is being tested for equality.
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected.
+"""
+
+        message = self.buildMessage("to be a string containing ", expectedContents, userMessage)
+        if self.actual.find(expectedContents) > -1:
+            self.success(message)
+        else:        
+            self.fail(message)
 
     def _diffStrings(self, a, b, originalMessage):
+        """Compares the conents of two strins
+        
+        Compares the contents of two strings, generates a difference
+        between them, and appends that to the message passed in
+        as originalMessage
+
+        Inputs
+        ------
+        a : the first string
+        b : the second string
+        originalMessage: the original message before the string content difference
+                         is added
+
+        Returns
+        -------
+        A message with the contents of orignalMessage followed by a summary of
+        the differnece between the two strings."""
         from WellBehavedPython.api import expect
         aList = a.split('\n');
         bList = b.split('\n')
-        expect(aList).toBeAnInstanceOf(list)
-        expect(bList).toBeAnInstanceOf(list)
         generator = difflib.ndiff(aList, bList)
         message = originalMessage + "\nDifference is:"
         for line in generator:

@@ -660,6 +660,34 @@ Difference is:
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
+    def test_string_contains_passes_on_identical_strings(self):
+        actual = 'asdf'
+        expect(actual).toContain('asdf')
+
+    def test_string_contains_passes_when_data_starts_with_expected(self):
+        actual = 'asdf'
+        expect(actual).toContain('as')
+
+    def test_string_contains_passes_when_actual_ends_with_expected(self):
+        actual = 'asdf'
+        expect(actual).toContain('df')
+
+    def test_string_contains_passes_when_expected_embedded_in_actual(self):
+        actual = 'asdf'
+        expect(actual).toContain('sd')
+
+    def test_string_contains_fails_When_expected_not_in_actual(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).toContain('zzz')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' to be a string containing 'zzz'")
+
+    def test_string_contains_prepends_userMessage(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).toContain('zzz', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
+        
 
 if __name__ == "__main__":
     suite = ExpectTests.suite()
