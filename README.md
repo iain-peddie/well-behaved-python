@@ -246,14 +246,16 @@ toleranceType parameter, which can be 'absolute' or 'relative'.
 The defaults are a tolerance of 1e-10, a toleranceType of relative.
 When the tolerance is absolute, it requries that
 
-~~~~~ latex
+~~~~~ 
  |actual - expected| < tolerance
 ~~~~~
 
 When the tolerance type is absoulte, it requires that:
 
-~~~~~ latex
-\frac{|actual - expected|}{|actual| + |expected| + 1e-20} < tolerance
+~~~~~ 
+|actual - expected|
+-----------------------------   < tolerance
+|actual| + |expected| + 1e-20
 ~~~~~ 
 
 The small factor of 1e-20 is a floor tolerance. This is to ensure that
