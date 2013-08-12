@@ -208,3 +208,55 @@ and fail otherwise. But sometimes the code could thrown the expected exception i
         expect(outer).toRaise(KeyError, expectedMessageMatches = regexp)
 
 ~~~~~ 
+
+Comparing Numbers
+-----------------
+
+When actual is a number, code for comparing numbers is used instead of the default
+comparison code. This allows numeric inequality comparison operators, <, <=, > and >=
+to be used. It also allows equality to be performed in the sense of the absolute
+difference being within a tolerance.
+
+The inequality operators have names that should be guessable:
+
+~~~~~ python
+    def test_that_numbers_can_be_compared_using_inequalities(self):
+        actual = 1.0
+
+        # We can use the operators > >= < and <=:
+        expect(actual).toBeGreaterThan(0.0)
+        expect(actual).toBeGreaterThanOrEqualTo(1.0)
+        expect(actual).toBeLessThan(2.0)
+        expect(actual).toBeLessThanOrEqualTo(1.0)
+~~~~~
+
+We can also write a test that demonstrates that the equality is being
+performed in the sense of having a toleance rather than being absolute:
+
+~~~~~ python
+    def test_that_equality_is_performed_within_a_tolerance(self):
+        # equality for floats is performed within a tolerance
+        actual = 1.00001
+        expect(actual).toEqual(actual + 1e-10)
+~~~~~
+
+The tolernace can be set in equality for numbers using an optional
+parameter called tolerance. The tolerance type can be set using the
+toleranceType parameter, which can be 'absolute' or 'relative'.
+
+The defaults are a tolerance of 1e-10, a toleranceType of relative.
+When the tolerance is absolute, it requries that
+
+~~~~~ latex
+ |actual - expected| < tolerance
+~~~~~
+
+When the tolerance type is absoulte, it requires that:
+
+~~~~~ latex
+\frac{|actual - expected|}{|actual| + |expected| + 1e-20} < tolerance
+
+~~~~~ latex
+
+The small factor of 1e-20 is a floor tolerance. This is to ensure that
+when actual is exactly equal to expected, the result is 0 rather than NaN

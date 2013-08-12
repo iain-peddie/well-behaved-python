@@ -119,7 +119,7 @@ class DemoTests(TestCase):
 
     def test_that_equality_is_performed_within_a_tolerance(self):
         # equality for floats is performed within a tolerance
-        actual = 1.0
+        actual = 1.00001
         expect(actual).toEqual(actual + 1e-10)
 
     def test_that_equality_tolerance_can_be_configured(self):
