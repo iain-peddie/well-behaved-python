@@ -41,12 +41,11 @@ python3 tutorial.py
 0 failed from 0 test
 ~~~~~
 
-A test method is any method which starts with the word 'test'
+A test method is any method within our test case class which starts with the word 'test'
 
 ~~~~~ python
     def test_something(self):
         pass
-
 ~~~~~
 
 We can run this test again, and see
@@ -123,7 +122,7 @@ equivalent expectations:
     def test_good_and_bad(self):
         actual = "hello"
         expect(actual == "hello").toBeTrue() # bad
-	expect(actual).toEqual("hello") # good 
+        expect(actual).toEqual("hello") # good 
 ~~~~~
 
 Compare the different output: "Expected False to be True" to
@@ -231,7 +230,7 @@ The inequality operators have names that should be guessable:
 ~~~~~
 
 We can also write a test that demonstrates that the equality is being
-performed in the sense of having a toleance rather than being absolute:
+performed in the sense of having a tolerance rather than being absolute:
 
 ~~~~~ python
     def test_that_equality_is_performed_within_a_tolerance(self):
@@ -255,8 +254,7 @@ When the tolerance type is absoulte, it requires that:
 
 ~~~~~ latex
 \frac{|actual - expected|}{|actual| + |expected| + 1e-20} < tolerance
-
-~~~~~ latex
+~~~~~ 
 
 The small factor of 1e-20 is a floor tolerance. This is to ensure that
 when actual is exactly equal to expected, the result is 0 rather than NaN
