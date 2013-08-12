@@ -108,10 +108,27 @@ class DemoTests(TestCase):
         regexp = re.compile("you.*out")
         expect(outer).toRaise(KeyError, expectedMessageMatches = regexp)
         
-    
+    def test_that_numbers_can_be_compared_using_inequalities(self):
+        actual = 1.0
 
+        # We can use the operators > >= < and <=:
+        expect(actual).toBeGreaterThan(0.0)
+        expect(actual).toBeGreaterThanOrEqualTo(1.0)
+        expect(actual).toBeLessThan(2.0)
+        expect(actual).toBeLessThanOrEqualTo(1.0)
 
+    def test_that_equality_is_performed_within_a_tolerance(self):
+        # equality for floats is performed within a tolerance
+        actual = 1.0
+        expect(actual).toEqual(actual + 1e-10)
 
+    def test_that_equality_tolerance_can_be_configured(self):
+        actual = 1
+        # we can reset the tolerance level
+        expect(actual).toEqual(1.01, tolerance=0.1)
+        # We can also reset the tolerance type to be aboslute rather
+        # than relative
+        expect(actual).toEqual(10, tolerance = 10, toleranceType = 'absolute')
 
 # create a main that calls the test case:
 
