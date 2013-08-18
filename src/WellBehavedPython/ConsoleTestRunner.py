@@ -17,6 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+from .TestResults import TestResults
+
 import sys
 
 class ConsoleTestRunner:
@@ -24,5 +26,13 @@ class ConsoleTestRunner:
         self._output = output
 
     def run(self, suite):
+        self.results = TestResults()
         self._output.write("Starting test run of 0 tests\n")
-        self._output.write("0 failed from 0 tests\n")
+        suite.run(self)
+        self._output.write(self.results.summary())
+
+    def registerTestStarted(self):
+        self.results.registerTestStarted()
+
+    def registerTestFailed(self):
+        self.results.registerTestFailed()

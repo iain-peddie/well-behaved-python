@@ -41,7 +41,7 @@ class TestResults:
 
         This will construct a string describing the overall results
         of the test."""
-        if self.testCount > 1:
+        if self.testCount != 1:
             plural = "s"
         else:
             plural = ""
