@@ -51,6 +51,8 @@ class ConsoleTestRunner:
         self._endResultsLineIfNecessary()
         self._output.write(self.results.summary())
 
+        return self.results
+
     def registerTestStarted(self):
         """Regsiter the start of a test."""
         self.results.registerTestStarted()

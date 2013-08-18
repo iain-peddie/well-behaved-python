@@ -7,25 +7,19 @@ from ExpectTests import *
 from ExpectNotTests import *
 from ConsoleTestRunnerTests import *
 
+from WellBehavedPython.TestSuite import TestSuite
+from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
+
 if __name__ == "__main__":
     results = TestResults()
-    suite = TestResultsTests.suite()
-    suite.run(results)
+    runner = ConsoleTestRunner()
+    suite = TestSuite()
+    suite.add(TestResultsTests.suite())
+    suite.add(TestCaseTests.suite())
+    suite.add(TestSuiteTests.suite())
+    suite.add(ExpectTests.suite())
+    suite.add(ExpectNotTests.suite())
+    suite.add(ConsoleTestRunnerTests.suite())
+    results = runner.run(suite)
 
-    suite = TestCaseTests.suite()
-    suite.run(results)
-
-    suite = TestSuiteTests.suite()
-    suite.run(results)
-
-    suite = ExpectTests.suite()
-    suite.run(results)
-
-    suite = ExpectNotTests.suite()
-    suite.run(results)
-
-    suite = ConsoleTestRunnerTests.suite()
-    suite.run(results)
-
-    print(results.summary())
     exit(results.failCount > 0)

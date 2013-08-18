@@ -105,3 +105,16 @@ class ConsoleTestRunnerTests(TestCase):
 ..
 """)
 
+    def test_that_runner_returns_test_result(self):
+        # Where
+        runner = self.runner
+        suite = TestCaseWithPassingTest.suite();
+
+        # When
+        results = runner.run(suite)
+
+        # Then
+        expect(results.passCount).toEqual(1)
+        expect(results.testCount).toEqual(1)
+
+
