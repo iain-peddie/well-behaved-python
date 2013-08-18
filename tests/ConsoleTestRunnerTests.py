@@ -127,6 +127,36 @@ class ConsoleTestRunnerTests(TestCase):
 F
 """)
 
+    def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
+        # Where
+        runner = self.runner
+        suite = TestCaseWithErrorTest.suite()
+
+        # When
+        runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toMatch("""test
+E
+""")
+
+    def test_that_runner_can_cope_with_one_of_each(self):
+        # Where
+        runner = self.runner
+        suite = TestSuite()
+        suite.add(TestCaseWithPassingTest.suite())
+        suite.add(TestCaseWithFailingTest.suite())
+        suite.add(TestCaseWithErrorTest.suite())
+
+        # When
+        runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toMatch("""tests
+.FE
+""")
+        
+
     def test_that_runner_buffers_output_and_prints_after_tests(self):
         # Where
         runner = self.runner
