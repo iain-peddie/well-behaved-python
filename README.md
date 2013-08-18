@@ -260,3 +260,15 @@ When the tolerance type is absoulte, it requires that:
 
 The small factor of 1e-20 is a floor tolerance. This is to ensure that
 when actual is exactly equal to expected, the result is 0 rather than NaN
+
+We can use this to write a test with a much looser tolernace:
+
+~~~~~ python
+    def test_that_equality_tolerance_can_be_configured(self):
+        actual = 1
+        # we can reset the tolerance level
+        expect(actual).toEqual(1.01, tolerance=0.1)
+        # We can also reset the tolerance type to be aboslute rather
+        # than relative
+        expect(actual).toEqual(10, tolerance = 10, toleranceType = 'absolute')
+~~~~~
