@@ -196,10 +196,6 @@ class DemoTests(TestCase):
         expect(actual).toContainValue(1)
         expect(actual).Not.toContainValue("a")
         
-    def test_evil(self):
-        actual = { "a" : 1, "b" : 2}
-        expect(actual).toContainValue(26)
-
 # create a main that calls the test case:
 
 if __name__ == "__main__":
