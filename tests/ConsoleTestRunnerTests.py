@@ -28,25 +28,32 @@ class TestCaseWithNoTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
-class TestCaseWithOneTest(TestCase):
+class TestCaseWithPassingTest(TestCase):
     
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
-    def test_one(self):
+    def test_pass(self):
         pass
 
-
-class TestCaseWithTwoTests(TestCase):
+class TestCaseWithFailingTest(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
-    def test_two(self):
-        expect(True).toBeFalse();
+    def test_fail(self):
+        expect(None).fail('Failing test')
 
-    def test_three(self):
-        pass
+class TestCaseWithErrorTest(TestCase):
+
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)
+
+    def test_error(self):
+        raise KeyError('You are locked out')
+    
+
+
     
 class ConsoleTestRunnerTests(TestCase):
     def __init__(self, testFunctionName):
@@ -73,7 +80,7 @@ class ConsoleTestRunnerTests(TestCase):
     def test_that_running_suite_with_one_tests_produces_correct_output(self):
         # Where
         runner = self.runner
-        suite = TestCaseWithOneTest.suite()
+        suite = TestCaseWithPassingTest.suite()
 
         # When
         runner.run(suite)
@@ -83,4 +90,18 @@ class ConsoleTestRunnerTests(TestCase):
 \\.
 0 failed from 1 test""")
         
-        pass
+    def test_that_running_suite_with_two_passing_tests_produces_correct_output(self):
+        # Where
+        runner = self.runner
+        suite = TestSuite()
+        suite.add(TestCaseWithPassingTest.suite())
+        suite.add(TestCaseWithPassingTest.suite())
+
+        # When
+        runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toContain("""Starting test run of 2 tests
+..
+""")
+
