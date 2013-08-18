@@ -22,6 +22,11 @@ from .TestResults import TestResults
 import sys
 
 class ConsoleTestRunner:
+    """Runs tests and displays minimal output at the console.
+
+    This behaves like the simple cosole test runners in JUnit etc,
+    displaying a dot for a passed test, F for a failed test,
+    E for a test that had an error, and I for an ignored test."""
     def __init__(self, output = sys.stdout):
         self._output = output
         self._resultsPerLine = 30
@@ -46,21 +51,28 @@ class ConsoleTestRunner:
         self._endResultsLineIfNecessary()
         self._output.write(self.results.summary())
 
+        return self.results
+
     def registerTestStarted(self):
+        """Regsiter the start of a test."""
         self.results.registerTestStarted()
 
     def registerTestFailed(self):
+        """Register a test failed."""
         self.results.registerTestFailed()
 
     def registerTestPassed(self):
+        """register a test passed."""
         self._writeResult(".")
         self.results.registerTestPassed()
 
     def _endResultsLineIfNecessary(self):
+        """End the results line if it is right to do so."""
         if (self._currentResult == self._testCount and
            self._currentResult > 0):
             self._output.write("\n")
 
     def _writeResult(self, result):
+        """Write a single result to the output."""
         self._output.write(result)
         self._currentResult += 1
