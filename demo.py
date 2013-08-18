@@ -195,7 +195,51 @@ class DemoTests(TestCase):
 
         expect(actual).toContainValue(1)
         expect(actual).Not.toContainValue("a")
+
+    ## String comparisons
+
+    def test_string_equal(self):
+        # Strings can be compared for equality.
+        actual = "asdf"
+        expect(actual).toEqual("asdf")
         
+    def test_multiline_string_equal(self):
+        # Multi-line strings can be compared. When they are
+        # any differences are reported using the pyhton
+        # difflib utility.
+        actual = """asdf
+lqwerty
+poiu
+zzzz"""
+        expect(actual).toEqual("""asdf
+lqwerty
+poiu
+zzzz""")
+
+    def test_string_starts_with(self):
+        # Strings can be expected to start with a certain substring
+        actual = "asdf"
+        expect(actual).toStartWith("as")
+
+    def test_string_ends_with(self):
+        # Strings can be expected to end with a certain substring
+        actual = "asdf"
+        expect(actual).toEndWith("df")
+
+    def test_string_to_contain(self):
+        # Strings can be expected to contain substrings
+        actual = "asdf"
+        expect(actual).toContain("sd")
+
+    def test_string_toMatch(self):
+        # String can be expected to match string and compiled
+        # regular expression patterns
+        actual = "asdf"
+
+        pattern = re.compile(".sd.")
+        expect(actual).toMatch("a..f")
+        expect(actual).toMatch(pattern)                
+
 # create a main that calls the test case:
 
 if __name__ == "__main__":

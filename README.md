@@ -396,3 +396,115 @@ container expectations on the values view:
 ~~~~~ bash
 "Expected {'b': 2, 'a': 1} to contain value 26"
 ~~~~~ 
+
+Comparing strings
+-----------------
+
+Strings are compared using a specialised class, which gives richer messages on
+string equality comparisons, and adds methods to match substrings at the start,
+end end inside the string. It also provides methods to match against regular expression
+patterns.
+
+Both strings and multiline strings can be compared:
+
+~~~~~ python
+    def test_string_equal(self):
+        # Strings can be compared for equality.
+        actual = "asdf"
+        expect(actual).toEqual("asdf")
+        
+    def test_multiline_string_equal(self):
+        # Multi-line strings can be compared. When they are
+        # any differences are reported using the pyhton
+        # difflib utility.
+        actual = """asdf
+lqwerty
+poiu
+zzzz"""
+        expect(actual).toEqual("""asdf
+lqwerty
+poiu
+zzzz""")
+~~~~~
+
+When the comparison fails, a diff between the two strings is generated
+and added to the exception message:
+
+~~~~ bash
+"Expected 'asdf
+lqwerty
+poiu
+zzzz' to equal 'asdfZ
+lqwerty
+XXXX
+zzzz'
+Difference is:
+- asdf
++ asdfZ
+?     +
+
+  lqwerty
+- poiu
++ XXXX
+  zzzz"
+~~~~~
+
+Strings starts and ends can also be compared:
+
+~~~~ python
+    def test_string_starts_with(self):
+        # Strings can be expected to start with a certain substring
+        actual = "asdf"
+        expect(actual).toStartWith("as")
+
+    def test_string_ends_with(self):
+        # Strings can be expected to end with a certain substring
+        actual = "asdf"
+        expect(actual).toEndWith("df")
+~~~~~
+
+The messages then generated look like:
+~~~~~ bash
+"Expected 'asdf' to be a string starting with 'df'
+Difference is:
+- asdf
++ df"
+"Expected 'asdf' to be a string ending with 'as'
+Difference is:
+- asdf
++ as"
+~~~~~
+
+String contents can be compared using toContain:
+
+~~~~~ python
+    def test_string_to_contain(self):
+        # Strings can be expected to contain substrings
+        actual = "asdf"
+        expect(actual).toContain("sd")
+~~~~~
+
+The message on error looks like
+~~~~~ bash
+"Expected 'asdf' to be a string containing 'ds'"
+~~~~~
+
+And strings can be expected to match against regular expression patterns:
+
+~~~~~ python
+    def test_string_toMatch(self):
+        # String can be expected to match string and compiled
+        # regular expression patterns
+        actual = "asdf"
+
+        pattern = re.compile(".sd.")
+        expect(actual).toMatch("a..f")
+        expect(actual).toMatch(pattern)                
+~~~~~
+
+When these assertions fail, it leads to messages that look like:
+
+~~~~~ bash
+"Expected 'asdf' to be a string matching regular expression pattern '[a-z]+0'"
+~~~~~
+
