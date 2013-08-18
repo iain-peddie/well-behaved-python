@@ -373,7 +373,7 @@ The messages received from keys missing are more helpful than performing
 container expectations on the keys view:
 
 ~~~~~ bash
-Expected {'b': 2, 'a': 1} to contain key 'z'
+"Expected {'b': 2, 'a': 1} to contain key 'z'"
 ~~~~~ 
 
 Of course, dictionaries also contain values, so there is also a toContainValue:
@@ -394,5 +394,5 @@ The messages received from values missing are more helpful than performing
 container expectations on the values view:
 
 ~~~~~ bash
-Expected {'b': 2, 'a': 1} to contain value 26
+"Expected {'b': 2, 'a': 1} to contain value 26"
 ~~~~~ 
