@@ -58,7 +58,7 @@ class TestSuiteTests(TestCase):
 
         self.suite.run(self.results)
         expect(test.testMethodCount).toEqual(1)
-        expect(self.results.summary()).toEqual("0 failed from 1 test\n")
+        expect(self.results.summary()).toStartWith("0 failures 0 errors from 1 test")
 
     def test_that_suite_with_one_test_counts_one_test(self):
         # Where
@@ -82,7 +82,7 @@ class TestSuiteTests(TestCase):
 
         expect(test1.testMethodCount).toEqual(1)
         expect(test2.testMethodCount).toEqual(1)
-        expect(self.results.summary()).toEqual("0 failed from 2 tests\n")
+        expect(self.results.summary()).toStartWith("0 failures 0 errors from 2 tests")
 
     def test_that_suite_with_two_tests_from_one_class_counts_both(self):
         # Where

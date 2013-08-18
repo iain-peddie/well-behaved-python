@@ -74,7 +74,7 @@ class TestCaseTests(TestCase):
         results = TestResults()
         test.run(results)
         
-        expect(results.summary()).toEqual("0 failed from 1 test\n")
+        expect(results.summary()).toStartWith("0 failures 0 errors from 1 test")
 
     def test_that_registerTestPassed_called_if_test_passed(self):
         test = TestCaseTests("targetGoodMethod")
@@ -108,7 +108,7 @@ class TestCaseTests(TestCase):
 
         test.run(results)
 
-        expect(results.summary()).toStartWith("1 failed from 1 test")
+        expect(results.summary()).toStartWith("1 failure 0 errors from 1 test")
 
     def test_countTests_returns_1(self):
         # Where

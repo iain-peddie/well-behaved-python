@@ -33,20 +33,20 @@ class TestResultsTests(TestCase):
     def test_summary_for_single_passing_test(self):
         results = self.results
 
-        expect(results.summary()).toEqual("0 failed from 1 test\n")
+        expect(results.summary()).toStartWith("0 failures 0 errors from 1 test")
 
     def test_summary_for_two_passing_tests(self):
         results = self.results
         results.registerTestStarted()
 
-        expect(results.summary()).toEqual("0 failed from 2 tests\n")
+        expect(results.summary()).toStartWith("0 failures 0 errors from 2 tests")
 
     def test_summary_for_single_failing_test(self):
         results = self.results
         stackTrace = ["asdf"]
         results.registerTestFailed(stackTrace)
 
-        expect(results.summary()).toStartWith("1 failed from 1 test")
+        expect(results.summary()).toStartWith("1 failure 0 errors from 1 test")
 
     def test_summary_for_passing_and_failing_test(self):
         results = self.results
@@ -54,7 +54,14 @@ class TestResultsTests(TestCase):
         results.registerTestFailed(stackTrace)
         results.registerTestStarted()
 
-        expect(results.summary()).toStartWith("1 failed from 2 tests")
+        expect(results.summary()).toStartWith("1 failure 0 errors from 2 tests")
+
+    def test_summary_for_error_tests(self):
+        results = self.results
+        stackTrace = []
+        results.registerTestError(stackTrace)
+        
+        expect(results.summary()).toStartWith("0 failures 1 error from 1 test")
 
     def test_summary_appends_stack_trace_to_summary(self):
         results = self.results
