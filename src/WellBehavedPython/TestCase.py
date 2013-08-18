@@ -83,6 +83,10 @@ class TestCase:
         print("Test of {} encountered {}".format(self.testMethod, errorType))
         traceback.print_exc()
 
+    def countTests(self):
+        """Counts the active number of tests configured to run."""
+        return 1
+
     @classmethod
     def suite(klass):
         """Builds a default test suite by examining the members of the class

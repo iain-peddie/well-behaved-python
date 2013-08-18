@@ -81,6 +81,15 @@ class TestCaseTests(TestCase):
         test.run(results)
 
         expect(results.summary()).toEqual("1 failed from 1 test")
+
+    def test_countTests_returns_1(self):
+        # Where
+        test = TestCaseTests("targetGoodMethod")
+        
+        # When
+
+        # Then
+        expect(test.countTests()).toEqual(1)
         
         
 if __name__ == "__main__":
