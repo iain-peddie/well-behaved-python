@@ -64,6 +64,7 @@ class TestCase:
         self.before()
         try:
             self.testMethod()
+            results.registerTestPassed()
         except AssertionError as ex:
             results.registerTestFailed()
             self.handleError(ex, "failure")

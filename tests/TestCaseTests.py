@@ -44,6 +44,9 @@ class TestCaseTests(TestCase):
         """Target method when running unit tests."""
         self.log += "targetMethod "
 
+    def targetFailedMethod(self):
+        expect(True).toBeFalse()
+
     def targetErrorMethod(self):
         raise Exception
 
@@ -72,6 +75,31 @@ class TestCaseTests(TestCase):
         test.run(results)
         
         expect(results.summary()).toEqual("0 failed from 1 test")
+
+    def test_that_registerTestPassed_called_if_test_passed(self):
+        test = TestCaseTests("targetGoodMethod")
+        results = TestResults()
+        test.handleError = self.ignoreError
+        test.run(results)
+
+        expect(results.testCount).toEqual(1)
+        expect(results.failCount).toEqual(0)
+        expect(results.passCount).toEqual(1)
+
+    def test_that_registerTestPassed_not_called_if_test_failed(self):
+        # Where
+        test = TestCaseTests("targetFailedMethod")
+        results = TestResults()
+        test.handleError = self.ignoreError
+
+        # When
+        test.run(results)
+
+        # Then
+        expect(results.testCount).toEqual(1)
+        expect(results.failCount).toEqual(1)
+        expect(results.passCount).toEqual(0)
+        
 
     def test_error_method_summary(self):
         test = TestCaseTests("targetErrorMethod")

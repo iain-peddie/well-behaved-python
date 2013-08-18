@@ -27,6 +27,7 @@ class TestResults:
         """Constructor."""
         self.testCount = 0
         self.failCount = 0
+        self.passCount = 0
 
     def registerTestStarted(self):
         """Register the fact that a test started running."""
@@ -35,6 +36,10 @@ class TestResults:
     def registerTestFailed(self):
         """Register the fact that a test failed."""
         self.failCount += 1
+
+    def registerTestPassed(self):
+        """Register the fact that a test passed."""
+        self.passCount += 1
     
     def summary(self):
         """Build a summary of the tests.
