@@ -41,6 +41,8 @@ class DemoTests(TestCase):
     def test_log(self):
         self.log.append("some test")
 
+    ## Truth comparisons
+
     # And tear it down
     def after(self):
         self.log.append("tear down")
@@ -65,15 +67,7 @@ class DemoTests(TestCase):
         # Failure message would be:
         # "A literal True values should be true: Expected True to be True"
 
-    def test_equality(self):
-        # We can test for equality
-        expect(1).toEqual(1)
-        expect("hello").toEqual("hello")
-
-    def test_negative_conditions(self):
-        # We can test the opposites of conditions
-        expect(1).Not.toEqual(0)
-        expect("hello").Not.toEqual("world")
+    ## Expected Exceptions
 
     def test_expected_exceptions_lambda(self):
         # We can expect exceptions to happen, using lambda
@@ -108,10 +102,143 @@ class DemoTests(TestCase):
         regexp = re.compile("you.*out")
         expect(outer).toRaise(KeyError, expectedMessageMatches = regexp)
         
-    
+    ## Numeric comparisons
 
+    def test_equality(self):
+        # We can test for equality
+        expect(1).toEqual(1)
+        expect("hello").toEqual("hello")
 
+    def test_negative_conditions(self):
+        # We can test the opposites of conditions
+        expect(1).Not.toEqual(0)
+        expect("hello").Not.toEqual("world")
 
+    def test_that_numbers_can_be_compared_using_inequalities(self):
+        actual = 1.0
+
+        # We can use the operators > >= < and <=:
+        expect(actual).toBeGreaterThan(0.0)
+        expect(actual).toBeGreaterThanOrEqualTo(1.0)
+        expect(actual).toBeLessThan(2.0)
+        expect(actual).toBeLessThanOrEqualTo(1.0)
+
+    def test_that_equality_is_performed_within_a_tolerance(self):
+        # equality for floats is performed within a tolerance
+        actual = 1.00001
+        expect(actual).toEqual(actual + 1e-10)
+
+    def test_that_equality_tolerance_can_be_configured(self):
+        actual = 1
+        # we can reset the tolerance level
+        expect(actual).toEqual(1.01, tolerance=0.1)
+        # We can also reset the tolerance type to be aboslute rather
+        # than relative
+        expect(actual).toEqual(10, tolerance = 10, toleranceType = 'absolute')
+
+    ## Containers
+        
+    # Containers can be compared
+    def test_that_containers_can_be_compared(self):
+        actual = (1, 2, 3)
+        # We can compare containers
+        expect(actual).toEqual((1, 2, 3))
+        expect(list(actual)).toEqual([1, 2, 3])
+
+    def test_that_similar_containers_can_be_compared(self):
+        actual = (1, 2, 3)
+        expect(actual).toEqual([1, 2, 3])
+
+    def test_that_container_contents_can_be_expected(self):
+        # We can also expect that containers contain something
+        actual = (1, 2, 3)
+        expect(actual).toContain(2)
+
+    def test_that_set_relations_can_be_expected(self):
+        # We can also expect the actual to be a superset or
+        # a subset of another container. This generalises
+        # the pyhton sets, so that set comparisons can work
+        # on lists and tuples:
+        actual = (1,2,3) # a tuple
+        expect(actual).toBeASupersetOf([2]) 
+        expect(actual).toBeASubsetOf([0,1,2,3,4])        
+
+    ## Dictionary Expectations
+
+    def test_dictionary_equality(self):
+        # Dictionaries can be compared. The failure message
+        # then knows it is a dictionary being compared and
+        # adds some more useful information to help understand
+        # the cause of the failure.
+        actual = {"a" : 1,
+                  "b" : 2 }
+
+        expect(actual).toEqual({"a":1, "b":2})
+
+    def test_dictionary_contains_key(self):
+        # Whether a dictionary contains a key is a useful test,
+        # and having a method for it can give a more
+        # enlightening error message than using a container
+        # comparison on the keys view:
+        actual = {"a" : 1, 
+                  "b" : 2}
+
+        expect(actual).toContainKey("a")
+        expect(actual).Not.toContainKey(1)
+
+    def test_dictionary_contains_value(self):
+        # Whether a dictionary contains a value is also a useful
+        # test, and gives a more enlightening message than using
+        # a conainer comparison on the values view.
+        actual = {"a" : 1, 
+                  "b" : 2}
+
+        expect(actual).toContainValue(1)
+        expect(actual).Not.toContainValue("a")
+
+    ## String comparisons
+
+    def test_string_equal(self):
+        # Strings can be compared for equality.
+        actual = "asdf"
+        expect(actual).toEqual("asdf")
+        
+    def test_multiline_string_equal(self):
+        # Multi-line strings can be compared. When they are
+        # any differences are reported using the pyhton
+        # difflib utility.
+        actual = """asdf
+lqwerty
+poiu
+zzzz"""
+        expect(actual).toEqual("""asdf
+lqwerty
+poiu
+zzzz""")
+
+    def test_string_starts_with(self):
+        # Strings can be expected to start with a certain substring
+        actual = "asdf"
+        expect(actual).toStartWith("as")
+
+    def test_string_ends_with(self):
+        # Strings can be expected to end with a certain substring
+        actual = "asdf"
+        expect(actual).toEndWith("df")
+
+    def test_string_to_contain(self):
+        # Strings can be expected to contain substrings
+        actual = "asdf"
+        expect(actual).toContain("sd")
+
+    def test_string_toMatch(self):
+        # String can be expected to match string and compiled
+        # regular expression patterns
+        actual = "asdf"
+
+        pattern = re.compile(".sd.")
+        expect(actual).toMatch("a..f")
+        expect(actual).toMatch(pattern)                
 
 # create a main that calls the test case:
 
