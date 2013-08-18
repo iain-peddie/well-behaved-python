@@ -33,8 +33,8 @@ class ConsoleTestRunner:
         self._resultsPerLine = 30
         self._currentResult = 0
         self.outputBuffer = io.StringIO()
-#        sys.stdout = self.outputBuffer
-#        sys.stderr = self.outputBuffer
+        sys.stdout = self.outputBuffer
+        sys.stderr = self.outputBuffer
 
     def __del__(self):
         sys.stdout = sys.__stdout__
@@ -86,7 +86,7 @@ class ConsoleTestRunner:
         """End the results line if it is right to do so."""
         if (self._currentResult == self._testCount and
            self._currentResult > 0):
-            self._output.write("\n")
+             self._output.write("\n")
 
     def _writeResult(self, result):
         """Write a single result to the output."""
