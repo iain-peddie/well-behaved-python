@@ -17,6 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+import traceback
+
 class TestResults:
     """Class containing the results of a test run.
 
@@ -28,13 +30,15 @@ class TestResults:
         self.testCount = 0
         self.failCount = 0
         self.passCount = 0
+        self.stackTraces = []
 
     def registerTestStarted(self):
         """Register the fact that a test started running."""
         self.testCount += 1
 
-    def registerTestFailed(self):
+    def registerTestFailed(self, stackTrace):
         """Register the fact that a test failed."""
+        self.stackTraces.extend(stackTrace)
         self.failCount += 1
 
     def registerTestPassed(self):
@@ -47,8 +51,12 @@ class TestResults:
         This will construct a string describing the overall results
         of the test."""
         plural = self.pluralise(self.testCount)
-        return "{} failed from {} test{}".format(
+        line0 = "{} failed from {} test{}\n".format(
             self.failCount, self.testCount, plural)
+        lines = [line0]
+        if len(self.stackTraces) > 0:
+            lines.extend(self.stackTraces)
+        return "".join(lines)
 
     def pluralise(self, count):
         if count != 1:

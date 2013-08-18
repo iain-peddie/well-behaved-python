@@ -19,6 +19,7 @@
 
 from .TestResults import TestResults
 
+import io
 import sys
 
 class ConsoleTestRunner:
@@ -31,6 +32,13 @@ class ConsoleTestRunner:
         self._output = output
         self._resultsPerLine = 30
         self._currentResult = 0
+        self.outputBuffer = io.StringIO()
+        sys.stdout = self.outputBuffer
+        sys.stderr = self.outputBuffer
+
+    def __del__(self):
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
 
     def run(self, suite):
         """Run the given test suite.
@@ -50,6 +58,8 @@ class ConsoleTestRunner:
         suite.run(self)
         self._endResultsLineIfNecessary()
         self._output.write(self.results.summary())
+        self._output.write("\n")
+        self._output.write(self.outputBuffer.getvalue())
 
         return self.results
 
@@ -57,10 +67,10 @@ class ConsoleTestRunner:
         """Regsiter the start of a test."""
         self.results.registerTestStarted()
 
-    def registerTestFailed(self):
+    def registerTestFailed(self, traceback):
         """Register a test failed."""
         self._writeResult("F")
-        self.results.registerTestFailed()
+        self.results.registerTestFailed(traceback)
 
     def registerTestPassed(self):
         """register a test passed."""

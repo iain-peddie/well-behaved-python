@@ -48,7 +48,7 @@ class TestCaseTests(TestCase):
         expect(True).toBeFalse()
 
     def targetErrorMethod(self):
-        raise Exception
+        raise KeyError("asdf")
 
     def test_run_template_on_good_method(self):
         # we can't use self shunt here, because we need to
@@ -74,7 +74,7 @@ class TestCaseTests(TestCase):
         results = TestResults()
         test.run(results)
         
-        expect(results.summary()).toEqual("0 failed from 1 test")
+        expect(results.summary()).toEqual("0 failed from 1 test\n")
 
     def test_that_registerTestPassed_called_if_test_passed(self):
         test = TestCaseTests("targetGoodMethod")
@@ -108,7 +108,7 @@ class TestCaseTests(TestCase):
 
         test.run(results)
 
-        expect(results.summary()).toEqual("1 failed from 1 test")
+        expect(results.summary()).toStartWith("1 failed from 1 test")
 
     def test_countTests_returns_1(self):
         # Where

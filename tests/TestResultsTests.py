@@ -33,26 +33,38 @@ class TestResultsTests(TestCase):
     def test_summary_for_single_passing_test(self):
         results = self.results
 
-        expect(results.summary()).toEqual("0 failed from 1 test")
+        expect(results.summary()).toEqual("0 failed from 1 test\n")
 
     def test_summary_for_two_passing_tests(self):
         results = self.results
         results.registerTestStarted()
 
-        expect(results.summary()).toEqual("0 failed from 2 tests")
+        expect(results.summary()).toEqual("0 failed from 2 tests\n")
 
     def test_summary_for_single_failing_test(self):
         results = self.results
-        results.registerTestFailed()
+        stackTrace = ["asdf"]
+        results.registerTestFailed(stackTrace)
 
-        expect(results.summary()).toEqual("1 failed from 1 test")
+        expect(results.summary()).toStartWith("1 failed from 1 test")
 
     def test_summary_for_passing_and_failing_test(self):
         results = self.results
-        results.registerTestFailed()
+        stackTrace = []
+        results.registerTestFailed(stackTrace)
         results.registerTestStarted()
 
-        expect(results.summary()).toEqual("1 failed from 2 tests")
+        expect(results.summary()).toStartWith("1 failed from 2 tests")
+
+    def test_summary_appends_stack_trace_to_summary(self):
+        results = self.results
+        stackTrace = ["Line1\n", "Line2\n"]
+        results.registerTestFailed(stackTrace)
+        
+        expect(results.summary()).toEndWith("""Line1
+Line2
+""")
+        
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
