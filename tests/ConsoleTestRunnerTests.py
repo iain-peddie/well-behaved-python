@@ -52,9 +52,6 @@ class TestCaseWithErrorTest(TestCase):
     def test_error(self):
         raise KeyError('You are locked out')
     
-
-
-    
 class ConsoleTestRunnerTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
@@ -116,5 +113,21 @@ class ConsoleTestRunnerTests(TestCase):
         # Then
         expect(results.passCount).toEqual(1)
         expect(results.testCount).toEqual(1)
+
+    def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
+        # Where
+        runner = self.runner
+        suite = TestCaseWithFailingTest.suite()
+
+        # When
+        runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toMatch("""test
+F
+""")
+
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
 
 
