@@ -33,8 +33,8 @@ class ConsoleTestRunner:
         self._resultsPerLine = 30
         self._currentResult = 0
         self.outputBuffer = io.StringIO()
-#        sys.stdout = self.outputBuffer
-#        sys.stderr = self.outputBuffer
+        sys.stdout = self.outputBuffer
+        sys.stderr = self.outputBuffer
 
     def __del__(self):
         sys.stdout = sys.__stdout__
