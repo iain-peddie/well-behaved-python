@@ -142,7 +142,7 @@ class DemoTests(TestCase):
     def test_that_containers_can_be_compared(self):
         actual = (1, 2, 3)
         # We can compare containers
-        expect(actual).toEqual((1, 3, 4))
+        expect(actual).toEqual((1, 2, 3))
         expect(list(actual)).toEqual([1, 2, 3])
 
     def test_that_similar_containers_can_be_compared(self):
@@ -162,6 +162,43 @@ class DemoTests(TestCase):
         actual = (1,2,3) # a tuple
         expect(actual).toBeASupersetOf([2]) 
         expect(actual).toBeASubsetOf([0,1,2,3,4])        
+
+    ## Dictionary Expectations
+
+    def test_dictionary_equality(self):
+        # Dictionaries can be compared. The failure message
+        # then knows it is a dictionary being compared and
+        # adds some more useful information to help understand
+        # the cause of the failure.
+        actual = {"a" : 1,
+                  "b" : 2 }
+
+        expect(actual).toEqual({"a":1, "b":2})
+
+    def test_dictionary_contains_key(self):
+        # Whether a dictionary contains a key is a useful test,
+        # and having a method for it can give a more
+        # enlightening error message than using a container
+        # comparison on the keys view:
+        actual = {"a" : 1, 
+                  "b" : 2}
+
+        expect(actual).toContainKey("a")
+        expect(actual).Not.toContainKey(1)
+
+    def test_dictionary_contains_value(self):
+        # Whether a dictionary contains a value is also a useful
+        # test, and gives a more enlightening message than using
+        # a conainer comparison on the values view.
+        actual = {"a" : 1, 
+                  "b" : 2}
+
+        expect(actual).toContainValue(1)
+        expect(actual).Not.toContainValue("a")
+        
+    def test_evil(self):
+        actual = { "a" : 1, "b" : 2}
+        expect(actual).toContainValue(26)
 
 # create a main that calls the test case:
 

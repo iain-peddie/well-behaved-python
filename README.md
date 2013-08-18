@@ -324,3 +324,75 @@ toBeASubsetOf:
         expect(actual).toBeASupersetOf([2]) 
         expect(actual).toBeASubsetOf([0,1,2,3,4])        
 ~~~~~
+
+Dictionary comparisons
+----------------------
+
+Dictionaries are slightly richer than standard containers, and having their
+own comparison assertions allow more descriptive errors to be made.
+
+There is a dictionary-specific equality method.
+
+~~~~~ python
+    def test_dictionary_equality(self):
+        # Dictionaries can be compared. The failure message
+        # then knows it is a dictionary being compared and
+        # adds some more useful information to help understand
+        # the cause of the failure.
+        actual = {"a" : 1,
+                  "b" : 2 }
+
+        expect(actual).toEqual({"a":1, "b":2})
+~~~~~
+
+If the dictionaries to not match, the error message looks like these:
+~~~~~ bash
+"Expected {} to be a dictionary containing 1 item"
+"Expected {'b': 2, 'a': 1} to equal {'z': 26, 'a': 1}
+First missing key is 'b'"
+"Expected {'b': 2, 'a': 1} to equal {'b': 26, 'a': 1}
+First difference at key 'b': Expected 2 to equal 26"
+~~~~
+
+Dictionaries can also be expected to contain specific keys:
+
+~~~~~ python
+    def test_dictionary_contains_key(self):
+        # Whether a dictionary contains a key is a useful test,
+        # and having a method for it can give a more
+        # enlightening error message than using a container
+        # comparison on the keys view:
+        actual = {"a" : 1, 
+                  "b" : 2}
+
+        expect(actual).toContainKey("a")
+        expect(actual).Not.toContainKey(1)
+~~~~~
+
+The messages received from keys missing are more helpful than performing
+container expectations on the keys view:
+
+~~~~~ bash
+Expected {'b': 2, 'a': 1} to contain key 'z'
+~~~~~ 
+
+Of course, dictionaries also contain values, so there is also a toContainValue:
+
+~~~~~ python
+    def test_dictionary_contains_value(self):
+        # Whether a dictionary contains a value is also a useful
+        # test, and gives a more enlightening message than using
+        # a conainer comparison on the values view.
+        actual = {"a" : 1, 
+                  "b" : 2}
+
+        expect(actual).toContainValue(1)
+        expect(actual).Not.toContainValue("a")
+~~~~~
+
+The messages received from values missing are more helpful than performing
+container expectations on the values view:
+
+~~~~~ bash
+Expected {'b': 2, 'a': 1} to contain value 26
+~~~~~ 
