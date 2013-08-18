@@ -38,6 +38,14 @@ class TestSuite:
 """
         self.tests.append(test)
 
+    def countTests(self):
+        """Counts the active number of tests configured to run."""
+        count = 0
+        for test in self.tests:
+            count += test.countTests()
+        return count
+
+
     def run(self, results):
         """Runs all the tests in the suite."""
         for test in self.tests:
