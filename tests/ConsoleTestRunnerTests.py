@@ -70,7 +70,7 @@ class ConsoleTestRunnerTests(TestCase):
 
         # Ignoring - this needs test completed event in test
         # runner and suteis to count number of tests
-    def xtest_that_running_suite_with_one_tests_produces_correct_output(self):
+    def test_that_running_suite_with_one_tests_produces_correct_output(self):
         # Where
         runner = self.runner
         suite = TestCaseWithOneTest.suite()

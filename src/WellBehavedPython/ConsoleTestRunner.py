@@ -24,11 +24,26 @@ import sys
 class ConsoleTestRunner:
     def __init__(self, output = sys.stdout):
         self._output = output
+        self._resultsPerLine = 30
+        self._currentResult = 0
 
     def run(self, suite):
+        """Run the given test suite.
+
+        Runs the given test suite, reporting results as the
+        individual test results come in.
+
+        Parameters
+        ----------
+        suite : A testable object, most probably a test suite.
+        """
+
         self.results = TestResults()
-        self._output.write("Starting test run of 0 tests\n")
+        self._testCount = suite.countTests()
+        self._output.write("Starting test run of {} test{}\n".format(
+                self._testCount, self.results.pluralise(self._testCount)))
         suite.run(self)
+        self._endResultsLineIfNecessary()
         self._output.write(self.results.summary())
 
     def registerTestStarted(self):
@@ -36,3 +51,16 @@ class ConsoleTestRunner:
 
     def registerTestFailed(self):
         self.results.registerTestFailed()
+
+    def registerTestPassed(self):
+        self._writeResult(".")
+        self.results.registerTestPassed()
+
+    def _endResultsLineIfNecessary(self):
+        if (self._currentResult == self._testCount and
+           self._currentResult > 0):
+            self._output.write("\n")
+
+    def _writeResult(self, result):
+        self._output.write(result)
+        self._currentResult += 1

@@ -46,9 +46,15 @@ class TestResults:
 
         This will construct a string describing the overall results
         of the test."""
-        if self.testCount != 1:
+        plural = self.pluralise(self.testCount)
+        return "{} failed from {} test{}".format(
+            self.failCount, self.testCount, plural)
+
+    def pluralise(self, count):
+        if count != 1:
             plural = "s"
         else:
             plural = ""
-        return "{} failed from {} test{}".format(
-            self.failCount, self.testCount, plural)
+        
+        return plural
+        
