@@ -71,7 +71,7 @@ class TestCase:
             results.registerTestFailed(stackTrace)
         except Exception as ex:
             stackTrace = self.getStackTrace(ex)
-            results.registerTestFailed(stackTrace)
+            results.registerTestError(stackTrace)
         finally:
             self.after()
 

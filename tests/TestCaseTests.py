@@ -69,24 +69,16 @@ class TestCaseTests(TestCase):
 
         expect(test.log).toEqual("before after ")
 
-    def test_good_method_summary(self):
-        test = TestCaseTests("targetGoodMethod")
-        results = TestResults()
-        test.run(results)
-        
-        expect(results.summary()).toEqual("0 failed from 1 test\n")
-
     def test_that_registerTestPassed_called_if_test_passed(self):
         test = TestCaseTests("targetGoodMethod")
         results = TestResults()
-        test.handleError = self.ignoreError
         test.run(results)
 
         expect(results.testCount).toEqual(1)
         expect(results.failCount).toEqual(0)
         expect(results.passCount).toEqual(1)
 
-    def test_that_registerTestPassed_not_called_if_test_failed(self):
+    def test_that_registerTestFailed_called_if_test_failed(self):
         # Where
         test = TestCaseTests("targetFailedMethod")
         results = TestResults()
@@ -98,17 +90,23 @@ class TestCaseTests(TestCase):
         # Then
         expect(results.testCount).toEqual(1)
         expect(results.failCount).toEqual(1)
+        expect(results.errorCount).toEqual(0)
         expect(results.passCount).toEqual(0)
-        
 
-    def test_error_method_summary(self):
+    def test_that_registerTestError_called_if_test_failed(self):
+        # Where
         test = TestCaseTests("targetErrorMethod")
-        test.handleError = test.ignoreError
         results = TestResults()
+        test.handleError = self.ignoreError
 
+        # When
         test.run(results)
 
-        expect(results.summary()).toStartWith("1 failed from 1 test")
+        # Then
+        expect(results.testCount).toEqual(1)
+        expect(results.failCount).toEqual(0)
+        expect(results.errorCount).toEqual(1)
+        expect(results.passCount).toEqual(0)        
 
     def test_countTests_returns_1(self):
         # Where

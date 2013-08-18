@@ -70,7 +70,7 @@ class ConsoleTestRunnerTests(TestCase):
 
         # Then
         expect(self.output.getvalue()).toMatch("""Starting test run of 0 tests
-0 failed from 0 tests""")
+.*from 0 tests""")
 
         # Ignoring - this needs test completed event in test
         # runner and suteis to count number of tests
@@ -85,7 +85,7 @@ class ConsoleTestRunnerTests(TestCase):
         # Then
         expect(self.output.getvalue()).toMatch("""Starting test run of 1 test
 \\.
-0 failed from 1 test""")
+.*from 1 test""")
         
     def test_that_running_suite_with_two_passing_tests_produces_correct_output(self):
         # Where
@@ -127,6 +127,36 @@ class ConsoleTestRunnerTests(TestCase):
 F
 """)
 
+    def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
+        # Where
+        runner = self.runner
+        suite = TestCaseWithErrorTest.suite()
+
+        # When
+        runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toMatch("""test
+E
+""")
+
+    def test_that_runner_can_cope_with_one_of_each(self):
+        # Where
+        runner = self.runner
+        suite = TestSuite()
+        suite.add(TestCaseWithPassingTest.suite())
+        suite.add(TestCaseWithFailingTest.suite())
+        suite.add(TestCaseWithErrorTest.suite())
+
+        # When
+        runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toMatch("""tests
+.FE
+""")
+        
+
     def test_that_runner_buffers_output_and_prints_after_tests(self):
         # Where
         runner = self.runner
@@ -143,6 +173,6 @@ F
 F.
 """)
         expect(theOutput).toMatch("""F\\.
-1 failed from 2 tests
+.*from 2 tests
 Failing test
 .*File.*\\.py""")

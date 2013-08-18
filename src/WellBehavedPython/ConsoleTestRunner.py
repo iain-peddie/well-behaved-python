@@ -67,21 +67,26 @@ class ConsoleTestRunner:
         """Regsiter the start of a test."""
         self.results.registerTestStarted()
 
-    def registerTestFailed(self, traceback):
+    def registerTestFailed(self, stackTrace):
         """Register a test failed."""
         self._writeResult("F")
-        self.results.registerTestFailed(traceback)
+        self.results.registerTestFailed(stackTrace)
 
     def registerTestPassed(self):
         """register a test passed."""
         self._writeResult(".")
         self.results.registerTestPassed()
 
+    def registerTestError(self, stackTrace):
+        """Register a test failed."""
+        self._writeResult("E")
+        self.results.registerTestError(stackTrace)
+
     def _endResultsLineIfNecessary(self):
         """End the results line if it is right to do so."""
         if (self._currentResult == self._testCount and
            self._currentResult > 0):
-            self._output.write("\n")
+             self._output.write("\n")
 
     def _writeResult(self, result):
         """Write a single result to the output."""

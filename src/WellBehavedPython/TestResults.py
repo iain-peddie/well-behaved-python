@@ -30,6 +30,7 @@ class TestResults:
         self.testCount = 0
         self.failCount = 0
         self.passCount = 0
+        self.errorCount = 0
         self.stackTraces = []
 
     def registerTestStarted(self):
@@ -41,6 +42,15 @@ class TestResults:
         self.stackTraces.extend(stackTrace)
         self.failCount += 1
 
+    def registerTestError(self, stackTrace):
+        """Register the fact that a tet failed.
+        
+        Parameters
+        ----------
+        stackTrace : list of strings forming the stack trace for this error."""
+        self.stackTraces.extend(stackTrace)
+        self.errorCount += 1
+
     def registerTestPassed(self):
         """Register the fact that a test passed."""
         self.passCount += 1
@@ -50,13 +60,21 @@ class TestResults:
 
         This will construct a string describing the overall results
         of the test."""
-        plural = self.pluralise(self.testCount)
-        line0 = "{} failed from {} test{}\n".format(
-            self.failCount, self.testCount, plural)
+        failedPart = self.buildMessagePart("failure", self.failCount)
+        errorPart = self.buildMessagePart("error", self.errorCount)
+        testPart = self.buildMessagePart("test", self.testCount)
+        
+        line0 = "{} {} from {}\n".format(failedPart, errorPart, testPart)
         lines = [line0]
         if len(self.stackTraces) > 0:
             lines.extend(self.stackTraces)
         return "".join(lines)
+
+    def buildMessagePart(self, word, number):
+        return "{} {}{}".format(
+            number, 
+            word,
+            self.pluralise(number))
 
     def pluralise(self, count):
         if count != 1:
