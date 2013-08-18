@@ -127,7 +127,22 @@ class ConsoleTestRunnerTests(TestCase):
 F
 """)
 
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
+    def test_that_runner_buffers_output_and_prints_after_tests(self):
+        # Where
+        runner = self.runner
+        suite = TestSuite()
+        suite.add(TestCaseWithFailingTest.suite())
+        suite.add(TestCaseWithPassingTest.suite())
 
+        # When
+        runner.run(suite)
 
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toContain("""
+F.
+""")
+        expect(theOutput).toMatch("""F\\.
+1 failed from 2 tests
+Failing test
+.*File.*\\.py""")
