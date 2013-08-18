@@ -52,12 +52,24 @@ class TestSuiteTests(TestCase):
         self.testMethodCount += 1
         
     def test_running_suite_with_one_test_runs_one_test(self):
+        # Where
         test = TestSuiteTests("selfShuntIncrementMethod")
         self.suite.add(test)
 
         self.suite.run(self.results)
         expect(test.testMethodCount).toEqual(1)
         expect(self.results.summary()).toEqual("0 failed from 1 test")
+
+    def test_that_suite_with_one_test_counts_one_test(self):
+        # Where
+        test = TestSuiteTests("selfShuntIncrementMethod")
+        self.suite.add(test)
+
+        # When
+
+        # Then
+        expect(self.suite.countTests()).toEqual(1)
+        
 
     def test_running_suite_with_two_tests_runs_both(self):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
@@ -71,6 +83,36 @@ class TestSuiteTests(TestCase):
         expect(test1.testMethodCount).toEqual(1)
         expect(test2.testMethodCount).toEqual(1)
         expect(self.results.summary()).toEqual("0 failed from 2 tests")
+
+    def test_that_suite_with_two_tests_from_one_class_counts_both(self):
+        # Where
+        test1 = TestSuiteTests("selfShuntIncrementMethod")
+        test2 = TestSuiteTests("selfShuntIncrementMethod")
+
+        self.suite.add(test1)
+        self.suite.add(test2)
+        
+        # When
+        
+        # Then
+        expect(self.suite.countTests()).toEqual(2)        
+
+    def test_that_suite_with_inner_suite_counts_all_subtests(self):
+        # Where
+        test1 = TestSuiteTests("selfShuntIncrementMethod")
+        test2 = TestSuiteTests("selfShuntIncrementMethod")
+
+        innerSuite = TestSuite()
+        innerSuite.add(test1)
+        innerSuite.add(test2)
+
+        self.suite.add(innerSuite)
+
+        # When
+
+        # Then
+        expect(self.suite.countTests()).toEqual(2)
+
 
     def test_autosuite_discovers_correct_tests(self):
         suite = MockTestCase.suite()

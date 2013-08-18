@@ -64,6 +64,7 @@ class TestCase:
         self.before()
         try:
             self.testMethod()
+            results.registerTestPassed()
         except AssertionError as ex:
             results.registerTestFailed()
             self.handleError(ex, "failure")
@@ -82,6 +83,10 @@ class TestCase:
         """
         print("Test of {} encountered {}".format(self.testMethod, errorType))
         traceback.print_exc()
+
+    def countTests(self):
+        """Counts the active number of tests configured to run."""
+        return 1
 
     @classmethod
     def suite(klass):
