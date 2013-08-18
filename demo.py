@@ -41,6 +41,8 @@ class DemoTests(TestCase):
     def test_log(self):
         self.log.append("some test")
 
+    ## Truth comparisons
+
     # And tear it down
     def after(self):
         self.log.append("tear down")
@@ -65,15 +67,7 @@ class DemoTests(TestCase):
         # Failure message would be:
         # "A literal True values should be true: Expected True to be True"
 
-    def test_equality(self):
-        # We can test for equality
-        expect(1).toEqual(1)
-        expect("hello").toEqual("hello")
-
-    def test_negative_conditions(self):
-        # We can test the opposites of conditions
-        expect(1).Not.toEqual(0)
-        expect("hello").Not.toEqual("world")
+    ## Expected Exceptions
 
     def test_expected_exceptions_lambda(self):
         # We can expect exceptions to happen, using lambda
@@ -108,6 +102,18 @@ class DemoTests(TestCase):
         regexp = re.compile("you.*out")
         expect(outer).toRaise(KeyError, expectedMessageMatches = regexp)
         
+    ## Numeric comparisons
+
+    def test_equality(self):
+        # We can test for equality
+        expect(1).toEqual(1)
+        expect("hello").toEqual("hello")
+
+    def test_negative_conditions(self):
+        # We can test the opposites of conditions
+        expect(1).Not.toEqual(0)
+        expect("hello").Not.toEqual("world")
+
     def test_that_numbers_can_be_compared_using_inequalities(self):
         actual = 1.0
 
@@ -129,6 +135,33 @@ class DemoTests(TestCase):
         # We can also reset the tolerance type to be aboslute rather
         # than relative
         expect(actual).toEqual(10, tolerance = 10, toleranceType = 'absolute')
+
+    ## Containers
+        
+    # Containers can be compared
+    def test_that_containers_can_be_compared(self):
+        actual = (1, 2, 3)
+        # We can compare containers
+        expect(actual).toEqual((1, 3, 4))
+        expect(list(actual)).toEqual([1, 2, 3])
+
+    def test_that_similar_containers_can_be_compared(self):
+        actual = (1, 2, 3)
+        expect(actual).toEqual([1, 2, 3])
+
+    def test_that_container_contents_can_be_expected(self):
+        # We can also expect that containers contain something
+        actual = (1, 2, 3)
+        expect(actual).toContain(2)
+
+    def test_that_set_relations_can_be_expected(self):
+        # We can also expect the actual to be a superset or
+        # a subset of another container. This generalises
+        # the pyhton sets, so that set comparisons can work
+        # on lists and tuples:
+        actual = (1,2,3) # a tuple
+        expect(actual).toBeASupersetOf([2]) 
+        expect(actual).toBeASubsetOf([0,1,2,3,4])        
 
 # create a main that calls the test case:
 

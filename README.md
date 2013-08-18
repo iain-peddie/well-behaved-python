@@ -272,3 +272,55 @@ We can use this to write a test with a much looser tolernace:
         # than relative
         expect(actual).toEqual(10, tolerance = 10, toleranceType = 'absolute')
 ~~~~~
+
+Comparing Containers
+--------------------
+
+Containers can be compared. Note that dictionary and strings are considered
+special cases, and have their own, specialised, comparison methods.
+
+The container comparison has a specialised equality comparison. This is called
+in the usual manner:
+
+~~~~~ python
+    def test_that_containers_can_be_compared(self):
+        actual = (1, 2, 3)
+        # We can compare containers
+        expect(actual).toEqual((1, 2, 3))
+        expect(list(actual)).toEqual([1, 2, 3])
+~~~~~
+
+When this fails, the message indicates which elements differ:
+
+~~~~ bash
+"Expected [1, 2, 3] to equal [1, 3, 4]. 
+First difference is at index 2: 2 != 3"
+~~~~ 
+
+This is intended to bring attention to where changes start in large
+containers. 
+
+Containers don't have to be exactly the same type. There is some flexibility
+over what constitutes 'equivalent' types. For example, tuples and lists can be
+compared. This is done by definging two containers with the same contents in the
+same order as equal.
+
+~~~~ python
+    def test_that_similar_containers_can_be_compared(self):
+        actual = (1, 2, 3)
+        expect(actual).toEqual([1, 2, 3])
+~~~~
+
+Furthermore, containers can be compared to other containers, using toBeASupersetOf and
+toBeASubsetOf:
+
+~~~~~ python
+    def test_that_set_relations_can_be_expected(self):
+        # We can also expect the actual to be a superset or
+        # a subset of another container. This generalises
+        # the pyhton sets, so that set comparisons can work
+        # on lists and tuples:
+        actual = (1,2,3) # a tuple
+        expect(actual).toBeASupersetOf([2]) 
+        expect(actual).toBeASubsetOf([0,1,2,3,4])        
+~~~~~
