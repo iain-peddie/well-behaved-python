@@ -59,6 +59,7 @@ class ConsoleTestRunner:
 
     def registerTestFailed(self):
         """Register a test failed."""
+        self._writeResult("F")
         self.results.registerTestFailed()
 
     def registerTestPassed(self):
