@@ -28,9 +28,9 @@ class ConsoleTestRunner:
     This behaves like the simple cosole test runners in JUnit etc,
     displaying a dot for a passed test, F for a failed test,
     E for a test that had an error, and I for an ignored test."""
-    def __init__(self, output = sys.stdout):
+    def __init__(self, output = sys.stdout, resultsPerLine = 30):
         self._output = output
-        self._resultsPerLine = 30
+        self._resultsPerLine = resultsPerLine
         self._currentResult = 0
         self.outputBuffer = io.StringIO()
         sys.stdout = self.outputBuffer
@@ -56,7 +56,6 @@ class ConsoleTestRunner:
         self._output.write("Starting test run of {} test{}\n".format(
                 self._testCount, self.results.pluralise(self._testCount)))
         suite.run(self)
-        self._endResultsLineIfNecessary()
         self._output.write(self.results.summary())
         self._output.write("\n")
         self._output.write(self.outputBuffer.getvalue())
@@ -84,11 +83,21 @@ class ConsoleTestRunner:
 
     def _endResultsLineIfNecessary(self):
         """End the results line if it is right to do so."""
-        if (self._currentResult == self._testCount and
-           self._currentResult > 0):
+        if (self._isEndOfLine() or self._isLastResult()): 
              self._output.write("\n")
+
+    def _isLastResult(self):
+        return (self._currentResult == self._testCount and
+           self._currentResult > 0)
+
+    def _isEndOfLine(self):        
+        modulus =  self._currentResult % self._resultsPerLine
+        return modulus == 0
+        return moudulus
+        
 
     def _writeResult(self, result):
         """Write a single result to the output."""
         self._output.write(result)
         self._currentResult += 1
+        self._endResultsLineIfNecessary()
