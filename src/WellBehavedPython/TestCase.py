@@ -41,6 +41,7 @@ class TestCase:
 """
         self.testMethod = getattr(self, testMethodName)
         self.testMethodName = testMethodName
+        self.ignore = False
 
     def before(self):
         """Override this to create the setup logic which should run
@@ -62,6 +63,9 @@ class TestCase:
 """
         
         results.registerTestStarted()
+        if self.ignore:
+            results.registerTestIgnored()
+            return
         self.before()
         try:
             self.testMethod()
@@ -113,14 +117,18 @@ class TestCase:
         A test suite configured with every method which start with 'test'."""
         testMethods = [
             ];
+    
 
         for key in klass.__dict__.keys():
-            if key.startswith("test"):
+            if key.startswith("test") or key.startswith("xtest"):
                 testMethods.append(key)
         
         suite = TestSuite();
         for testMethod in testMethods:
-            suite.add(klass(testMethod))
+            testCase = klass(testMethod)
+            testCase.ignore = testMethod.startswith("x")
+                
+            suite.add(testCase)
 
         return suite
 

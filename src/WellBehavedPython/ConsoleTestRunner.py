@@ -20,6 +20,7 @@
 from .TestResults import TestResults
 
 import io
+import traceback
 import sys
 
 class ConsoleTestRunner:
@@ -28,17 +29,20 @@ class ConsoleTestRunner:
     This behaves like the simple cosole test runners in JUnit etc,
     displaying a dot for a passed test, F for a failed test,
     E for a test that had an error, and I for an ignored test."""
-    def __init__(self, output = sys.stdout, resultsPerLine = 30):
+    def __init__(self, output = sys.stdout, resultsPerLine = 30, bufferOutput = True):
         self._output = output
         self._resultsPerLine = resultsPerLine
         self._currentResult = 0
         self.outputBuffer = io.StringIO()
-        sys.stdout = self.outputBuffer
-        sys.stderr = self.outputBuffer
+        self.bufferOutput = bufferOutput
+        if self.bufferOutput:
+            sys.stdout = self.outputBuffer
+            sys.stderr = self.outputBuffer
 
     def __del__(self):
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
+        if self.bufferOutput:
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
 
     def run(self, suite):
         """Run the given test suite.
@@ -50,15 +54,18 @@ class ConsoleTestRunner:
         ----------
         suite : A testable object, most probably a test suite.
         """
-
-        self.results = TestResults()
-        self._testCount = suite.countTests()
-        self._output.write("Starting test run of {} test{}\n".format(
+        try:
+            self.results = TestResults()
+            self._testCount = suite.countTests()
+            self._output.write("Starting test run of {} test{}\n".format(
                 self._testCount, self.results.pluralise(self._testCount)))
-        suite.run(self)
-        self._output.write(self.results.summary())
-        self._output.write("\n")
-        self._output.write(self.outputBuffer.getvalue())
+            suite.run(self)
+            self._output.write(self.results.summary())
+            self._output.write("\n")
+            self._output.write(self.outputBuffer.getvalue())
+        except Exception as ex:
+            sys.__stdout__.write("Error running test suite:\n")
+            traceback.print_exc(file = sys.__stdout__)
 
         return self.results
 
@@ -80,6 +87,11 @@ class ConsoleTestRunner:
         """Register a test failed."""
         self._writeResult("E")
         self.results.registerTestError(stackTrace)
+
+    def registerTestIgnored(self):
+        """Register a test ignored."""
+        self._writeResult("I")
+        self.results.registerTestIgnored()
 
     def _endResultsLineIfNecessary(self):
         """End the results line if it is right to do so."""

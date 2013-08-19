@@ -20,9 +20,9 @@
 import os
 import os.path
 import sys
+
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
-#from WellBehavedPython.Expect import *
 from WellBehavedPython.api import *
 
 class MockTestCase(TestCase):
@@ -37,6 +37,16 @@ class MockTestCase(TestCase):
 
     def test_example2(self):
         print("test_example2")
+
+class MockIgnoredTestCase(TestCase):
+    """This class should never be run directly.
+
+    It is used to test the auto-dection of ignored test cases."""
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    def xtest_ignored(self):
+        print("should be ignored")
 
 class TestSuiteTests(TestCase):
 
@@ -55,10 +65,13 @@ class TestSuiteTests(TestCase):
         # Where
         test = TestSuiteTests("selfShuntIncrementMethod")
         self.suite.add(test)
-
+        
+        # When
         self.suite.run(self.results)
+
+        # Then
         expect(test.testMethodCount).toEqual(1)
-        expect(self.results.summary()).toStartWith("0 failures 0 errors from 1 test")
+        expect(self.results.summary()).toMatch("0 failures.*1 test")
 
     def test_that_suite_with_one_test_counts_one_test(self):
         # Where
@@ -82,7 +95,7 @@ class TestSuiteTests(TestCase):
 
         expect(test1.testMethodCount).toEqual(1)
         expect(test2.testMethodCount).toEqual(1)
-        expect(self.results.summary()).toStartWith("0 failures 0 errors from 2 tests")
+        expect(self.results.summary()).toMatch("0 failures.*from 2 tests")
 
     def test_that_suite_with_two_tests_from_one_class_counts_both(self):
         # Where
@@ -127,6 +140,15 @@ class TestSuiteTests(TestCase):
             expect(suite.tests[i]).toBeAnInstanceOf(MockTestCase, message)
             expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames, message)
 
+    def test_autosuite_ingores_xtests(self):
+        suite = MockIgnoredTestCase.suite()
+        expectedTestMethodNames = ["xtest_ignored"]
+        
+        expect(len(suite.tests)).toEqual(len(expectedTestMethodNames))
+        for test in suite.tests:
+            expect(test.ignore).toBeTrue()
+            expect(test).toBeAnInstanceOf(MockIgnoredTestCase)
+            expect(test.testMethodName).toBeIn(expectedTestMethodNames)
         
 
 if __name__ == "__main__":

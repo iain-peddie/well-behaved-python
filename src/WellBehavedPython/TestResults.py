@@ -31,6 +31,7 @@ class TestResults:
         self.failCount = 0
         self.passCount = 0
         self.errorCount = 0
+        self.ignoredCount = 0
         self.stackTraces = []
 
     def registerTestStarted(self):
@@ -54,6 +55,10 @@ class TestResults:
     def registerTestPassed(self):
         """Register the fact that a test passed."""
         self.passCount += 1
+
+    def registerTestIgnored(self):
+        """Register the fact that a test was ignored."""
+        self.ignoredCount += 1
     
     def summary(self):
         """Build a summary of the tests.
@@ -62,22 +67,23 @@ class TestResults:
         of the test."""
         failedPart = self.buildMessagePart("failure", self.failCount)
         errorPart = self.buildMessagePart("error", self.errorCount)
+        ignoredPart = self.buildMessagePart("ignored", self.ignoredCount, False)
         testPart = self.buildMessagePart("test", self.testCount)
         
-        line0 = "{} {} from {}\n".format(failedPart, errorPart, testPart)
+        line0 = "{} {} {} from {}\n".format(failedPart, errorPart, ignoredPart, testPart)
         lines = [line0]
         if len(self.stackTraces) > 0:
             lines.extend(self.stackTraces)
         return "".join(lines)
 
-    def buildMessagePart(self, word, number):
+    def buildMessagePart(self, word, number, pluraliseFlag = True):
         return "{} {}{}".format(
             number, 
             word,
-            self.pluralise(number))
+            self.pluralise(number, pluraliseFlag))
 
-    def pluralise(self, count):
-        if count != 1:
+    def pluralise(self, count, pluraliseFlag = True):        
+        if (count != 1 and pluraliseFlag):
             plural = "s"
         else:
             plural = ""

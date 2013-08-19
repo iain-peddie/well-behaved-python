@@ -65,9 +65,33 @@ class TestCaseTests(TestCase):
         # ingore it for this test
         test = TestCaseTests("targetErrorMethod")
         test.handleError = test.ignoreError
-        test.run(TestResults())
+        results = TestResults()
+        test.run(results)
 
         expect(test.log).toEqual("before after ")
+
+    def test_run_template_on_ignored_method(self):
+        test = TestCaseTests("targetGoodMethod")
+        test.ignore = True
+
+        test.run(TestResults())
+        expect(test.log).toEqual("")
+
+    def test_that_registerTestIgnored_called_if_test_ignored(self):
+        # Where
+        test = TestCaseTests("targetGoodMethod")
+        test.ignore = True
+
+        # When
+        results = TestResults()
+        test.run(results)
+
+        # Then
+        expect(results.testCount).toEqual(1)
+        expect(results.passCount).toEqual(0)
+        expect(results.failCount).toEqual(0)
+        expect(results.errorCount).toEqual(0)
+        expect(results.ignoredCount).toEqual(1)
 
     def test_that_registerTestPassed_called_if_test_passed(self):
         test = TestCaseTests("targetGoodMethod")
@@ -77,6 +101,8 @@ class TestCaseTests(TestCase):
         expect(results.testCount).toEqual(1)
         expect(results.failCount).toEqual(0)
         expect(results.passCount).toEqual(1)
+        expect(results.errorCount).toEqual(0)
+        expect(results.ignoredCount).toEqual(0)
 
     def test_that_registerTestFailed_called_if_test_failed(self):
         # Where
@@ -92,6 +118,7 @@ class TestCaseTests(TestCase):
         expect(results.failCount).toEqual(1)
         expect(results.errorCount).toEqual(0)
         expect(results.passCount).toEqual(0)
+        expect(results.ignoredCount).toEqual(0)
 
     def test_that_registerTestError_called_if_test_failed(self):
         # Where
@@ -107,6 +134,7 @@ class TestCaseTests(TestCase):
         expect(results.failCount).toEqual(0)
         expect(results.errorCount).toEqual(1)
         expect(results.passCount).toEqual(0)        
+        expect(results.ignoredCount).toEqual(0)
 
     def test_countTests_returns_1(self):
         # Where
