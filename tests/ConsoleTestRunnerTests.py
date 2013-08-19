@@ -51,6 +51,14 @@ class TestCaseWithErrorTest(TestCase):
 
     def test_error(self):
         raise KeyError('You are locked out')
+
+class TestCaseWithIgnoredTest(TestCase):
+
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)
+
+    def xtest_ignore(self):
+        pass
     
 class ConsoleTestRunnerTests(TestCase):
     def __init__(self, testFunctionName):
@@ -140,6 +148,22 @@ F
 E
 """)
 
+    def test_that_running_suite_with_one_ignored_test_produces_correct_output(self):
+        # Where
+        runner = self.runner
+        suite = TestCaseWithIgnoredTest.suite()
+
+        # When
+        results = runner.run(suite)
+
+        # Then
+        expect(self.output.getvalue()).toMatch("""test
+I
+""")
+        expect(results.ignoredCount).toEqual(1)
+        expect(results.testCount).toEqual(1)
+        expect(results.passCount).toEqual(0)
+
     def test_that_runner_can_cope_with_one_of_each(self):
         # Where
         runner = self.runner
@@ -194,3 +218,4 @@ Failing test
 .FE
 """)
         expect(theOutput).toContain("from 6 tests")
+
