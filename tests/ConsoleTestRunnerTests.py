@@ -58,7 +58,7 @@ class ConsoleTestRunnerTests(TestCase):
 
     def before(self):
         self.output = io.StringIO()
-        self.runner = ConsoleTestRunner(self.output)
+        self.runner = ConsoleTestRunner(self.output, resultsPerLine = 3)
 
     def test_that_running_suite_with_no_tests_produces_correct_output(self):
         # Where
@@ -156,7 +156,6 @@ E
 .FE
 """)
         
-
     def test_that_runner_buffers_output_and_prints_after_tests(self):
         # Where
         runner = self.runner
@@ -176,3 +175,22 @@ F.
 .*from 2 tests
 Failing test
 .*File.*\\.py""")
+
+    def test_that_runner_limits_results_block_width(self):
+        # Where
+        runner = self.runner
+        suite = TestSuite()
+        for i in range(0,4):
+            suite.add(TestCaseWithPassingTest.suite())
+        suite.add(TestCaseWithFailingTest.suite())
+        suite.add(TestCaseWithErrorTest.suite())
+
+        # When
+        runner.run(suite)
+
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toContain("""...
+.FE
+""")
+        expect(theOutput).toContain("from 6 tests")
