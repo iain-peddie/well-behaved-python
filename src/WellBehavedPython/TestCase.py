@@ -63,6 +63,9 @@ class TestCase:
 """
         
         results.registerTestStarted()
+        if self.ignore:
+            results.registerTestIgnored()
+            return
         self.before()
         try:
             self.testMethod()
