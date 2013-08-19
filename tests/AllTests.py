@@ -29,6 +29,6 @@ if __name__ == "__main__":
     except Exception as ex:
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        traceback.print_exc(file = sty.stdout)
+        traceback.print_exc(file = sys.stdout)
         
     

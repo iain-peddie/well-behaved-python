@@ -139,6 +139,16 @@ class TestSuiteTests(TestCase):
             message = "Test index {}".format(i)
             expect(suite.tests[i]).toBeAnInstanceOf(MockTestCase, message)
             expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames, message)
+
+    def test_autosuite_ingores_xtests(self):
+        suite = MockIgnoredTestCase.suite()
+        expectedTestMethodNames = ["xtest_ignored"]
+        
+        expect(len(suite.tests)).toEqual(len(expectedTestMethodNames))
+        for test in suite.tests:
+            expect(test.ignore).toBeTrue()
+            expect(test).toBeAnInstanceOf(MockIgnoredTestCase)
+            expect(test.testMethodName).toBeIn(expectedTestMethodNames)
         
 
 if __name__ == "__main__":
