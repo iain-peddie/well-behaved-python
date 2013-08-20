@@ -39,11 +39,8 @@ def expect(actual, normal = True):
     else:
         strategy = ExpectNot()
         reverseStrategy = Expect()
-
-    if isNumeric(actual): 
-        reverser = NumericExpectations(actual, reverseStrategy)
-        return NumericExpectations(actual, strategy, reverser)
-    elif isinstance(actual, str):
+        
+    if isinstance(actual, str):
         reverser = StringExpectations(actual, reverseStrategy)
         return StringExpectations(actual, strategy, reverser)
     elif isDictionary(actual):
@@ -52,6 +49,9 @@ def expect(actual, normal = True):
     elif isIterable(actual) and not isinstance(actual, str):
         reverser = ContainerExpectations(actual, reverseStrategy)
         return ContainerExpectations(actual, strategy, reverser)
+    elif isNumeric(actual): 
+        reverser = NumericExpectations(actual, reverseStrategy)
+        return NumericExpectations(actual, strategy, reverser)
     else:
         reverser = DefaultExpectations(actual, reverseStrategy)
         return DefaultExpectations(actual, strategy, reverser)    
