@@ -69,19 +69,19 @@ class ConsoleTestRunner:
 
         return self.results
 
-    def registerTestStarted(self):
+    def registerTestStarted(self, suiteName, testName):
         """Regsiter the start of a test."""
-        self.results.registerTestStarted()
+        self.results.registerTestStarted(suiteName, testName)
 
     def registerTestFailed(self, stackTrace):
         """Register a test failed."""
         self._writeResult("F")
         self.results.registerTestFailed(stackTrace)
 
-    def registerTestPassed(self):
+    def registerTestPassed(self, suiteName, testName):
         """register a test passed."""
         self._writeResult(".")
-        self.results.registerTestPassed()
+        self.results.registerTestPassed(suiteName, testName)
 
     def registerTestError(self, stackTrace):
         """Register a test failed."""

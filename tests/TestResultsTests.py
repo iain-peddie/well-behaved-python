@@ -65,16 +65,17 @@ line2
         results = self.results
         before = results.testCount
         
-        results.registerTestStarted()
+        results.registerTestStarted("suite", "test")
         after = results.testCount
 
         expect(after).toEqual(before + 1)
 
     def test_register_test_passed_increments_passCount(self):
         results = self.results
+        results.registerTestStarted("suite", "test")
         before = results.passCount
         
-        results.registerTestPassed()
+        results.registerTestPassed("suite", "test")
         after = results.passCount
 
         expect(after).toEqual(before + 1)
@@ -82,6 +83,7 @@ line2
     def test_register_test_failed_increments_failCount_and_stores_stackTrace(self):
         results = self.results
         before = results.failCount
+        results.registerTestStarted("suite", "test")
         
         results.registerTestFailed(["line1\n"])
         after = results.failCount
@@ -92,6 +94,7 @@ line2
     def test_register_test_error_increments_failCount_and_stores_stackTrace(self):
         results = self.results
         before = results.errorCount
+        results.registerTestStarted("suite", "test")
         
         results.registerTestError(["line1\n"])
         after = results.errorCount
@@ -101,12 +104,27 @@ line2
         
     def test_register_test_ingored_increments_ingoredCount(self):
         results = self.results
+        results.registerTestStarted("suite", "test")
         before = results.ignoredCount
         
         results.registerTestIgnored()
         after = results.ignoredCount
 
         expect(after).toEqual(before + 1)
+
+    def test_results_updates_result(self):
+        # Where
+        results = self.results
+        result = results.registerTestStarted("suite", "test")
+
+        # When
+        results.registerTestPassed("suite", "test")
+
+        # Then
+        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(results.getDuration().total_seconds()).toEqual(
+            result.getDuration().total_seconds())
+
         
         
 
