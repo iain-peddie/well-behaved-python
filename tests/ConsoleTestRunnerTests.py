@@ -196,7 +196,7 @@ I
 F.
 """)
         expect(theOutput).toMatch("""F\\.
-.*from 2 tests
+.*from 2 tests.*
 Failing test
 .*File.*\\.py""")
 
