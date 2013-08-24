@@ -21,44 +21,10 @@ from WellBehavedPython.api import *
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.ConsoleTestRunner import *
 
+from .SampleTestCases import *
+
 import io
 
-class TestCaseWithNoTests(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
-class TestCaseWithPassingTest(TestCase):
-    
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
-    def test_pass(self):
-        pass
-
-class TestCaseWithFailingTest(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
-    def test_fail(self):
-        expect(None).fail('Failing test')
-
-class TestCaseWithErrorTest(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
-    def test_error(self):
-        raise KeyError('You are locked out')
-
-class TestCaseWithIgnoredTest(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
-    def xtest_ignore(self):
-        pass
     
 class ConsoleTestRunnerTests(TestCase):
     def __init__(self, testFunctionName):
