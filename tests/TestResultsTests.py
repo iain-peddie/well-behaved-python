@@ -96,7 +96,7 @@ line2
         before = results.errorCount
         results.registerTestStarted("suite", "test")
         
-        results.registerTestError(["line1\n"])
+        results.registerTestError("suite", "test", ["line1\n"])
         after = results.errorCount
 
         expect(after).toEqual(before + 1)
@@ -107,7 +107,7 @@ line2
         results.registerTestStarted("suite", "test")
         before = results.ignoredCount
         
-        results.registerTestIgnored()
+        results.registerTestIgnored("suite", "test")
         after = results.ignoredCount
 
         expect(after).toEqual(before + 1)
@@ -138,8 +138,32 @@ line2
         expect(results.getDuration().total_seconds()).toEqual(
             result.getDuration().total_seconds())
         
+    def test_result_error_updates_result(self):
+        # Where
+        results = self.results
+        result = results.registerTestStarted("suite", "test")
+
+        # When
+        results.registerTestError("suite", "test", ["stacktrace"])
+
+        # Then
+        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(results.getDuration().total_seconds()).toEqual(
+            result.getDuration().total_seconds())
 
         
+    def test_result_ignored_updates_result(self):
+        # Where
+        results = self.results
+        result = results.registerTestStarted("suite", "test")
+
+        # When
+        results.registerTestIgnored("suite", "test")
+
+        # Then
+        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(results.getDuration().total_seconds()).toEqual(
+            result.getDuration().total_seconds())
         
 
 if __name__ == "__main__":

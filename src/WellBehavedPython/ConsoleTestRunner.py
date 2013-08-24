@@ -83,15 +83,15 @@ class ConsoleTestRunner:
         self._writeResult(".")
         self.results.registerTestPassed(suiteName, testName)
 
-    def registerTestError(self, stackTrace):
+    def registerTestError(self, suiteName, testName, stackTrace):
         """Register a test failed."""
         self._writeResult("E")
-        self.results.registerTestError(stackTrace)
+        self.results.registerTestError(suiteName, testName, stackTrace)
 
-    def registerTestIgnored(self):
+    def registerTestIgnored(self, suiteName, testName):
         """Register a test ignored."""
         self._writeResult("I")
-        self.results.registerTestIgnored()
+        self.results.registerTestIgnored(suiteName, testName)
 
     def _endResultsLineIfNecessary(self):
         """End the results line if it is right to do so."""

@@ -48,7 +48,6 @@ class TestResults:
         self.individualResults.append(result)
         return result
 
-
     def registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
@@ -56,7 +55,7 @@ class TestResults:
         result = self._getTestResult(suiteName, testName)
         result.registerTestFailed(stackTrace)
 
-    def registerTestError(self, stackTrace):
+    def registerTestError(self, suiteName, testName, stackTrace):
         """Register the fact that a tet failed.
         
         Parameters
@@ -64,6 +63,8 @@ class TestResults:
         stackTrace : list of strings forming the stack trace for this error."""
         self.stackTraces.extend(stackTrace)
         self.errorCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestError(stackTrace)
 
     def registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
@@ -71,14 +72,11 @@ class TestResults:
         result = self._getTestResult(suiteName, testName)
         result.registerTestPassed()
 
-    def _getTestResult(self, suiteName, testName):
-        # TODO : check the result
-        result = self.individualResults[-1]
-        return result
-
-    def registerTestIgnored(self):
+    def registerTestIgnored(self, suiteName, testName):
         """Register the fact that a test was ignored."""
         self.ignoredCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestIgnored()
     
     def summary(self):
         """Build a summary of the tests.
@@ -116,3 +114,8 @@ class TestResults:
         
         return plural
         
+    def _getTestResult(self, suiteName, testName):
+        # TODO : check the result
+        result = self.individualResults[-1]
+        return result
+

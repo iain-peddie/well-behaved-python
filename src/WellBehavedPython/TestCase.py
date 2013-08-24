@@ -64,7 +64,7 @@ class TestCase:
         suiteName = ""
         results.registerTestStarted(suiteName, self.testMethodName)
         if self.ignore:
-            results.registerTestIgnored()
+            results.registerTestIgnored(suiteName, self.testMethodName)
             return
         self.before()
         try:
@@ -75,7 +75,7 @@ class TestCase:
             results.registerTestFailed(suiteName, self.testMethodName, stackTrace)
         except Exception as ex:
             stackTrace = self.getStackTrace(ex)
-            results.registerTestError(stackTrace)
+            results.registerTestError(suiteName, self.testMethodName, stackTrace)
         finally:
             self.after()
 
