@@ -2,13 +2,15 @@
 
 import sys
 
-from TestSuiteTests import *
-from TestCaseTests import *
-from TestResultsTests import *
-from ExpectTests import *
-from ExpectNotTests import *
-from ConsoleTestRunnerTests import *
-from TestResultTests import *
+
+
+from WellBehavedPythonTests.TestSuiteTests import *
+from WellBehavedPythonTests.TestCaseTests import *
+from WellBehavedPythonTests.TestResultsTests import *
+from WellBehavedPythonTests.ExpectTests import *
+from WellBehavedPythonTests.ExpectNotTests import *
+from WellBehavedPythonTests.ConsoleTestRunnerTests import *
+from WellBehavedPythonTests.TestResultTests import *
 
 from WellBehavedPython.TestSuite import TestSuite
 from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner

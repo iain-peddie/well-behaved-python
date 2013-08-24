@@ -170,16 +170,16 @@ class ExpectNotTests(TestCase):
     def test_expect_not_self_instanceof_ExpectNotTests_fails(self):
         expect(lambda: expect(self).Not.toBeAnInstanceOf(ExpectNotTests)).toRaise(
             AssertionError,
-            expectedMessage = "Expected <ExpectNotTests.ExpectNotTests object> "
-            "not to be an instance of <class 'ExpectNotTests.ExpectNotTests'> "
-            "but was an instance of <class 'ExpectNotTests.ExpectNotTests'>")
+            expectedMessageMatches = "Expected <.*ExpectNotTests object> "
+            "not to be an instance of <class '.*ExpectNotTests'> "
+            "but was an instance of <class '.*ExpectNotTests'>")
 
     def test_expect_not_self_instanceof_TestCase_fails(self):
         expect(lambda: expect(self).Not.toBeAnInstanceOf(TestCase)).toRaise(
             AssertionError,
-            expectedMessage = "Expected <ExpectNotTests.ExpectNotTests object>"
-            " not to be an instance of <class 'WellBehavedPython.TestCase.TestCase'>"
-            " but was an instance of <class 'ExpectNotTests.ExpectNotTests'>")        
+            expectedMessageMatches = "Expected <.*ExpectNotTests object>"
+            " not to be an instance of <class '.*TestCase'>"
+            " but was an instance of <class '.*ExpectNotTests'>")        
 
     def test_instance_of_prepends_usermessage(self):
         expect(lambda: expect(1).Not.toBeAnInstanceOf(
