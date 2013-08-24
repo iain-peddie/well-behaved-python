@@ -17,7 +17,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+
+from datetime import timedelta
 import traceback
+
+from .TestResult import TestResult
+
 
 class TestResults:
     """Class containing the results of a test run.
@@ -33,17 +38,24 @@ class TestResults:
         self.errorCount = 0
         self.ignoredCount = 0
         self.stackTraces = []
+        self.individualResults = []
 
-    def registerTestStarted(self):
-        """Register the fact that a test started running."""
+    def registerTestStarted(self, suiteName, testName):
+        """Register the fact that a test started running."""        
         self.testCount += 1
+        result = TestResult(suiteName, testName)
+        result.registerTestStarted()
+        self.individualResults.append(result)
+        return result
 
-    def registerTestFailed(self, stackTrace):
+    def registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
         self.failCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestFailed(stackTrace)
 
-    def registerTestError(self, stackTrace):
+    def registerTestError(self, suiteName, testName, stackTrace):
         """Register the fact that a tet failed.
         
         Parameters
@@ -51,14 +63,20 @@ class TestResults:
         stackTrace : list of strings forming the stack trace for this error."""
         self.stackTraces.extend(stackTrace)
         self.errorCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestError(stackTrace)
 
-    def registerTestPassed(self):
+    def registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
         self.passCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestPassed()
 
-    def registerTestIgnored(self):
+    def registerTestIgnored(self, suiteName, testName):
         """Register the fact that a test was ignored."""
         self.ignoredCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestIgnored()
     
     def summary(self):
         """Build a summary of the tests.
@@ -82,6 +100,12 @@ class TestResults:
             word,
             self.pluralise(number, pluraliseFlag))
 
+    def getDuration(self):
+        totalDuration = timedelta()
+        for result in self.individualResults:
+            totalDuration += result.getDuration()
+        return totalDuration
+
     def pluralise(self, count, pluraliseFlag = True):        
         if (count != 1 and pluraliseFlag):
             plural = "s"
@@ -90,3 +114,8 @@ class TestResults:
         
         return plural
         
+    def _getTestResult(self, suiteName, testName):
+        # TODO : check the result
+        result = self.individualResults[-1]
+        return result
+

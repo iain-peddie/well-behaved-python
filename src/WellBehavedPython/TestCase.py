@@ -61,21 +61,21 @@ class TestCase:
                      the test and calls methods on TestResults to indicate
                      the results of the test.
 """
-        
-        results.registerTestStarted()
+        suiteName = ""
+        results.registerTestStarted(suiteName, self.testMethodName)
         if self.ignore:
-            results.registerTestIgnored()
+            results.registerTestIgnored(suiteName, self.testMethodName)
             return
         self.before()
         try:
             self.testMethod()
-            results.registerTestPassed()
+            results.registerTestPassed(suiteName, self.testMethodName)
         except AssertionError as ex:
             stackTrace = self.getStackTrace(ex)
-            results.registerTestFailed(stackTrace)
+            results.registerTestFailed(suiteName, self.testMethodName, stackTrace)
         except Exception as ex:
             stackTrace = self.getStackTrace(ex)
-            results.registerTestError(stackTrace)
+            results.registerTestError(suiteName, self.testMethodName, stackTrace)
         finally:
             self.after()
 

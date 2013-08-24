@@ -8,6 +8,7 @@ from TestResultsTests import *
 from ExpectTests import *
 from ExpectNotTests import *
 from ConsoleTestRunnerTests import *
+from TestResultTests import *
 
 from WellBehavedPython.TestSuite import TestSuite
 from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
@@ -17,6 +18,7 @@ if __name__ == "__main__":
         results = TestResults()
         runner = ConsoleTestRunner(bufferOutput = True)
         suite = TestSuite()
+        suite.add(TestResultTests.suite())
         suite.add(TestResultsTests.suite())
         suite.add(TestCaseTests.suite())
         suite.add(TestSuiteTests.suite())
