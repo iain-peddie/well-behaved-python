@@ -62,17 +62,17 @@ class TestCase:
                      the results of the test.
 """
         suiteName = ""
-        results.registerTestStarted("", self.testMethodName)
+        results.registerTestStarted(suiteName, self.testMethodName)
         if self.ignore:
             results.registerTestIgnored()
             return
         self.before()
         try:
             self.testMethod()
-            results.registerTestPassed("", self.testMethodName)
+            results.registerTestPassed(suiteName, self.testMethodName)
         except AssertionError as ex:
             stackTrace = self.getStackTrace(ex)
-            results.registerTestFailed(stackTrace)
+            results.registerTestFailed(suiteName, self.testMethodName, stackTrace)
         except Exception as ex:
             stackTrace = self.getStackTrace(ex)
             results.registerTestError(stackTrace)

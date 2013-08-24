@@ -85,7 +85,7 @@ line2
         before = results.failCount
         results.registerTestStarted("suite", "test")
         
-        results.registerTestFailed(["line1\n"])
+        results.registerTestFailed("suite", "test", ["line1\n"])
         after = results.failCount
 
         expect(after).toEqual(before + 1)
@@ -112,7 +112,7 @@ line2
 
         expect(after).toEqual(before + 1)
 
-    def test_results_updates_result(self):
+    def test_result_passes_updates_result(self):
         # Where
         results = self.results
         result = results.registerTestStarted("suite", "test")
@@ -124,6 +124,20 @@ line2
         expect(result.getDuration()).toBeGreaterThan(timedelta())
         expect(results.getDuration().total_seconds()).toEqual(
             result.getDuration().total_seconds())
+
+    def test_result_fails_updates_result(self):
+        # Where
+        results = self.results
+        result = results.registerTestStarted("suite", "test")
+
+        # When
+        results.registerTestFailed("suite", "test", ["stacktrace"])
+
+        # Then
+        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(results.getDuration().total_seconds()).toEqual(
+            result.getDuration().total_seconds())
+        
 
         
         

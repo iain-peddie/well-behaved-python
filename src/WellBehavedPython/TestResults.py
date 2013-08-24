@@ -49,10 +49,12 @@ class TestResults:
         return result
 
 
-    def registerTestFailed(self, stackTrace):
+    def registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
         self.failCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestFailed(stackTrace)
 
     def registerTestError(self, stackTrace):
         """Register the fact that a tet failed.
@@ -66,8 +68,13 @@ class TestResults:
     def registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
         self.passCount += 1
-        result = self.individualResults[-0]
+        result = self._getTestResult(suiteName, testName)
         result.registerTestPassed()
+
+    def _getTestResult(self, suiteName, testName):
+        # TODO : check the result
+        result = self.individualResults[-1]
+        return result
 
     def registerTestIgnored(self):
         """Register the fact that a test was ignored."""
