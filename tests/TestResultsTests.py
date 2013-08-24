@@ -61,6 +61,18 @@ class TestResultsTests(TestCase):
 line2
 """)
 
+    def test_summary_writes_duration(self):
+        results = self.results
+        # Where
+        result = results.registerTestStarted("suite", "test")
+        results.registerTestPassed("suite", "test")
+        result.EndTime = result.StartTime + timedelta(minutes = 1)
+
+        # When
+        
+        # Then
+        expect(results.summary()).toMatch("in 60\\.0+s")
+
     def test_register_test_started_increments_testCount(self):
         results = self.results
         before = results.testCount

@@ -88,7 +88,9 @@ class TestResults:
         ignoredPart = self.buildMessagePart("ignored", self.ignoredCount, False)
         testPart = self.buildMessagePart("test", self.testCount)
         
-        line0 = "{} {} {} from {}\n".format(failedPart, errorPart, ignoredPart, testPart)
+        line0 = "{} {} {} from {} in {}s\n".format(
+            failedPart, errorPart, ignoredPart, testPart, 
+            self.getDuration().total_seconds())
         lines = [line0]
         if len(self.stackTraces) > 0:
             lines.extend(self.stackTraces)

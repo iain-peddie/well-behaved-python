@@ -142,6 +142,13 @@ class NumericExpectations(DefaultExpectations):
 
         FLOOR_TOLERANCE = 1e-20
 
+        try:
+            abs(expected)
+            abs(self.actual)
+        except:
+            DefaultExpectations.toEqual(self, expected, userMessage)
+            return
+
         if toleranceType == "absolute":
             difference = abs(self.actual - expected)
         else:
