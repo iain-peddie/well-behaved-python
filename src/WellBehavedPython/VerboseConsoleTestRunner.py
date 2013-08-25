@@ -49,21 +49,15 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         self._output.write(testName)
         self.lastResult = self.results.registerTestStarted(suiteName, testName)
 
-    def xregisterTestFailed(self, suiteName, testName, stackTrace):
+    def registerTestFailed(self, suiteName, testName, stackTrace):
         """Register a test failed."""
-        self._writeResult("F")
         self.results.registerTestFailed(suiteName, testName, stackTrace)
+        self.registerTestFinished(suiteName, testName, "failed")
 
     def registerTestPassed(self, suiteName, testName):
         """register a test passed."""
         self.results.registerTestPassed(suiteName, testName)
         self.registerTestFinished(suiteName, testName, "passed")
-
-    def registerTestFinished(self, suiteName, testName, stateMessage):
-        time = self.lastResult.getDuration().total_seconds()
-        self._output.write("... {} in {:f}s\n".format(stateMessage, time))
-
-
 
     def xregisterTestError(self, suiteName, testName, stackTrace):
         """Register a test failed."""
@@ -74,4 +68,10 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         """Register a test ignored."""
         self._writeResult("I")
         self.results.registerTestIgnored(suiteName, testName)
+
+    def registerTestFinished(self, suiteName, testName, stateMessage):
+        time = self.lastResult.getDuration().total_seconds()
+        self._output.write("... {} in {:f}s\n".format(stateMessage, time))
+
+
     

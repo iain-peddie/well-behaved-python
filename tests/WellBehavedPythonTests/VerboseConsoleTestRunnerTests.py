@@ -92,7 +92,7 @@ test_pass.* passed in [0-9\\.]+s""")
         expect(results.passCount).toEqual(1)
         expect(results.testCount).toEqual(1)
 
-    def xtest_that_running_suite_with_one_failing_test_produces_correct_output(self):
+    def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
         # Where
         runner = self.runner
         suite = TestCaseWithFailingTest.suite()
@@ -101,9 +101,9 @@ test_pass.* passed in [0-9\\.]+s""")
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""test
-F
-""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 1 test")
+        expect(self.output.getvalue()).toMatch("from 1 test")
+        expect(self.output.getvalue()).toMatch("test_fail.* failed in [0-9\\.]+s")
 
     def xtest_that_running_suite_with_one_failing_test_produces_correct_output(self):
         # Where
