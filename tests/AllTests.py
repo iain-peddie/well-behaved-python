@@ -19,7 +19,6 @@ from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
 if __name__ == "__main__":
     try:
         results = TestResults()
-        runner = ConsoleTestRunner(bufferOutput = True)
         suite = TestSuite()
         suite.add(TestResultTests.suite())
         suite.add(TestResultsTests.suite())
@@ -29,9 +28,11 @@ if __name__ == "__main__":
         suite.add(ExpectNotTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
-        results = runner.run(suite)
 
-        runner = VerboseConsoleTestRunner(bufferOutput = True)
+        if len(sys.argv) > 1 and sys.argv[1] == '--verbose':
+            runner = VerboseConsoleTestRunner(bufferOutput = True)
+        else:
+            runner = ConsoleTestRunner(bufferOutput = True)
         results = runner.run(suite)
 
         exit(results.failCount > 0)

@@ -60,6 +60,7 @@ class ConsoleTestRunner:
             self._output.write("Starting test run of {} test{}\n".format(
                 self._testCount, self.results.pluralise(self._testCount)))
             suite.run(self)
+            self._output.write("\n")
             self._output.write(self.results.summary())
             self._output.write("\n")
             self._output.write(self.outputBuffer.getvalue())

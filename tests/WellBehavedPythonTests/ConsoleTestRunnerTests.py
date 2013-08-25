@@ -43,8 +43,8 @@ class ConsoleTestRunnerTests(TestCase):
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""Starting test run of 0 tests
-.*from 0 tests""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 0 tests")
+        expect(self.output.getvalue()).toMatch(".*from 0 tests""")
 
         # Ignoring - this needs test completed event in test
         # runner and suteis to count number of tests
@@ -58,8 +58,8 @@ class ConsoleTestRunnerTests(TestCase):
 
         # Then
         expect(self.output.getvalue()).toMatch("""Starting test run of 1 test
-\\.
-.*from 1 test""")
+\\.""")
+        expect(self.output.getvalue()).toMatch(".*from 1 test""")
         
     def test_that_running_suite_with_two_passing_tests_produces_correct_output(self):
         # Where
@@ -161,8 +161,8 @@ I
         expect(theOutput).toContain("""
 F.
 """)
-        expect(theOutput).toMatch("""F\\.
-.*from 2 tests.*
+        expect(theOutput).toMatch("F\\.")
+        expect(theOutput).toMatch(""".*from 2 tests.*
 Failing test
 .*File.*\\.py""")
 
