@@ -62,7 +62,7 @@ class VerboseConsoleTestRunnerTests(TestCase):
         expect(self.output.getvalue()).toMatch("from 1 test")
         expect(self.output.getvalue()).toMatch("test_pass.* passed in [0-9\\.]+s")
         
-    def xtest_that_running_suite_with_two_passing_tests_produces_correct_output(self):
+    def test_that_running_suite_with_two_passing_tests_produces_correct_output(self):
         # Where
         runner = self.runner
         suite = TestSuite()
@@ -73,11 +73,14 @@ class VerboseConsoleTestRunnerTests(TestCase):
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toContain("""Starting test run of 2 tests
-..
-""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 2 tests")
+        expect(self.output.getvalue()).toMatch("from 2 tests")
+        expect(self.output.getvalue()).toMatch("""
+test_pass.* passed in [0-9\\.]+s
+test_pass.* passed in [0-9\\.]+s""")
+        
 
-    def xtest_that_runner_returns_test_result(self):
+    def test_that_runner_returns_test_result(self):
         # Where
         runner = self.runner
         suite = TestCaseWithPassingTest.suite();
