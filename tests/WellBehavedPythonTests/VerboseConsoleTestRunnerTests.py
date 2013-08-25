@@ -19,20 +19,23 @@
 
 from WellBehavedPython.api import *
 from WellBehavedPython.TestCase import *
-from WellBehavedPython.ConsoleTestRunner import *
+from WellBehavedPython.VerboseConsoleTestRunner import *
 
 from .SampleTestCases import *
 
 import io
 
-    
-class ConsoleTestRunnerTests(TestCase):
+class VerboseConsoleTestRunnerTests(TestCase):
+
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
     def before(self):
         self.output = io.StringIO()
-        self.runner = ConsoleTestRunner(self.output, resultsPerLine = 3)
+        self.runner = VerboseConsoleTestRunner(self.output)
+
+    def test_setup(self):
+        pass
 
     def test_that_running_suite_with_no_tests_produces_correct_output(self):
         # Where
@@ -46,8 +49,6 @@ class ConsoleTestRunnerTests(TestCase):
         expect(self.output.getvalue()).toMatch("Starting test run of 0 tests")
         expect(self.output.getvalue()).toMatch(".*from 0 tests""")
 
-        # Ignoring - this needs test completed event in test
-        # runner and suteis to count number of tests
     def test_that_running_suite_with_one_tests_produces_correct_output(self):
         # Where
         runner = self.runner
@@ -57,9 +58,9 @@ class ConsoleTestRunnerTests(TestCase):
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""Starting test run of 1 test
-\\.""")
-        expect(self.output.getvalue()).toMatch(".*from 1 test""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 1 test")
+        expect(self.output.getvalue()).toMatch("from 1 test")
+        expect(self.output.getvalue()).toMatch("test_pass.* passed in [0-9\\.]+s")
         
     def test_that_running_suite_with_two_passing_tests_produces_correct_output(self):
         # Where
@@ -72,9 +73,12 @@ class ConsoleTestRunnerTests(TestCase):
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toContain("""Starting test run of 2 tests
-..
-""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 2 tests")
+        expect(self.output.getvalue()).toMatch("from 2 tests")
+        expect(self.output.getvalue()).toMatch("""
+test_pass.* passed in [0-9\\.]+s
+test_pass.* passed in [0-9\\.]+s""")
+        
 
     def test_that_runner_returns_test_result(self):
         # Where
@@ -97,11 +101,11 @@ class ConsoleTestRunnerTests(TestCase):
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""test
-F
-""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 1 test")
+        expect(self.output.getvalue()).toMatch("from 1 test")
+        expect(self.output.getvalue()).toMatch("test_fail.* failed in [0-9\\.]+s")
 
-    def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
+    def test_that_running_suite_with_one_error_test_produces_correct_output(self):
         # Where
         runner = self.runner
         suite = TestCaseWithErrorTest.suite()
@@ -110,9 +114,9 @@ F
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""test
-E
-""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 1 test")
+        expect(self.output.getvalue()).toMatch("from 1 test")
+        expect(self.output.getvalue()).toMatch("test_error.* error in [0-9\\.]+s")
 
     def test_that_running_suite_with_one_ignored_test_produces_correct_output(self):
         # Where
@@ -123,9 +127,9 @@ E
         results = runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""test
-I
-""")
+        expect(self.output.getvalue()).toMatch("Starting test run of 1 test")
+        expect(self.output.getvalue()).toMatch("from 1 test")
+        expect(self.output.getvalue()).toMatch("test_ignore.* ignored in [0-9\\.]+s")
         expect(results.ignoredCount).toEqual(1)
         expect(results.testCount).toEqual(1)
         expect(results.passCount).toEqual(0)
@@ -137,14 +141,17 @@ I
         suite.add(TestCaseWithPassingTest.suite())
         suite.add(TestCaseWithFailingTest.suite())
         suite.add(TestCaseWithErrorTest.suite())
+        suite.add(TestCaseWithIgnoredTest.suite())
 
         # When
         runner.run(suite)
 
         # Then
-        expect(self.output.getvalue()).toMatch("""tests
-.FE
-""")
+        expect(self.output.getvalue()).toMatch("4 tests")
+        expect(self.output.getvalue()).toMatch("test_pass.*passed")
+        expect(self.output.getvalue()).toMatch("test_fail.*failed")
+        expect(self.output.getvalue()).toMatch("test_error.*error")
+        expect(self.output.getvalue()).toMatch("test_ignore.*ignored")
         
     def test_that_runner_buffers_output_and_prints_after_tests(self):
         # Where
@@ -158,30 +165,11 @@ I
 
         # Then
         theOutput = self.output.getvalue()
-        expect(theOutput).toContain("""
-F.
-""")
-        expect(theOutput).toMatch("F\\.")
+        expect(theOutput).toContain("failed")
+        expect(theOutput).toContain("passed")
         expect(theOutput).toMatch(""".*from 2 tests.*
 Failing test
 .*File.*\\.py""")
 
-    def test_that_runner_limits_results_block_width(self):
-        # Where
-        runner = self.runner
-        suite = TestSuite()
-        for i in range(0,4):
-            suite.add(TestCaseWithPassingTest.suite())
-        suite.add(TestCaseWithFailingTest.suite())
-        suite.add(TestCaseWithErrorTest.suite())
 
-        # When
-        runner.run(suite)
-
-        # Then
-        theOutput = self.output.getvalue()
-        expect(theOutput).toContain("""...
-.FE
-""")
-        expect(theOutput).toContain("from 6 tests")
 
