@@ -98,3 +98,15 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
     def test_statics(self):
         expect(self.beforeClassCalled).toBeTrue("beforeClass was not called")
         expect(self.afterClassCalled).toBeFalse("afterClass was called before test")
+
+class TestCaseWithBeforeClassSaboteur(TestCaseWithBeforeAndAfterClass):
+
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    @classmethod
+    def beforeClass(type):
+        raise KeyError("Saboteur sabotages beforeClass")
+
+    def test_two(self):
+        pass

@@ -54,9 +54,12 @@ class TestSuite:
         """Runs all the tests in the suite."""
         if self.testClass is None:
             return
-        self.testClass.beforeClass()
-        for test in self.tests:
-            test.run(results)        
+        try:
+            self.testClass.beforeClass()
+            for test in self.tests:
+                test.run(results)        
+        except:            
+            results.errorCount += self.countTests()
 
     @classmethod
     def beforeClass(type):
