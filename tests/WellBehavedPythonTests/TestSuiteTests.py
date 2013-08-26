@@ -219,7 +219,7 @@ class TestSuiteTests(TestCase):
         # Then
         expect(results.failCount).toEqual(0, "Test should pass")
         
-    def xtest_suite_run_calls_test_case_beforeClass(self):
+    def test_suite_run_calls_beforeClass_before_any_tests_run(self):
         # Where
         TestCaseWithBeforeAndAfterClass.reset()
         suite = TestCaseWithBeforeAndAfterClass.suite()

@@ -105,6 +105,15 @@ class TestCase:
         return 1
 
     @classmethod
+    def beforeClass(type):
+        """Default implementation of do nothing. 
+
+        This allows classes to derive from TestCase without needing to
+        define beforeClass."""
+        
+        pass
+
+    @classmethod
     def suite(klass):
         """Builds a default test suite by examining the members of the class
 

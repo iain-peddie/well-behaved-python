@@ -52,8 +52,15 @@ class TestSuite:
 
     def run(self, results):
         """Runs all the tests in the suite."""
+        if self.testClass is None:
+            return
+        self.testClass.beforeClass()
         for test in self.tests:
             test.run(results)        
+
+    @classmethod
+    def beforeClass(type):
+        pass
 
     def _validateAddedTest(self, test):
         if self.testClass == None:
