@@ -24,6 +24,7 @@ import sys
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.api import *
+from WellBehavedPython.TestRunningException import *
 
 from .SampleTestCases import *
 
@@ -88,6 +89,25 @@ class TestSuiteTests(TestCase):
         
         # Then
         expect(self.suite.countTests()).toEqual(2)        
+
+    def test_that_suite_raises_error_if_tests_from_different_classes_added(self):
+        # This may be transient behavior, but it makes getting going on
+        # before and after easier. We want the suite to raise an exception
+        # if additions to different classes are added to the same suite directly
+        
+        # Where 
+        test1 = TestCaseWithPassingTest("test_pass")
+        test2 = TestCaseWithTwoPassingTests("test_example1")
+        suite = TestSuite()
+
+        # When
+        suite.add(test1)
+
+        # Then
+        expect(lambda: suite.add(test2)).toRaise(
+            TestRunningException,
+            expectedMessageMatches = "Tests from two different test classes added to suite")
+        
 
     def test_that_suite_with_inner_suite_counts_all_subtests(self):
         # Where
