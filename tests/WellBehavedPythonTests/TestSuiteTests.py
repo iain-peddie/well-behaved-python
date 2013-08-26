@@ -24,29 +24,9 @@ import sys
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.api import *
+from WellBehavedPython.TestRunningException import *
 
-class MockTestCase(TestCase):
-    """This class should never be run directly.
-
-    It is used to test the auto-detection of test cases."""
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
-
-    def test_example1(self):
-        print("test_example1")
-
-    def test_example2(self):
-        print("test_example2")
-
-class MockIgnoredTestCase(TestCase):
-    """This class should never be run directly.
-
-    It is used to test the auto-dection of ignored test cases."""
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
-
-    def xtest_ignored(self):
-        print("should be ignored")
+from .SampleTestCases import *
 
 class TestSuiteTests(TestCase):
 
@@ -57,6 +37,9 @@ class TestSuiteTests(TestCase):
         self.testMethodCount = 0
         self.suite = TestSuite()
         self.results = TestResults()
+
+    def after(self):
+        TestCaseWithBeforeAndAfterClass.reset()
 
     def selfShuntIncrementMethod(self):
         self.testMethodCount += 1
@@ -110,6 +93,25 @@ class TestSuiteTests(TestCase):
         # Then
         expect(self.suite.countTests()).toEqual(2)        
 
+    def test_that_suite_raises_error_if_tests_from_different_classes_added(self):
+        # This may be transient behavior, but it makes getting going on
+        # before and after easier. We want the suite to raise an exception
+        # if additions to different classes are added to the same suite directly
+        
+        # Where 
+        test1 = TestCaseWithPassingTest("test_pass")
+        test2 = TestCaseWithTwoPassingTests("test_example1")
+        suite = TestSuite()
+
+        # When
+        suite.add(test1)
+
+        # Then
+        expect(lambda: suite.add(test2)).toRaise(
+            TestRunningException,
+            expectedMessageMatches = "Tests from two different test classes added to suite")
+        
+
     def test_that_suite_with_inner_suite_counts_all_subtests(self):
         # Where
         test1 = TestSuiteTests("selfShuntIncrementMethod")
@@ -128,7 +130,7 @@ class TestSuiteTests(TestCase):
 
 
     def test_autosuite_discovers_correct_tests(self):
-        suite = MockTestCase.suite()
+        suite = TestCaseWithTwoPassingTests.suite()
         expectedTestMethodNames = ["test_example1", "test_example2" ];
 
         # TODO : toHaveLength(2) ?
@@ -137,19 +139,98 @@ class TestSuiteTests(TestCase):
             # we use naked asserts while waiting for isInstanceOf and
             # toBeIn
             message = "Test index {}".format(i)
-            expect(suite.tests[i]).toBeAnInstanceOf(MockTestCase, message)
+            expect(suite.tests[i]).toBeAnInstanceOf(TestCaseWithTwoPassingTests, message)
             expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames, message)
 
     def test_autosuite_ingores_xtests(self):
-        suite = MockIgnoredTestCase.suite()
-        expectedTestMethodNames = ["xtest_ignored"]
+        suite = TestCaseWithIgnoredTest.suite()
+        expectedTestMethodNames = ["xtest_ignore"]
         
         expect(len(suite.tests)).toEqual(len(expectedTestMethodNames))
         for test in suite.tests:
             expect(test.ignore).toBeTrue()
-            expect(test).toBeAnInstanceOf(MockIgnoredTestCase)
+            expect(test).toBeAnInstanceOf(TestCaseWithIgnoredTest)
             expect(test.testMethodName).toBeIn(expectedTestMethodNames)
+
+    def test_BeforeAndAfterCase_classmethods_set_static_variables(self):
+        # This test checks the assumed behaviour of the test case that
+        # will be called in other tests to ensure that the test is working
+        # correctly
         
+        # Where
+        
+        # (cache values to compare to later without drive-by-asserting)
+        beforeAtStart = TestCaseWithBeforeAndAfterClass.beforeClassCalled
+        afterAtStart = TestCaseWithBeforeAndAfterClass.afterClassCalled
+
+        # When
+        TestCaseWithBeforeAndAfterClass.beforeClass()
+        TestCaseWithBeforeAndAfterClass.afterClass()
+
+        beforeAfterCallingBeforeClass = TestCaseWithBeforeAndAfterClass.beforeClassCalled
+        afterAfterCallingAfterClass = TestCaseWithBeforeAndAfterClass.afterClassCalled
+
+        TestCaseWithBeforeAndAfterClass.reset()
+        beforeAtEnd = TestCaseWithBeforeAndAfterClass.beforeClassCalled
+        afterAtEnd = TestCaseWithBeforeAndAfterClass.afterClassCalled
+
+        # Then
+        expect(beforeAtStart).toBeFalse("beforeCalled should be false initially")
+        expect(afterAtStart).toBeFalse("afterCalled should be false initially")
+        expect(beforeAfterCallingBeforeClass).toBeTrue("beforeCalled should be true after calling beforeClass")
+        expect(afterAfterCallingAfterClass).toBeTrue("afterCalled should be false after calling afterClass")
+        expect(beforeAtEnd).toBeFalse("beforeCalled should be false after calling reset()")
+        expect(afterAtEnd).toBeFalse("beforeCalled should be false after calling reset()")
+
+    def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        test = TestCaseWithBeforeAndAfterClass("test_statics")
+        
+
+        # Then
+        results = TestResults()
+        test.run(results)
+        expect(results.failCount).toEqual(1, "beforeClass was not called")
+
+    def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        test = TestCaseWithBeforeAndAfterClass("test_statics")
+        TestCaseWithBeforeAndAfterClass.beforeClass()
+        TestCaseWithBeforeAndAfterClass.afterClass()
+        
+        # Then
+        results = TestResults()
+        test.run(results)
+        expect(results.failCount).toEqual(1, "afterClass was called")
+
+    def test_beforeAndAFterCase_test_passes_if_just_before_called(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        test = TestCaseWithBeforeAndAfterClass("test_statics")
+        results = TestResults()
+
+        # When
+        TestCaseWithBeforeAndAfterClass.beforeClass()
+        test.run(results)
+        TestCaseWithBeforeAndAfterClass.afterClass()
+
+        # Then
+        expect(results.failCount).toEqual(0, "Test should pass")
+        
+    def test_suite_run_calls_beforeClass_before_any_tests_run(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        suite = TestCaseWithBeforeAndAfterClass.suite()
+        results = TestResults()
+
+        # When
+        suite.run(results)
+
+        # Then
+        expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).toBeTrue(
+            "beforeClass should have been called")
 
 if __name__ == "__main__":
     # Let's hand craft a test suite

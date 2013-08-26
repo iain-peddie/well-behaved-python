@@ -17,6 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+from .TestRunningException import *
+
 class TestSuite:
     """Class for containing multiple tests.
 
@@ -27,6 +29,7 @@ class TestSuite:
     def __init__(self):
         """Constructor."""
         self.tests = []
+        self.testClass = None
     
     def add(self, test):
         """Adds a test or other runnable to the suite.
@@ -36,6 +39,7 @@ class TestSuite:
         test : An object which has a run method consistent with
             TestCase.              
 """
+        self._validateAddedTest(test)
         self.tests.append(test)
 
     def countTests(self):
@@ -48,5 +52,23 @@ class TestSuite:
 
     def run(self, results):
         """Runs all the tests in the suite."""
+        if self.testClass is None:
+            return
+        self.testClass.beforeClass()
         for test in self.tests:
             test.run(results)        
+
+    @classmethod
+    def beforeClass(type):
+        pass
+
+    def _validateAddedTest(self, test):
+        if self.testClass == None:
+            self.testClass = type(test)
+        else:
+            if type(test) != self.testClass:
+                raise TestRunningException("""Tests from two different test classes added to suite. 
+To have a suite like this, create a suite with two sub-suites, one per test case class.""")
+
+
+

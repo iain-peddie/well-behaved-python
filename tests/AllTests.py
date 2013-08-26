@@ -35,7 +35,8 @@ if __name__ == "__main__":
             runner = ConsoleTestRunner(bufferOutput = True)
         results = runner.run(suite)
 
-        exit(results.failCount > 0)
+        # TODO : is test run success
+        exit(results.failCount + results.errorCount > 0)
     except Exception as ex:
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__

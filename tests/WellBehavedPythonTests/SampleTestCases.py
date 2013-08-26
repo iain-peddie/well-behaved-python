@@ -60,3 +60,41 @@ class TestCaseWithIgnoredTest(TestCase):
 
     def xtest_ignore(self):
         pass
+
+class TestCaseWithTwoPassingTests(TestCase):
+    """This class should never be run directly.
+
+    It is used to test the auto-detection of test cases."""
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    def test_example1(self):
+        print("test_example1")
+
+    def test_example2(self):
+        print("test_example2")
+
+class TestCaseWithBeforeAndAfterClass(TestCase):
+
+    beforeClassCalled = False
+    afterClassCalled = False
+
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    @classmethod
+    def beforeClass(testCase):
+        testCase.beforeClassCalled = True
+
+    @classmethod
+    def afterClass(testCase):
+        testCase.afterClassCalled = True
+
+    @classmethod
+    def reset(testCase):
+        testCase.beforeClassCalled = False
+        testCase.afterClassCalled = False
+
+    def test_statics(self):
+        expect(self.beforeClassCalled).toBeTrue("beforeClass was not called")
+        expect(self.afterClassCalled).toBeFalse("afterClass was called before test")
