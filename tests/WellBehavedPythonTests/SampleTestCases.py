@@ -79,6 +79,9 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
     beforeClassCalled = False
     afterClassCalled = False
 
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
     @classmethod
     def beforeClass(testCase):
         testCase.beforeClassCalled = True
@@ -86,3 +89,12 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
     @classmethod
     def afterClass(testCase):
         testCase.afterClassCalled = True
+
+    @classmethod
+    def reset(testCase):
+        testCase.beforeClassCalled = False
+        testCase.afterClassCalled = False
+
+    def test_statics(self):
+        expect(self.beforeClassCalled).toBeTrue("beforeClass was not called")
+        expect(self.afterClassCalled).toBeFalse("afterClass was called before test")

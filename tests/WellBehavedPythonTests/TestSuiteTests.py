@@ -38,6 +38,9 @@ class TestSuiteTests(TestCase):
         self.suite = TestSuite()
         self.results = TestResults()
 
+    def after(self):
+        TestCaseWithBeforeAndAfterClass.reset()
+
     def selfShuntIncrementMethod(self):
         self.testMethodCount += 1
         
@@ -153,7 +156,7 @@ class TestSuiteTests(TestCase):
         # This test checks the assumed behaviour of the test case that
         # will be called in other tests to ensure that the test is working
         # correctly
-
+        
         # Where
         
         # (cache values to compare to later without drive-by-asserting)
@@ -164,16 +167,70 @@ class TestSuiteTests(TestCase):
         TestCaseWithBeforeAndAfterClass.beforeClass()
         TestCaseWithBeforeAndAfterClass.afterClass()
 
-        # Then
+        beforeAfterCallingBeforeClass = TestCaseWithBeforeAndAfterClass.beforeClassCalled
+        afterAfterCallingAfterClass = TestCaseWithBeforeAndAfterClass.afterClassCalled
+
+        TestCaseWithBeforeAndAfterClass.reset()
         beforeAtEnd = TestCaseWithBeforeAndAfterClass.beforeClassCalled
         afterAtEnd = TestCaseWithBeforeAndAfterClass.afterClassCalled
 
+        # Then
         expect(beforeAtStart).toBeFalse("beforeCalled should be false initially")
         expect(afterAtStart).toBeFalse("afterCalled should be false initially")
-        expect(beforeAtEnd).toBeTrue("beforeCalled should be true at end of test")
-        expect(afterAtEnd).toBeTrue("afterCalled should be false at end of test")
+        expect(beforeAfterCallingBeforeClass).toBeTrue("beforeCalled should be true after calling beforeClass")
+        expect(afterAfterCallingAfterClass).toBeTrue("afterCalled should be false after calling afterClass")
+        expect(beforeAtEnd).toBeFalse("beforeCalled should be false after calling reset()")
+        expect(afterAtEnd).toBeFalse("beforeCalled should be false after calling reset()")
+
+    def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        test = TestCaseWithBeforeAndAfterClass("test_statics")
         
+
+        # Then
+        results = TestResults()
+        test.run(results)
+        expect(results.failCount).toEqual(1, "beforeClass was not called")
+
+    def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        test = TestCaseWithBeforeAndAfterClass("test_statics")
+        TestCaseWithBeforeAndAfterClass.beforeClass()
+        TestCaseWithBeforeAndAfterClass.afterClass()
         
+        # Then
+        results = TestResults()
+        test.run(results)
+        expect(results.failCount).toEqual(1, "afterClass was called")
+
+    def test_beforeAndAFterCase_test_passes_if_just_before_called(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        test = TestCaseWithBeforeAndAfterClass("test_statics")
+        results = TestResults()
+
+        # When
+        TestCaseWithBeforeAndAfterClass.beforeClass()
+        test.run(results)
+        TestCaseWithBeforeAndAfterClass.afterClass()
+
+        # Then
+        expect(results.failCount).toEqual(0, "Test should pass")
+        
+    def xtest_suite_run_calls_test_case_beforeClass(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        suite = TestCaseWithBeforeAndAfterClass.suite()
+        results = TestResults()
+
+        # When
+        suite.run(results)
+
+        # Then
+        expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).toBeTrue(
+            "beforeClass should have been called")
 
 if __name__ == "__main__":
     # Let's hand craft a test suite
