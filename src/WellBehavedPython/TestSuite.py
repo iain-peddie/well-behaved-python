@@ -58,11 +58,24 @@ class TestSuite:
             self.testClass.beforeClass()
             for test in self.tests:
                 test.run(results)        
+            self.testClass.afterClass()
         except:            
             results.errorCount += self.countTests()
 
     @classmethod
     def beforeClass(type):
+        """Static method called before any tests in the suite are called.
+
+        This method exists to ensure TestSuite and TestCase have the same
+        test interface, so that they can be used interchangably."""
+        pass
+
+    @classmethod
+    def afterClass(type):
+        """Static method called after all tests in the suite are called.
+
+        This method exists to ensure TestSuite and TestCase have the same
+        test interface, so that they can be used interchangably."""
         pass
 
     def _validateAddedTest(self, test):

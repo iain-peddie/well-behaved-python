@@ -106,12 +106,24 @@ class TestCase:
 
     @classmethod
     def beforeClass(type):
-        """Default implementation of do nothing. 
+        """Static method called before any tests in the class are called.
 
-        This allows classes to derive from TestCase without needing to
-        define beforeClass."""
+        Default implementation is to do nothing. We don't want an abstract
+        static method, because we want to keep the overhead on creating test
+        classes as low as possible."""
         
         pass
+
+    @classmethod
+    def afterClass(type):
+        """Static method called after all tests in the class are called.
+
+        Default implementation is to do nothing. We don't want an abstract
+        static method, because we want to keep the overhead on creating test
+        classes as low as possible."""
+        pass
+
+        
 
     @classmethod
     def suite(klass):

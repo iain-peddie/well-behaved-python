@@ -232,6 +232,27 @@ class TestSuiteTests(TestCase):
         expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).toBeTrue(
             "beforeClass should have been called")
 
+    def test_suite_run_calls_afterClass_after_tests_run(self):
+        # Where
+        TestCaseWithBeforeAndAfterClass.reset()
+        suite = TestCaseWithBeforeAndAfterClass.suite()
+        results = TestResults()
+
+        # When
+        # note : the test run asserts that afterClassCalled is
+        # false when the test runs. This, combined with the asserts
+        # in this test check that afterClass is called _after_
+        # the test runs. With a do-nothing test, this would
+        # not be possible
+        suite.run(results)
+
+        # Then
+        expect(results.errorCount).toEqual(0)
+        expect(results.failCount).toEqual(
+            0, "failure would indicate afterClaass called too early")
+        expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).toBeTrue(
+            "afterClass should have been called")
+
     def test_error_in_beforeClass_marks_all_children_as_error(self):
         # Where
         suite = TestSuite()
