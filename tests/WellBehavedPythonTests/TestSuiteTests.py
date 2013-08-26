@@ -25,28 +25,7 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.TestSuite import *
 from WellBehavedPython.api import *
 
-class MockTestCase(TestCase):
-    """This class should never be run directly.
-
-    It is used to test the auto-detection of test cases."""
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
-
-    def test_example1(self):
-        print("test_example1")
-
-    def test_example2(self):
-        print("test_example2")
-
-class MockIgnoredTestCase(TestCase):
-    """This class should never be run directly.
-
-    It is used to test the auto-dection of ignored test cases."""
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
-
-    def xtest_ignored(self):
-        print("should be ignored")
+from .SampleTestCases import *
 
 class TestSuiteTests(TestCase):
 
@@ -128,7 +107,7 @@ class TestSuiteTests(TestCase):
 
 
     def test_autosuite_discovers_correct_tests(self):
-        suite = MockTestCase.suite()
+        suite = TestCaseWithTwoPassingTests.suite()
         expectedTestMethodNames = ["test_example1", "test_example2" ];
 
         # TODO : toHaveLength(2) ?
@@ -137,18 +116,43 @@ class TestSuiteTests(TestCase):
             # we use naked asserts while waiting for isInstanceOf and
             # toBeIn
             message = "Test index {}".format(i)
-            expect(suite.tests[i]).toBeAnInstanceOf(MockTestCase, message)
+            expect(suite.tests[i]).toBeAnInstanceOf(TestCaseWithTwoPassingTests, message)
             expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames, message)
 
     def test_autosuite_ingores_xtests(self):
-        suite = MockIgnoredTestCase.suite()
-        expectedTestMethodNames = ["xtest_ignored"]
+        suite = TestCaseWithIgnoredTest.suite()
+        expectedTestMethodNames = ["xtest_ignore"]
         
         expect(len(suite.tests)).toEqual(len(expectedTestMethodNames))
         for test in suite.tests:
             expect(test.ignore).toBeTrue()
-            expect(test).toBeAnInstanceOf(MockIgnoredTestCase)
+            expect(test).toBeAnInstanceOf(TestCaseWithIgnoredTest)
             expect(test.testMethodName).toBeIn(expectedTestMethodNames)
+
+    def test_BeforeAndAfterCase_classmethods_set_static_variables(self):
+        # This test checks the assumed behaviour of the test case that
+        # will be called in other tests to ensure that the test is working
+        # correctly
+
+        # Where
+        
+        # (cache values to compare to later without drive-by-asserting)
+        beforeAtStart = TestCaseWithBeforeAndAfterClass.beforeClassCalled
+        afterAtStart = TestCaseWithBeforeAndAfterClass.afterClassCalled
+
+        # When
+        TestCaseWithBeforeAndAfterClass.beforeClass()
+        TestCaseWithBeforeAndAfterClass.afterClass()
+
+        # Then
+        beforeAtEnd = TestCaseWithBeforeAndAfterClass.beforeClassCalled
+        afterAtEnd = TestCaseWithBeforeAndAfterClass.afterClassCalled
+
+        expect(beforeAtStart).toBeFalse("beforeCalled should be false initially")
+        expect(afterAtStart).toBeFalse("afterCalled should be false initially")
+        expect(beforeAtEnd).toBeTrue("beforeCalled should be true at end of test")
+        expect(afterAtEnd).toBeTrue("afterCalled should be false at end of test")
+        
         
 
 if __name__ == "__main__":
