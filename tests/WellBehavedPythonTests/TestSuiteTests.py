@@ -232,6 +232,21 @@ class TestSuiteTests(TestCase):
         expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).toBeTrue(
             "beforeClass should have been called")
 
+    def test_error_in_beforeClass_marks_all_children_as_error(self):
+        # Where
+        suite = TestSuite()
+        suite.add(TestCaseWithBeforeClassSaboteur("test_statics"))
+        suite.add(TestCaseWithBeforeClassSaboteur("test_two"))
+
+        # When
+        results = TestResults()
+        suite.run(results)
+
+        # Then
+        expect(results.errorCount).toEqual(2, "both tests should count as failed")
+
+        
+
 if __name__ == "__main__":
     # Let's hand craft a test suite
     
