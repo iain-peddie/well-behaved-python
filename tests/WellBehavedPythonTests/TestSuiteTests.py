@@ -133,7 +133,7 @@ class TestSuiteTests(TestCase):
         suite = TestCaseWithTwoPassingTests.suite()
         expectedTestMethodNames = ["test_example1", "test_example2" ];
 
-        # TODO : toHaveLength(2) ?
+        expect(suite.suiteName).toEqual("TestCaseWithTwoPassingTests")
         expect(len(suite.tests)).toEqual(2)
         for i in range(2):
             # we use naked asserts while waiting for isInstanceOf and
@@ -145,7 +145,8 @@ class TestSuiteTests(TestCase):
     def test_autosuite_ingores_xtests(self):
         suite = TestCaseWithIgnoredTest.suite()
         expectedTestMethodNames = ["xtest_ignore"]
-        
+
+        expect(suite.suiteName).toEqual("TestCaseWithIgnoredTest")
         expect(len(suite.tests)).toEqual(len(expectedTestMethodNames))
         for test in suite.tests:
             expect(test.ignore).toBeTrue()
