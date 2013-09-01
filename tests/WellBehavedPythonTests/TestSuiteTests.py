@@ -279,16 +279,4 @@ class TestSuiteTests(TestCase):
         # Then
         expect(results.passCount).toEqual(2, "both tests should count as passed")
         expect(results.errorCount).toEqual(1, "but with an extra error anyway")
-        expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")
-        
-
-if __name__ == "__main__":
-    # Let's hand craft a test suite
-    
-    suite = TestSuiteTests.suite()
-    
-    results = TestResults()
-    suite.run(results)
-    
-    print(results.summary())
-
+        expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")        
