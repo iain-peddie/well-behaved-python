@@ -35,7 +35,7 @@ class TestSuiteTests(TestCase):
 
     def before(self):
         self.testMethodCount = 0
-        self.suite = TestSuite()
+        self.suite = TestSuite("self.suite")
         self.results = TestResults()
 
     def after(self):
@@ -101,7 +101,7 @@ class TestSuiteTests(TestCase):
         # Where 
         test1 = TestCaseWithPassingTest("test_pass")
         test2 = TestCaseWithTwoPassingTests("test_example1")
-        suite = TestSuite()
+        suite = self.suite
 
         # When
         suite.add(test1)
@@ -117,7 +117,7 @@ class TestSuiteTests(TestCase):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
         test2 = TestSuiteTests("selfShuntIncrementMethod")
 
-        innerSuite = TestSuite()
+        innerSuite = TestSuite("inner")
         innerSuite.add(test1)
         innerSuite.add(test2)
 
@@ -255,7 +255,7 @@ class TestSuiteTests(TestCase):
 
     def test_error_in_beforeClass_marks_all_children_as_error(self):
         # Where
-        suite = TestSuite()
+        suite = self.suite
         suite.add(TestCaseWithBeforeClassSaboteur("test_statics"))
         suite.add(TestCaseWithBeforeClassSaboteur("test_two"))
 
@@ -268,7 +268,7 @@ class TestSuiteTests(TestCase):
 
     def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
         # Where
-        suite = TestSuite()
+        suite = self.suite
         suite.add(TestCaseWithAfterClassSaboteur("test_statics"))
         suite.add(TestCaseWithAfterClassSaboteur("test_two"))
 
