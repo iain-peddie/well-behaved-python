@@ -17,13 +17,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-import traceback
-import sys
-
 from .TestResults import TestResults
 from .TestSuite import TestSuite
+from .TestComponent import TestComponent
 
-class TestCase:
+class TestCase(TestComponent):
     """Base class for TestCases. 
 
     At the moment, all test methods have to be in classes derived from
@@ -79,16 +77,6 @@ class TestCase:
         finally:
             self.after()
 
-    def getStackTrace(self, exception):
-        exInfo = sys.exc_info()
-        stackInfo = traceback.extract_tb(exInfo[2])
-        if len(exception.args) > 0:
-            stackTrace = [exception.args[0] + "\n"]
-        else:
-            stackTrace = [""]
-        stackTrace.extend(traceback.format_list(stackInfo))
-        return stackTrace
-
     def handleError(self, error, errorType):
         """Handles the case of an error in running a test.
 
@@ -106,12 +94,24 @@ class TestCase:
 
     @classmethod
     def beforeClass(type):
-        """Default implementation of do nothing. 
+        """Static method called before any tests in the class are called.
 
-        This allows classes to derive from TestCase without needing to
-        define beforeClass."""
+        Default implementation is to do nothing. We don't want an abstract
+        static method, because we want to keep the overhead on creating test
+        classes as low as possible."""
         
         pass
+
+    @classmethod
+    def afterClass(type):
+        """Static method called after all tests in the class are called.
+
+        Default implementation is to do nothing. We don't want an abstract
+        static method, because we want to keep the overhead on creating test
+        classes as low as possible."""
+        pass
+
+        
 
     @classmethod
     def suite(klass):

@@ -102,11 +102,23 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
 class TestCaseWithBeforeClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
     def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
+        TestCaseWithBeforeAndAfterClass.__init__(self, testFunctionName)        
 
     @classmethod
     def beforeClass(type):
         raise KeyError("Saboteur sabotages beforeClass")
+
+    def test_two(self):
+        pass
+
+class TestCaseWithAfterClassSaboteur(TestCaseWithBeforeAndAfterClass):
+
+    def __init__(self, testFunctionName):
+        TestCaseWithBeforeAndAfterClass.__init__(self, testFunctionName)        
+
+    @classmethod
+    def afterClass(type):
+        raise KeyError("Saboteur sabotages afterClass")
 
     def test_two(self):
         pass

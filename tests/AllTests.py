@@ -2,8 +2,6 @@
 
 import sys
 
-
-
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ExpectNotTests import *
 from WellBehavedPythonTests.ExpectTests import *
