@@ -35,7 +35,7 @@ class TestSuiteTests(TestCase):
 
     def before(self):
         self.testMethodCount = 0
-        self.suite = TestSuite()
+        self.suite = TestSuite("self.suite")
         self.results = TestResults()
 
     def after(self):
@@ -101,7 +101,7 @@ class TestSuiteTests(TestCase):
         # Where 
         test1 = TestCaseWithPassingTest("test_pass")
         test2 = TestCaseWithTwoPassingTests("test_example1")
-        suite = TestSuite()
+        suite = self.suite
 
         # When
         suite.add(test1)
@@ -117,7 +117,7 @@ class TestSuiteTests(TestCase):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
         test2 = TestSuiteTests("selfShuntIncrementMethod")
 
-        innerSuite = TestSuite()
+        innerSuite = TestSuite("inner")
         innerSuite.add(test1)
         innerSuite.add(test2)
 
@@ -133,7 +133,7 @@ class TestSuiteTests(TestCase):
         suite = TestCaseWithTwoPassingTests.suite()
         expectedTestMethodNames = ["test_example1", "test_example2" ];
 
-        # TODO : toHaveLength(2) ?
+        expect(suite.suiteName).toEqual("TestCaseWithTwoPassingTests")
         expect(len(suite.tests)).toEqual(2)
         for i in range(2):
             # we use naked asserts while waiting for isInstanceOf and
@@ -145,7 +145,8 @@ class TestSuiteTests(TestCase):
     def test_autosuite_ingores_xtests(self):
         suite = TestCaseWithIgnoredTest.suite()
         expectedTestMethodNames = ["xtest_ignore"]
-        
+
+        expect(suite.suiteName).toEqual("TestCaseWithIgnoredTest")
         expect(len(suite.tests)).toEqual(len(expectedTestMethodNames))
         for test in suite.tests:
             expect(test.ignore).toBeTrue()
@@ -255,7 +256,7 @@ class TestSuiteTests(TestCase):
 
     def test_error_in_beforeClass_marks_all_children_as_error(self):
         # Where
-        suite = TestSuite()
+        suite = self.suite
         suite.add(TestCaseWithBeforeClassSaboteur("test_statics"))
         suite.add(TestCaseWithBeforeClassSaboteur("test_two"))
 
@@ -268,7 +269,7 @@ class TestSuiteTests(TestCase):
 
     def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
         # Where
-        suite = TestSuite()
+        suite = self.suite
         suite.add(TestCaseWithAfterClassSaboteur("test_statics"))
         suite.add(TestCaseWithAfterClassSaboteur("test_two"))
 
@@ -279,16 +280,4 @@ class TestSuiteTests(TestCase):
         # Then
         expect(results.passCount).toEqual(2, "both tests should count as passed")
         expect(results.errorCount).toEqual(1, "but with an extra error anyway")
-        expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")
-        
-
-if __name__ == "__main__":
-    # Let's hand craft a test suite
-    
-    suite = TestSuiteTests.suite()
-    
-    results = TestResults()
-    suite.run(results)
-    
-    print(results.summary())
-
+        expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")        

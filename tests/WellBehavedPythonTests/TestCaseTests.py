@@ -144,15 +144,4 @@ class TestCaseTests(TestCase):
 
         # Then
         expect(test.countTests()).toEqual(1)
-        
-        
-if __name__ == "__main__":
-    # Let's hand craft a test suite
-
-    suite = TestCaseTests.suite()
-    results = TestResults()
-    suite.run(results)
-    
-    print(results.summary())
-
-
+                

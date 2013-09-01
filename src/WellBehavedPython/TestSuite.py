@@ -27,10 +27,12 @@ class TestSuite(TestComponent):
     with test case, so a full suite can be constructed out of other
     TestSuties and TestCases."""
 
-    def __init__(self):
+    def __init__(self, suiteName = ""):
         """Constructor."""
         self.tests = []
         self.testClass = None
+        self.suiteName = suiteName
+#        assert suiteName != ""
     
     def add(self, test):
         """Adds a test or other runnable to the suite.
@@ -56,8 +58,6 @@ class TestSuite(TestComponent):
         if self.testClass is None:
             return
 
-        suiteName = ""        
-
         try:
             self.testClass.beforeClass()
             for test in self.tests:
@@ -66,7 +66,7 @@ class TestSuite(TestComponent):
                 self.testClass.afterClass()
             except Exception as ex:
                 trace = self.getStackTrace(ex)
-                results.registerTestError(suiteName, "afterClass", trace)
+                results.registerTestError(self.suiteName, "afterClass", trace)
         except Exception as ex:            
             results.errorCount += self.countTests()
 

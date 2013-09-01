@@ -17,6 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 from .TestResults import TestResults
 from .TestSuite import TestSuite
 from .TestComponent import TestComponent
@@ -131,8 +133,9 @@ class TestCase(TestComponent):
         for key in klass.__dict__.keys():
             if key.startswith("test") or key.startswith("xtest"):
                 testMethods.append(key)
-        
-        suite = TestSuite();
+
+        onlyClassName = TestCase.getUnqualifiedClassName(klass)
+        suite = TestSuite(onlyClassName);
         for testMethod in testMethods:
             testCase = klass(testMethod)
             testCase.ignore = testMethod.startswith("x")
@@ -140,6 +143,16 @@ class TestCase(TestComponent):
             suite.add(testCase)
 
         return suite
+
+    @staticmethod
+    def getUnqualifiedClassName(klass):        
+        pattern = "\\.([^'\\.]*)'"
+        match = re.search(pattern, str(klass))
+        if match:
+            unqualifiedClassName = match.group(1)
+        else:
+            unqualifiedClassName = ""
+        return unqualifiedClassName
 
 
 
