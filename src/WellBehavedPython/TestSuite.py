@@ -18,8 +18,9 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .TestRunningException import *
+from .TestComponent import *
 
-class TestSuite:
+class TestSuite(TestComponent):
     """Class for containing multiple tests.
 
     A TestSuite can contain anything that has a run method consistent
@@ -54,12 +55,19 @@ class TestSuite:
         """Runs all the tests in the suite."""
         if self.testClass is None:
             return
+
+        suiteName = ""        
+
         try:
             self.testClass.beforeClass()
             for test in self.tests:
-                test.run(results)        
-            self.testClass.afterClass()
-        except:            
+                test.run(results)
+            try:
+                self.testClass.afterClass()
+            except Exception as ex:
+                trace = self.getStackTrace(ex)
+                results.registerTestError(suiteName, "afterClass", trace)
+        except Exception as ex:            
             results.errorCount += self.countTests()
 
     @classmethod

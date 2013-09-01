@@ -266,6 +266,20 @@ class TestSuiteTests(TestCase):
         # Then
         expect(results.errorCount).toEqual(2, "both tests should count as failed")
 
+    def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
+        # Where
+        suite = TestSuite()
+        suite.add(TestCaseWithAfterClassSaboteur("test_statics"))
+        suite.add(TestCaseWithAfterClassSaboteur("test_two"))
+
+        # When
+        results = TestResults()
+        suite.run(results)
+
+        # Then
+        expect(results.passCount).toEqual(2, "both tests should count as passed")
+        expect(results.errorCount).toEqual(1, "but with an extra error anyway")
+        expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")
         
 
 if __name__ == "__main__":

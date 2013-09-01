@@ -55,14 +55,14 @@ class TestResults:
         result = self._getTestResult(suiteName, testName)
         result.registerTestFailed(stackTrace)
 
-    def registerTestError(self, suiteName, testName, stackTrace):
+    def registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
         """Register the fact that a tet failed.
         
         Parameters
         ----------
         stackTrace : list of strings forming the stack trace for this error."""
         self.stackTraces.extend(stackTrace)
-        self.errorCount += 1
+        self.errorCount += numErrors
         result = self._getTestResult(suiteName, testName)
         result.registerTestError(stackTrace)
 
