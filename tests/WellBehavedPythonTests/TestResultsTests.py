@@ -176,13 +176,19 @@ line2
         expect(result.getDuration()).toBeGreaterThan(timedelta())
         expect(results.getDuration().total_seconds()).toEqual(
             result.getDuration().total_seconds())
+
+    def test_registerSuiteStarted_returns_child_results(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("suite")        
+        childResults.registerTestStarted("suite", "test_something")
+        childResults.registerTestPassed("suite", "test_something")
+        results.registerSuiteCompleted("suite")
+
+        # Then
+        expect(childResults.testCount).toEqual(1)
+        expect(results.testCount).toEqual(0)
+        expect(results.getDuration()).toBeGreaterThanOrEqualTo(childResults.getDuration())
         
-
-if __name__ == "__main__":
-    # Let's hand craft a test suite
-
-    suite = TestResultsTests.suite()
-    results = TestResults()
-    suite.run(results)
-    
-    print(results.summary())
