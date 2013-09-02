@@ -39,6 +39,15 @@ class TestResults:
         self.ignoredCount = 0
         self.stackTraces = []
         self.individualResults = []
+        self.suiteResults = []
+
+    def registerSuiteStarted(self, suiteName):
+        childResults = TestResults()
+        self.suiteResults.append(childResults)
+        return childResults
+
+    def registerSuiteCompleted(self, suiteName):
+        pass
 
     def registerTestStarted(self, suiteName, testName):
         """Register the fact that a test started running."""        
@@ -106,6 +115,8 @@ class TestResults:
         totalDuration = timedelta()
         for result in self.individualResults:
             totalDuration += result.getDuration()
+        for suite in self.suiteResults:
+            totalDuration += suite.getDuration()
         return totalDuration
 
     def pluralise(self, count, pluraliseFlag = True):        
