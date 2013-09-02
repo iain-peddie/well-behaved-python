@@ -32,6 +32,7 @@ class TestSuiteTests(TestCase):
 
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
+        self.methodCalls = {}
 
     def before(self):
         self.testMethodCount = 0
@@ -40,6 +41,9 @@ class TestSuiteTests(TestCase):
 
     def after(self):
         TestCaseWithBeforeAndAfterClass.reset()
+
+    def spyMethod(self, methodName, *args):
+        self.methodCalls[methodName] = args
 
     def selfShuntIncrementMethod(self):
         self.testMethodCount += 1
@@ -281,3 +285,31 @@ class TestSuiteTests(TestCase):
         expect(results.passCount).toEqual(2, "both tests should count as passed")
         expect(results.errorCount).toEqual(1, "but with an extra error anyway")
         expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")        
+
+    def test_spyMethod(self):
+        # TODO : this will be redundant once test spies are written
+        self.spyMethod("test_spyMethod", 1, "2", 3.0, "four")
+        expect(self.methodCalls["test_spyMethod"]).toEqual([1, "2", 3.0, "four"])
+
+    def test_Spying(self):
+        # TODO : this will be redundant once test spies are written
+        results = TestResults();
+        results.registerSuiteStarted = lambda *args: self.spyMethod("registerSuiteStarted", *args)
+        results.registerSuiteStarted("some suite")
+        expect(self.methodCalls["registerSuiteStarted"]).toContain("some suite")
+
+    def test_suite_run_calls_suite_started_suite_ended_on_initial_suite(self):
+        # Where
+        results = TestResults()
+        results.registerSuiteStarted = lambda *args: self.spyMethod("registerSuiteStarted", *args)
+        results.registerSuiteCompleted = lambda *args: self.spyMethod("registerSuiteCompleted", *args)
+        suite = TestCaseWithPassingTest.suite()
+
+        # When
+        suite.run(results)
+
+        # Then
+        expect(self.methodCalls).toContainKey("registerSuiteStarted")
+        expect(self.methodCalls["registerSuiteStarted"]).toContain("TestCaseWithPassingTest")
+        expect(self.methodCalls).toContainKey("registerSuiteCompleted")
+        expect(self.methodCalls["registerSuiteCompleted"]).toContain("TestCaseWithPassingTest")

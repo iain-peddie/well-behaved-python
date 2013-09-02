@@ -44,6 +44,12 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
 
+    def registerSuiteStarted(self, suiteName):
+        pass
+
+    def registerSuiteCompleted(self, suiteName):
+        pass
+
     def registerTestStarted(self, suiteName, testName):
         """Regsiter the start of a test."""        
         self._output.write(testName)

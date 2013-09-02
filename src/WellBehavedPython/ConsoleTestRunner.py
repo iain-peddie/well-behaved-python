@@ -70,6 +70,12 @@ class ConsoleTestRunner:
 
         return self.results
 
+    def registerSuiteStarted(self, suiteName):
+        pass
+
+    def registerSuiteCompleted(self, suiteName):
+        pass
+
     def registerTestStarted(self, suiteName, testName):
         """Regsiter the start of a test."""
         self.results.registerTestStarted(suiteName, testName)
