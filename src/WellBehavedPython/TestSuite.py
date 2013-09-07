@@ -59,6 +59,7 @@ class TestSuite(TestComponent):
             return
 
         try:
+            suiteResults = results.registerSuiteStarted(self.suiteName)
             self.testClass.beforeClass()
             for test in self.tests:
                 test.run(results)
@@ -69,6 +70,8 @@ class TestSuite(TestComponent):
                 results.registerTestError(self.suiteName, "afterClass", trace)
         except Exception as ex:            
             results.errorCount += self.countTests()
+
+        results.registerSuiteCompleted(self.suiteName)
 
     @classmethod
     def beforeClass(type):

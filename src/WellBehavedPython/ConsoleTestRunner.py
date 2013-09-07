@@ -35,6 +35,7 @@ class ConsoleTestRunner:
         self._currentResult = 0
         self.outputBuffer = io.StringIO()
         self.bufferOutput = bufferOutput
+        self.resultsStack = []
         if self.bufferOutput:
             sys.stdout = self.outputBuffer
             sys.stderr = self.outputBuffer
@@ -69,6 +70,13 @@ class ConsoleTestRunner:
             traceback.print_exc(file = sys.__stdout__)
 
         return self.results
+
+    def registerSuiteStarted(self, suiteName):
+        suiteResults = self.results.registerSuiteStarted(suiteName)
+        return self
+
+    def registerSuiteCompleted(self, suiteName):
+        self.results.registerSuiteCompleted(suiteName)
 
     def registerTestStarted(self, suiteName, testName):
         """Regsiter the start of a test."""
