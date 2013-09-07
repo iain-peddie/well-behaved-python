@@ -313,3 +313,19 @@ class TestSuiteTests(TestCase):
         expect(self.methodCalls["registerSuiteStarted"]).toContain("TestCaseWithPassingTest")
         expect(self.methodCalls).toContainKey("registerSuiteCompleted")
         expect(self.methodCalls["registerSuiteCompleted"]).toContain("TestCaseWithPassingTest")
+
+    # ignored - the obvious implementation of this behaviour would completely
+    # break the console test runners. Instead, we need to make TestResults act
+    # as a composite, aggregating data about it's children
+    def xtest_suite_run_calls_run_using_subsuite(self):
+        # Where
+        results = TestResults()
+        suite = TestCaseWithPassingTest.suite()
+
+        # When
+        suite.run(results)
+        suiteResults = results.suiteResults[0]
+
+        # Then
+        expect(results.testCount).toEqual(0)
+        expect(suiteResults.testCount).toEqual(1)

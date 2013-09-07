@@ -86,13 +86,19 @@ class TestResults:
         self.ignoredCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestIgnored()
+
+    def countFailures(self):
+        totalFailures = self.failCount
+        for suite in self.suiteResults:
+            totalFailures += suite.failCount
+        return totalFailures
     
     def summary(self):
         """Build a summary of the tests.
 
         This will construct a string describing the overall results
         of the test."""
-        failedPart = self.buildMessagePart("failure", self.failCount)
+        failedPart = self.buildMessagePart("failure", self.countFailures())
         errorPart = self.buildMessagePart("error", self.errorCount)
         ignoredPart = self.buildMessagePart("ignored", self.ignoredCount, False)
         testPart = self.buildMessagePart("test", self.testCount)

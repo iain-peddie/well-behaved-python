@@ -59,7 +59,7 @@ class TestSuite(TestComponent):
             return
 
         try:
-            results.registerSuiteStarted(self.suiteName)
+            suiteResults = results.registerSuiteStarted(self.suiteName)
             self.testClass.beforeClass()
             for test in self.tests:
                 test.run(results)

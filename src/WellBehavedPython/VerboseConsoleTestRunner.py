@@ -45,10 +45,11 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
             sys.stderr = sys.__stderr__
 
     def registerSuiteStarted(self, suiteName):
-        pass
+        ConsoleTestRunner.registerSuiteStarted(self, suiteName)
+        return self
 
     def registerSuiteCompleted(self, suiteName):
-        pass
+        ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
 
     def registerTestStarted(self, suiteName, testName):
         """Regsiter the start of a test."""        
