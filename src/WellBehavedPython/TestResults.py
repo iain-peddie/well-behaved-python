@@ -87,11 +87,41 @@ class TestResults:
         result = self._getTestResult(suiteName, testName)
         result.registerTestIgnored()
 
+    def countTests(self):
+        total = self.testCount
+        for results in self.suiteResults:
+            total += results.countTests()
+        return total
+
+    def countPasses(self):
+        total = self.passCount
+        for results in self.suiteResults:
+            total += results.countPasses()
+        return total
+
     def countFailures(self):
-        totalFailures = self.failCount
-        for suite in self.suiteResults:
-            totalFailures += suite.failCount
-        return totalFailures
+        total = self.failCount
+        for results in self.suiteResults:
+            total += results.countFailures()
+        return total
+
+    def countErrors(self):
+        total = self.errorCount
+        for results in self.suiteResults:
+            total += results.countErrors()
+        return total
+
+    def countIgnores(self):
+        total = self.ignoredCount
+        for results in self.suiteResults:
+            total += results.countIgnores()
+        return total
+
+    def getStackTraces(self):
+        allTraces = self.stackTraces[:]
+        for results in self.suiteResults:
+            allTraces.extend(results.getStackTraces())
+        return allTraces
     
     def summary(self):
         """Build a summary of the tests.

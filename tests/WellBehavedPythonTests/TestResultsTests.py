@@ -191,4 +191,68 @@ line2
         expect(childResults.testCount).toEqual(1)
         expect(results.testCount).toEqual(0)
         expect(results.getDuration()).toBeGreaterThanOrEqualTo(childResults.getDuration())
-        
+
+    def test_passing_method_in_subsuite_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "passing")
+        childResults.registerTestPassed("subsuite", "passing")
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(1)
+
+    def test_failed_methods_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "failing")
+        childResults.registerTestFailed("subsuite", "failing", ["fail stack"])
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(1)
+        expect(results.getStackTraces()).toEqual(["fail stack"])
+
+    def test_failed_methods_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "failing")
+        childResults.registerTestError("subsuite", "failing", ["error stack"])
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countErrors()).toEqual(1)
+        expect(results.getStackTraces()).toEqual(["error stack"])
+
+    def test_ignored_methods_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "ignored")
+        childResults.registerTestIgnored("subsuite", "ignored")
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countErrors()).toEqual(0)
+        expect(results.countIgnores()).toEqual(1)
+
