@@ -40,24 +40,36 @@ class TestResults:
         self.stackTraces = []
         self.individualResults = []
         self.suiteResults = []
+        self.suiteStack = []
+        self.activeResults = self
 
     def registerSuiteStarted(self, suiteName):
-        childResults = TestResults()
-        self.suiteResults.append(childResults)
-        return childResults
+        self.suiteStack.append(self.activeResults)
+        self.activeResults = TestResults()
+        self.suiteResults.append(self.activeResults)
+        return self.activeResults
 
     def registerSuiteCompleted(self, suiteName):
-        pass
+        self.activeResults = self.suiteStack.pop()
 
     def registerTestStarted(self, suiteName, testName):
+        return self.activeResults._registerTestStarted(suiteName, testName)
+
+    def _registerTestStarted(self, suiteName, testName):
         """Register the fact that a test started running."""        
         self._testCount += 1
+        result = self._getTestResult(suiteName, testName)
+        if result is not None:
+            raise KeyError("Test in same suite twice")
         result = TestResult(suiteName, testName)
         result.registerTestStarted()
         self.individualResults.append(result)
         return result
 
     def registerTestFailed(self, suiteName, testName, stackTrace):
+        self.activeResults._registerTestFailed(suiteName, testName, stackTrace)
+
+    def _registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
         self._failCount += 1
@@ -65,7 +77,10 @@ class TestResults:
         result.registerTestFailed(stackTrace)
 
     def registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
-        """Register the fact that a tet failed.
+        self.activeResults._registerTestError(suiteName, testName, stackTrace, numErrors)
+
+    def _registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
+        """Register the fact that a test failed.
         
         Parameters
         ----------
@@ -76,12 +91,18 @@ class TestResults:
         result.registerTestError(stackTrace)
 
     def registerTestPassed(self, suiteName, testName):
+        self.activeResults._registerTestPassed(suiteName, testName)
+
+    def _registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
         self._passCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestPassed()
 
     def registerTestIgnored(self, suiteName, testName):
+        self.activeResults._registerTestIgnored(suiteName, testName)
+
+    def _registerTestIgnored(self, suiteName, testName):
         """Register the fact that a test was ignored."""
         self._ignoredCount += 1
         result = self._getTestResult(suiteName, testName)
@@ -165,7 +186,18 @@ class TestResults:
         return plural
         
     def _getTestResult(self, suiteName, testName):
+        from .api import expect
         # TODO : check the result
-        result = self.individualResults[-1]
+        result = None
+        if testName == "beforeClass" or testName == "afterClass" :
+            result = TestResult(suiteName, testName)
+            result.registerTestStarted()
+        else:
+            for trialResult in self.activeResults.individualResults:
+                # TODO : also check 
+                if trialResult.TestName == testName:
+                    result = trialResult
+                    break
+
         return result
 

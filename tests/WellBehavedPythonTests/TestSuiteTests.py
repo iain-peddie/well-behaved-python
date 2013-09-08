@@ -47,6 +47,9 @@ class TestSuiteTests(TestCase):
 
     def selfShuntIncrementMethod(self):
         self.testMethodCount += 1
+
+    def selfShuntMethod(self):
+        pass
         
     def test_running_suite_with_one_test_runs_one_test(self):
         # Where
@@ -73,15 +76,17 @@ class TestSuiteTests(TestCase):
 
     def test_running_suite_with_two_tests_runs_both(self):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
-        test2 = TestSuiteTests("selfShuntIncrementMethod")
+        test2 = TestSuiteTests("selfShuntMethod")
 
         self.suite.add(test1)
         self.suite.add(test2)
         
         self.suite.run(self.results)
 
-        expect(test1.testMethodCount).toEqual(1)
-        expect(test2.testMethodCount).toEqual(1)
+        expect(test1.countTests()).toEqual(1)
+        expect(test2.countTests()).toEqual(1)
+        expect(self.results.countTests()).toEqual(2)
+        expect(self.results.countPasses()).toEqual(2)
         expect(self.results.summary()).toMatch("0 failures.*from 2 tests")
 
     def test_that_suite_with_two_tests_from_one_class_counts_both(self):

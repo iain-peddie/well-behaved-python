@@ -256,7 +256,7 @@ line2
         expect(results.countErrors()).toEqual(0)
         expect(results.countIgnored()).toEqual(1)
 
-    def test_summart_summarises_children(self):
+    def test_summary_summarises_children(self):
         # Where
         results = self.results
 
@@ -280,3 +280,21 @@ line2
         expect(summary).toContain("from 4 tests")
         expect(summary).toContain("fail stack")
         expect(summary).toContain("error stack")
+        expect(str(type(childResults.getDuration()))).toMatch('timedelta')
+        expect(str(type(results.getDuration()))).toMatch('timedelta')
+        expect(results.getDuration()).toBeGreaterThanOrEqualTo(childResults.getDuration())
+
+    def test_that_registering_tests_after_suites_delegate_to_suite_results(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        results.registerTestStarted("subsuite", "passing")
+        results.registerTestPassed("subsuite", "passing")
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(childResults.countTests()).toEqual(1)
+        expect(childResults.countPasses()).toEqual(1)
+        
