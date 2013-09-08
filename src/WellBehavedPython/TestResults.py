@@ -129,16 +129,17 @@ class TestResults:
         This will construct a string describing the overall results
         of the test."""
         failedPart = self.buildMessagePart("failure", self.countFailures())
-        errorPart = self.buildMessagePart("error", self._errorCount)
-        ignoredPart = self.buildMessagePart("ignored", self._ignoredCount, False)
-        testPart = self.buildMessagePart("test", self._testCount)
+        errorPart = self.buildMessagePart("error", self.countErrors())
+        ignoredPart = self.buildMessagePart("ignored", self.countIgnored(), False)
+        testPart = self.buildMessagePart("test", self.countTests())
         
         line0 = "{} {} {} from {} in {}s\n".format(
             failedPart, errorPart, ignoredPart, testPart, 
             self.getDuration().total_seconds())
         lines = [line0]
-        if len(self.stackTraces) > 0:
-            lines.extend(self.stackTraces)
+        stackTraces = self.getStackTraces()
+        if len(stackTraces) > 0:
+            lines.extend(stackTraces)
         return "".join(lines)
 
     def buildMessagePart(self, word, number, pluraliseFlag = True):

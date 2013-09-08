@@ -228,8 +228,8 @@ line2
 
         # When
         childResults = results.registerSuiteStarted("subsuite")
-        childResults.registerTestStarted("subsuite", "failing")
-        childResults.registerTestError("subsuite", "failing", ["error stack"])
+        childResults.registerTestStarted("subsuite", "error")
+        childResults.registerTestError("subsuite", "error", ["error stack"])
         results.registerSuiteCompleted("subsuite")
 
         # Then
@@ -256,3 +256,27 @@ line2
         expect(results.countErrors()).toEqual(0)
         expect(results.countIgnored()).toEqual(1)
 
+    def test_summart_summarises_children(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "passing")
+        childResults.registerTestPassed("subsuite", "passing")
+        childResults.registerTestStarted("subsuite", "failing")
+        childResults.registerTestFailed("subsuite", "failing", ["fail stack"])
+        childResults.registerTestStarted("subsuite", "error")
+        childResults.registerTestError("subsuite", "error", ["error stack"])
+        childResults.registerTestStarted("subsuite", "ignored")
+        childResults.registerTestIgnored("subsuite", "ignored")
+        results.registerSuiteCompleted("subsuite")
+        
+        # Then
+        summary = results.summary()
+        expect(summary).toContain("1 failure")
+        expect(summary).toContain("1 error")
+        expect(summary).toContain("1 ignored")
+        expect(summary).toContain("from 4 tests")
+        expect(summary).toContain("fail stack")
+        expect(summary).toContain("error stack")
