@@ -62,7 +62,11 @@ class TestCase(TestComponent):
                      the results of the test.
 """
         suiteName = ""
-        results.registerTestStarted(suiteName, self.testMethodName)
+        try:
+            results.registerTestStarted(suiteName, self.testMethodName)
+        except Exception as ex:
+            return
+
         if self.ignore:
             results.registerTestIgnored(suiteName, self.testMethodName)
             return

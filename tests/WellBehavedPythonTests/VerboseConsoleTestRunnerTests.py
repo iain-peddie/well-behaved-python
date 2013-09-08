@@ -89,8 +89,8 @@ test_pass.* passed in [0-9\\.]+s""")
         results = runner.run(suite)
 
         # Then
-        expect(results.passCount).toEqual(1)
-        expect(results.testCount).toEqual(1)
+        expect(results.countPasses()).toEqual(1)
+        expect(results.countTests()).toEqual(1)
 
     def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
         # Where
@@ -130,9 +130,9 @@ test_pass.* passed in [0-9\\.]+s""")
         expect(self.output.getvalue()).toMatch("Starting test run of 1 test")
         expect(self.output.getvalue()).toMatch("from 1 test")
         expect(self.output.getvalue()).toMatch("test_ignore.* ignored in [0-9\\.]+s")
-        expect(results.ignoredCount).toEqual(1)
-        expect(results.testCount).toEqual(1)
-        expect(results.passCount).toEqual(0)
+        expect(results.countIgnored()).toEqual(1)
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
 
     def test_that_runner_can_cope_with_one_of_each(self):
         # Where

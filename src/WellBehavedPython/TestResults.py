@@ -32,66 +32,117 @@ class TestResults:
 
     def __init__(self):
         """Constructor."""
-        self.testCount = 0
-        self.failCount = 0
-        self.passCount = 0
-        self.errorCount = 0
-        self.ignoredCount = 0
+        self._testCount = 0
+        self._failCount = 0
+        self._passCount = 0
+        self._errorCount = 0
+        self._ignoredCount = 0
         self.stackTraces = []
         self.individualResults = []
         self.suiteResults = []
+        self.suiteStack = []
+        self.activeResults = self
 
     def registerSuiteStarted(self, suiteName):
-        childResults = TestResults()
-        self.suiteResults.append(childResults)
-        return childResults
+        self.suiteStack.append(self.activeResults)
+        self.activeResults = TestResults()
+        self.suiteResults.append(self.activeResults)
+        return self.activeResults
 
     def registerSuiteCompleted(self, suiteName):
-        pass
+        self.activeResults = self.suiteStack.pop()
 
     def registerTestStarted(self, suiteName, testName):
+        return self.activeResults._registerTestStarted(suiteName, testName)
+
+    def _registerTestStarted(self, suiteName, testName):
         """Register the fact that a test started running."""        
-        self.testCount += 1
+        self._testCount += 1
+        result = self._getTestResult(suiteName, testName)
+        if result is not None:
+            raise KeyError("Test in same suite twice")
         result = TestResult(suiteName, testName)
         result.registerTestStarted()
         self.individualResults.append(result)
         return result
 
     def registerTestFailed(self, suiteName, testName, stackTrace):
+        self.activeResults._registerTestFailed(suiteName, testName, stackTrace)
+
+    def _registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
-        self.failCount += 1
+        self._failCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestFailed(stackTrace)
 
     def registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
-        """Register the fact that a tet failed.
+        self.activeResults._registerTestError(suiteName, testName, stackTrace, numErrors)
+
+    def _registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
+        """Register the fact that a test failed.
         
         Parameters
         ----------
         stackTrace : list of strings forming the stack trace for this error."""
         self.stackTraces.extend(stackTrace)
-        self.errorCount += numErrors
+        self._errorCount += numErrors
         result = self._getTestResult(suiteName, testName)
         result.registerTestError(stackTrace)
 
     def registerTestPassed(self, suiteName, testName):
+        self.activeResults._registerTestPassed(suiteName, testName)
+
+    def _registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
-        self.passCount += 1
+        self._passCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestPassed()
 
     def registerTestIgnored(self, suiteName, testName):
+        self.activeResults._registerTestIgnored(suiteName, testName)
+
+    def _registerTestIgnored(self, suiteName, testName):
         """Register the fact that a test was ignored."""
-        self.ignoredCount += 1
+        self._ignoredCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestIgnored()
 
+    def countTests(self):
+        total = self._testCount
+        for results in self.suiteResults:
+            total += results.countTests()
+        return total
+
+    def countPasses(self):
+        total = self._passCount
+        for results in self.suiteResults:
+            total += results.countPasses()
+        return total
+
     def countFailures(self):
-        totalFailures = self.failCount
-        for suite in self.suiteResults:
-            totalFailures += suite.failCount
-        return totalFailures
+        total = self._failCount
+        for results in self.suiteResults:
+            total += results.countFailures()
+        return total
+
+    def countErrors(self):
+        total = self._errorCount
+        for results in self.suiteResults:
+            total += results.countErrors()
+        return total
+
+    def countIgnored(self):
+        total = self._ignoredCount
+        for results in self.suiteResults:
+            total += results.countIgnored()
+        return total
+
+    def getStackTraces(self):
+        allTraces = self.stackTraces[:]
+        for results in self.suiteResults:
+            allTraces.extend(results.getStackTraces())
+        return allTraces
     
     def summary(self):
         """Build a summary of the tests.
@@ -99,16 +150,17 @@ class TestResults:
         This will construct a string describing the overall results
         of the test."""
         failedPart = self.buildMessagePart("failure", self.countFailures())
-        errorPart = self.buildMessagePart("error", self.errorCount)
-        ignoredPart = self.buildMessagePart("ignored", self.ignoredCount, False)
-        testPart = self.buildMessagePart("test", self.testCount)
+        errorPart = self.buildMessagePart("error", self.countErrors())
+        ignoredPart = self.buildMessagePart("ignored", self.countIgnored(), False)
+        testPart = self.buildMessagePart("test", self.countTests())
         
         line0 = "{} {} {} from {} in {}s\n".format(
             failedPart, errorPart, ignoredPart, testPart, 
             self.getDuration().total_seconds())
         lines = [line0]
-        if len(self.stackTraces) > 0:
-            lines.extend(self.stackTraces)
+        stackTraces = self.getStackTraces()
+        if len(stackTraces) > 0:
+            lines.extend(stackTraces)
         return "".join(lines)
 
     def buildMessagePart(self, word, number, pluraliseFlag = True):
@@ -134,7 +186,18 @@ class TestResults:
         return plural
         
     def _getTestResult(self, suiteName, testName):
+        from .api import expect
         # TODO : check the result
-        result = self.individualResults[-1]
+        result = None
+        if testName == "beforeClass" or testName == "afterClass" :
+            result = TestResult(suiteName, testName)
+            result.registerTestStarted()
+        else:
+            for trialResult in self.activeResults.individualResults:
+                # TODO : also check 
+                if trialResult.TestName == testName:
+                    result = trialResult
+                    break
+
         return result
 

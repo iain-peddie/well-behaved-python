@@ -92,10 +92,10 @@ class ConsoleTestRunner:
         self._writeResult(".")
         self.results.registerTestPassed(suiteName, testName)
 
-    def registerTestError(self, suiteName, testName, stackTrace):
+    def registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
         """Register a test failed."""
         self._writeResult("E")
-        self.results.registerTestError(suiteName, testName, stackTrace)
+        self.results.registerTestError(suiteName, testName, stackTrace, numErrors)
 
     def registerTestIgnored(self, suiteName, testName):
         """Register a test ignored."""

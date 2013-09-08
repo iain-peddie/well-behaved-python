@@ -36,21 +36,21 @@ class TestResultsTests(TestCase):
 
     def test_summary_writes_single_numbers_correctly(self):
         results = self.results
-        results.testCount = 1
-        results.failCount = 1
-        results.passCount = 1
-        results.errorCount = 1
-        results.ignoredCount = 1
+        results._testCount = 1
+        results._failCount = 1
+        results._passCount = 1
+        results._errorCount = 1
+        results._ignoredCount = 1
         
         expect(results.summary()).toStartWith("1 failure 1 error 1 ignored from 1 test")
 
     def test_summary_writes_plural_numbers_correctly(self):
         results = self.results
-        results.testCount = 2
-        results.failCount = 2
-        results.passCount = 2
-        results.errorCount = 2
-        results.ignoredCount = 2
+        results._testCount = 2
+        results._failCount = 2
+        results._passCount = 2
+        results._errorCount = 2
+        results._ignoredCount = 2
         expect(results.summary()).toStartWith("2 failures 2 errors 2 ignored from 2 tests")
 
     def test_summary_writes_stack_trace_correctly(self):
@@ -75,41 +75,41 @@ line2
 
     def test_register_test_started_increments_testCount(self):
         results = self.results
-        before = results.testCount
+        before = results.countTests()
         
         results.registerTestStarted("suite", "test")
-        after = results.testCount
+        after = results.countTests()
 
         expect(after).toEqual(before + 1)
 
     def test_register_test_passed_increments_passCount(self):
         results = self.results
         results.registerTestStarted("suite", "test")
-        before = results.passCount
+        before = results.countPasses()
         
         results.registerTestPassed("suite", "test")
-        after = results.passCount
+        after = results.countPasses()
 
         expect(after).toEqual(before + 1)
 
     def test_register_test_failed_increments_failCount_and_stores_stackTrace(self):
         results = self.results
-        before = results.failCount
+        before = results.countFailures()
         results.registerTestStarted("suite", "test")
         
         results.registerTestFailed("suite", "test", ["line1\n"])
-        after = results.failCount
+        after = results.countFailures()
 
         expect(after).toEqual(before + 1)
         expect(results.stackTraces).toEqual(["line1\n"])
         
     def test_register_test_error_increments_failCount_and_stores_stackTrace(self):
         results = self.results
-        before = results.errorCount
+        before = results.countErrors()
         results.registerTestStarted("suite", "test")
         
         results.registerTestError("suite", "test", ["line1\n"])
-        after = results.errorCount
+        after = results.countErrors()
 
         expect(after).toEqual(before + 1)
         expect(results.stackTraces).toEqual(["line1\n"])
@@ -117,10 +117,10 @@ line2
     def test_register_test_ingored_increments_ingoredCount(self):
         results = self.results
         results.registerTestStarted("suite", "test")
-        before = results.ignoredCount
+        before = results.countIgnored()
         
         results.registerTestIgnored("suite", "test")
-        after = results.ignoredCount
+        after = results.countIgnored()
 
         expect(after).toEqual(before + 1)
 
@@ -188,7 +188,113 @@ line2
         results.registerSuiteCompleted("suite")
 
         # Then
-        expect(childResults.testCount).toEqual(1)
-        expect(results.testCount).toEqual(0)
+        expect(childResults.countTests()).toEqual(1)
+        expect(results.countTests()).toEqual(1)
         expect(results.getDuration()).toBeGreaterThanOrEqualTo(childResults.getDuration())
+
+    def test_passing_method_in_subsuite_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "passing")
+        childResults.registerTestPassed("subsuite", "passing")
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(1)
+
+    def test_failed_methods_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "failing")
+        childResults.registerTestFailed("subsuite", "failing", ["fail stack"])
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(1)
+        expect(results.getStackTraces()).toEqual(["fail stack"])
+
+    def test_failed_methods_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "error")
+        childResults.registerTestError("subsuite", "error", ["error stack"])
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countErrors()).toEqual(1)
+        expect(results.getStackTraces()).toEqual(["error stack"])
+
+    def test_ignored_methods_counted_in_parent(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "ignored")
+        childResults.registerTestIgnored("subsuite", "ignored")
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countErrors()).toEqual(0)
+        expect(results.countIgnored()).toEqual(1)
+
+    def test_summary_summarises_children(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        childResults.registerTestStarted("subsuite", "passing")
+        childResults.registerTestPassed("subsuite", "passing")
+        childResults.registerTestStarted("subsuite", "failing")
+        childResults.registerTestFailed("subsuite", "failing", ["fail stack"])
+        childResults.registerTestStarted("subsuite", "error")
+        childResults.registerTestError("subsuite", "error", ["error stack"])
+        childResults.registerTestStarted("subsuite", "ignored")
+        childResults.registerTestIgnored("subsuite", "ignored")
+        results.registerSuiteCompleted("subsuite")
+        
+        # Then
+        summary = results.summary()
+        expect(summary).toContain("1 failure")
+        expect(summary).toContain("1 error")
+        expect(summary).toContain("1 ignored")
+        expect(summary).toContain("from 4 tests")
+        expect(summary).toContain("fail stack")
+        expect(summary).toContain("error stack")
+        expect(str(type(childResults.getDuration()))).toMatch('timedelta')
+        expect(str(type(results.getDuration()))).toMatch('timedelta')
+        expect(results.getDuration()).toBeGreaterThanOrEqualTo(childResults.getDuration())
+
+    def test_that_registering_tests_after_suites_delegate_to_suite_results(self):
+        # Where
+        results = self.results
+
+        # When
+        childResults = results.registerSuiteStarted("subsuite")
+        results.registerTestStarted("subsuite", "passing")
+        results.registerTestPassed("subsuite", "passing")
+        results.registerSuiteCompleted("subsuite")
+
+        # Then
+        expect(childResults.countTests()).toEqual(1)
+        expect(childResults.countPasses()).toEqual(1)
         
