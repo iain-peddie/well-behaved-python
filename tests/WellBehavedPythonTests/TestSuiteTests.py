@@ -196,7 +196,7 @@ class TestSuiteTests(TestCase):
         # Then
         results = TestResults()
         test.run(results)
-        expect(results.failCount).toEqual(1, "beforeClass was not called")
+        expect(results.countFaiulres()).toEqual(1, "beforeClass was not called")
 
     def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
         # Where
@@ -208,7 +208,7 @@ class TestSuiteTests(TestCase):
         # Then
         results = TestResults()
         test.run(results)
-        expect(results.failCount).toEqual(1, "afterClass was called")
+        expect(results.countFailures()).toEqual(1, "afterClass was called")
 
     def test_beforeAndAFterCase_test_passes_if_just_before_called(self):
         # Where
@@ -222,7 +222,7 @@ class TestSuiteTests(TestCase):
         TestCaseWithBeforeAndAfterClass.afterClass()
 
         # Then
-        expect(results.failCount).toEqual(0, "Test should pass")
+        expect(results.countFailures()).toEqual(0, "Test should pass")
         
     def test_suite_run_calls_beforeClass_before_any_tests_run(self):
         # Where
@@ -252,8 +252,8 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(results.errorCount).toEqual(0)
-        expect(results.failCount).toEqual(
+        expect(results.countErrors()).toEqual(0)
+        expect(results.countFailures()).toEqual(
             0, "failure would indicate afterClaass called too early")
         expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).toBeTrue(
             "afterClass should have been called")
@@ -269,7 +269,7 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(results.errorCount).toEqual(2, "both tests should count as failed")
+        expect(results.countErrors()).toEqual(2, "both tests should count as failed")
 
     def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
         # Where
@@ -282,9 +282,9 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(results.passCount).toEqual(2, "both tests should count as passed")
-        expect(results.errorCount).toEqual(1, "but with an extra error anyway")
-        expect(results.failCount).toEqual(0, "exception in afterClass is an error not a failure")        
+        expect(results.countPasses()).toEqual(2, "both tests should count as passed")
+        expect(results.countErrors()).toEqual(1, "but with an extra error anyway")
+        expect(results.countFailures()).toEqual(0, "exception in afterClass is an error not a failure")        
 
     def test_spyMethod(self):
         # TODO : this will be redundant once test spies are written
@@ -327,5 +327,5 @@ class TestSuiteTests(TestCase):
         suiteResults = results.suiteResults[0]
 
         # Then
-        expect(results.testCount).toEqual(0)
-        expect(suiteResults.testCount).toEqual(1)
+        expect(results.countTests()).toEqual(1)
+        expect(suiteResults.countTests()).toEqual(1)

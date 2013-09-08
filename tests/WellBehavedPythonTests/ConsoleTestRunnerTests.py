@@ -85,8 +85,8 @@ class ConsoleTestRunnerTests(TestCase):
         results = runner.run(suite)
 
         # Then
-        expect(results.passCount).toEqual(1)
-        expect(results.testCount).toEqual(1)
+        expect(results.countPasses()).toEqual(1)
+        expect(results.countTests()).toEqual(1)
 
     def test_that_running_suite_with_one_failing_test_produces_correct_output(self):
         # Where
@@ -126,9 +126,9 @@ E
         expect(self.output.getvalue()).toMatch("""test
 I
 """)
-        expect(results.ignoredCount).toEqual(1)
-        expect(results.testCount).toEqual(1)
-        expect(results.passCount).toEqual(0)
+        expect(results.countIgnored()).toEqual(1)
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
 
     def test_that_runner_can_cope_with_one_of_each(self):
         # Where

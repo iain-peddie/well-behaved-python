@@ -32,11 +32,11 @@ class TestResults:
 
     def __init__(self):
         """Constructor."""
-        self.testCount = 0
-        self.failCount = 0
-        self.passCount = 0
-        self.errorCount = 0
-        self.ignoredCount = 0
+        self._testCount = 0
+        self._failCount = 0
+        self._passCount = 0
+        self._errorCount = 0
+        self._ignoredCount = 0
         self.stackTraces = []
         self.individualResults = []
         self.suiteResults = []
@@ -51,7 +51,7 @@ class TestResults:
 
     def registerTestStarted(self, suiteName, testName):
         """Register the fact that a test started running."""        
-        self.testCount += 1
+        self._testCount += 1
         result = TestResult(suiteName, testName)
         result.registerTestStarted()
         self.individualResults.append(result)
@@ -60,7 +60,7 @@ class TestResults:
     def registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
-        self.failCount += 1
+        self._failCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestFailed(stackTrace)
 
@@ -71,50 +71,50 @@ class TestResults:
         ----------
         stackTrace : list of strings forming the stack trace for this error."""
         self.stackTraces.extend(stackTrace)
-        self.errorCount += numErrors
+        self._errorCount += numErrors
         result = self._getTestResult(suiteName, testName)
         result.registerTestError(stackTrace)
 
     def registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
-        self.passCount += 1
+        self._passCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestPassed()
 
     def registerTestIgnored(self, suiteName, testName):
         """Register the fact that a test was ignored."""
-        self.ignoredCount += 1
+        self._ignoredCount += 1
         result = self._getTestResult(suiteName, testName)
         result.registerTestIgnored()
 
     def countTests(self):
-        total = self.testCount
+        total = self._testCount
         for results in self.suiteResults:
             total += results.countTests()
         return total
 
     def countPasses(self):
-        total = self.passCount
+        total = self._passCount
         for results in self.suiteResults:
             total += results.countPasses()
         return total
 
     def countFailures(self):
-        total = self.failCount
+        total = self._failCount
         for results in self.suiteResults:
             total += results.countFailures()
         return total
 
     def countErrors(self):
-        total = self.errorCount
+        total = self._errorCount
         for results in self.suiteResults:
             total += results.countErrors()
         return total
 
-    def countIgnores(self):
-        total = self.ignoredCount
+    def countIgnored(self):
+        total = self._ignoredCount
         for results in self.suiteResults:
-            total += results.countIgnores()
+            total += results.countIgnored()
         return total
 
     def getStackTraces(self):
@@ -129,9 +129,9 @@ class TestResults:
         This will construct a string describing the overall results
         of the test."""
         failedPart = self.buildMessagePart("failure", self.countFailures())
-        errorPart = self.buildMessagePart("error", self.errorCount)
-        ignoredPart = self.buildMessagePart("ignored", self.ignoredCount, False)
-        testPart = self.buildMessagePart("test", self.testCount)
+        errorPart = self.buildMessagePart("error", self._errorCount)
+        ignoredPart = self.buildMessagePart("ignored", self._ignoredCount, False)
+        testPart = self.buildMessagePart("test", self._testCount)
         
         line0 = "{} {} {} from {} in {}s\n".format(
             failedPart, errorPart, ignoredPart, testPart, 

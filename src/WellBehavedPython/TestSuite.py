@@ -69,7 +69,7 @@ class TestSuite(TestComponent):
                 trace = self.getStackTrace(ex)
                 results.registerTestError(self.suiteName, "afterClass", trace)
         except Exception as ex:            
-            results.errorCount += self.countTests()
+            results._errorCount += self.countTests()
 
         results.registerSuiteCompleted(self.suiteName)
 

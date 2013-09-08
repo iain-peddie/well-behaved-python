@@ -34,7 +34,7 @@ if __name__ == "__main__":
         results = runner.run(suite)
 
         # TODO : is test run success
-        exit(results.failCount + results.errorCount > 0)
+        exit(results.countFailures() + results.countErrors() > 0)
     except Exception as ex:
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__

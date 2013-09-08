@@ -87,22 +87,22 @@ class TestCaseTests(TestCase):
         test.run(results)
 
         # Then
-        expect(results.testCount).toEqual(1)
-        expect(results.passCount).toEqual(0)
-        expect(results.failCount).toEqual(0)
-        expect(results.errorCount).toEqual(0)
-        expect(results.ignoredCount).toEqual(1)
+        expect(results.countTests()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countErrors()).toEqual(0)
+        expect(results.countIgnored()).toEqual(1)
 
     def test_that_registerTestPassed_called_if_test_passed(self):
         test = TestCaseTests("targetGoodMethod")
         results = TestResults()
         test.run(results)
 
-        expect(results.testCount).toEqual(1)
-        expect(results.failCount).toEqual(0)
-        expect(results.passCount).toEqual(1)
-        expect(results.errorCount).toEqual(0)
-        expect(results.ignoredCount).toEqual(0)
+        expect(results.countTests()).toEqual(1)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countPasses()).toEqual(1)
+        expect(results.countErrors()).toEqual(0)
+        expect(results.countIgnored()).toEqual(0)
 
     def test_that_registerTestFailed_called_if_test_failed(self):
         # Where
@@ -114,11 +114,11 @@ class TestCaseTests(TestCase):
         test.run(results)
 
         # Then
-        expect(results.testCount).toEqual(1)
-        expect(results.failCount).toEqual(1)
-        expect(results.errorCount).toEqual(0)
-        expect(results.passCount).toEqual(0)
-        expect(results.ignoredCount).toEqual(0)
+        expect(results.countTests()).toEqual(1)
+        expect(results.countFailures()).toEqual(1)
+        expect(results.countErrors()).toEqual(0)
+        expect(results.countPasses()).toEqual(0)
+        expect(results.countIgnored()).toEqual(0)
 
     def test_that_registerTestError_called_if_test_failed(self):
         # Where
@@ -130,11 +130,11 @@ class TestCaseTests(TestCase):
         test.run(results)
 
         # Then
-        expect(results.testCount).toEqual(1)
-        expect(results.failCount).toEqual(0)
-        expect(results.errorCount).toEqual(1)
-        expect(results.passCount).toEqual(0)        
-        expect(results.ignoredCount).toEqual(0)
+        expect(results.countTests()).toEqual(1)
+        expect(results.countFailures()).toEqual(0)
+        expect(results.countErrors()).toEqual(1)
+        expect(results.countPasses()).toEqual(0)        
+        expect(results.countIgnored()).toEqual(0)
 
     def test_countTests_returns_1(self):
         # Where
