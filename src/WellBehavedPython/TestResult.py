@@ -45,9 +45,15 @@ class TestResult:
 
     def registerTestFinished(self, finishType):
         message = "Unstarted test registered as {}".format(finishType)
-        assert self.StartTime is not None, message
+        
+        assert self._testStarted(), message
 
         self.EndTime = datetime.now()
+
+    def _testStarted(self):
+        if self.TestName == "beforeClass" or self.TestName == "afterClass":
+            return True
+        return self.StartTime is not None
 
     def getDuration(self):
         return self.EndTime - self.StartTime

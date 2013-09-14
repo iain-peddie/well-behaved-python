@@ -61,7 +61,7 @@ class TestSuite(TestComponent):
         try:
             suiteResults = results.registerSuiteStarted(self.suiteName)
             self.testClass.beforeClass()
-            for test in self.tests:
+            for test in self.tests:                
                 test.run(results)
             try:
                 self.testClass.afterClass()

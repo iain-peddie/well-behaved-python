@@ -101,7 +101,7 @@ line2
         after = results.countFailures()
 
         expect(after).toEqual(before + 1)
-        expect(results.stackTraces).toEqual(["line1\n"])
+        expect(results.getStackTraces()).toEqual(["line1\n"])
         
     def test_register_test_error_increments_failCount_and_stores_stackTrace(self):
         results = self.results
@@ -112,7 +112,7 @@ line2
         after = results.countErrors()
 
         expect(after).toEqual(before + 1)
-        expect(results.stackTraces).toEqual(["line1\n"])
+        expect(results.getStackTraces()).toEqual(["line1\n"])
         
     def test_register_test_ingored_increments_ingoredCount(self):
         results = self.results

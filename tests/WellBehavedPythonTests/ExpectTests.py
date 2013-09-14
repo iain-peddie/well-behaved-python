@@ -208,8 +208,7 @@ class ExpectTests(TestCase):
     def test_instance_of_wrong_userclass_fails(self):
         expect(lambda: expect(TestResults()).toBeAnInstanceOf(TestSuite)).toRaise(
             AssertionError,
-            expectedMessage = "Expected <WellBehavedPython.TestResults.TestResults object>"
-            " to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'>"
+            expectedMessageMatches = " to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'>"
             " but was an instance of <class 'WellBehavedPython.TestResults.TestResults'>")
 
     def test_instance_of_derived_class_matches_base_class(self):

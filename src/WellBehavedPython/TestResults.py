@@ -30,8 +30,9 @@ class TestResults:
     A test run may be an individual test, or the results of runinng
     multiple tests through a suite."""
 
-    def __init__(self):
+    def __init__(self, name = "<anonymous>"):
         """Constructor."""
+        self.name = name
         self._testCount = 0
         self._failCount = 0
         self._passCount = 0
@@ -44,69 +45,32 @@ class TestResults:
         self.activeResults = self
 
     def registerSuiteStarted(self, suiteName):
-        self.suiteStack.append(self.activeResults)
-        self.activeResults = TestResults()
-        self.suiteResults.append(self.activeResults)
+        self._pushActiveResults(suiteName)
         return self.activeResults
 
     def registerSuiteCompleted(self, suiteName):
-        self.activeResults = self.suiteStack.pop()
+        self._popActiveResults()        
 
     def registerTestStarted(self, suiteName, testName):
+        self._pushActiveResults(testName)
         return self.activeResults._registerTestStarted(suiteName, testName)
-
-    def _registerTestStarted(self, suiteName, testName):
-        """Register the fact that a test started running."""        
-        self._testCount += 1
-        result = self._getTestResult(suiteName, testName)
-        if result is not None:
-            raise KeyError("Test in same suite twice")
-        result = TestResult(suiteName, testName)
-        result.registerTestStarted()
-        self.individualResults.append(result)
-        return result
-
-    def registerTestFailed(self, suiteName, testName, stackTrace):
-        self.activeResults._registerTestFailed(suiteName, testName, stackTrace)
-
-    def _registerTestFailed(self, suiteName, testName, stackTrace):
-        """Register the fact that a test failed."""
-        self.stackTraces.extend(stackTrace)
-        self._failCount += 1
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestFailed(stackTrace)
-
-    def registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
-        self.activeResults._registerTestError(suiteName, testName, stackTrace, numErrors)
-
-    def _registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
-        """Register the fact that a test failed.
-        
-        Parameters
-        ----------
-        stackTrace : list of strings forming the stack trace for this error."""
-        self.stackTraces.extend(stackTrace)
-        self._errorCount += numErrors
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestError(stackTrace)
 
     def registerTestPassed(self, suiteName, testName):
         self.activeResults._registerTestPassed(suiteName, testName)
+        self._popActiveResults()
 
-    def _registerTestPassed(self, suiteName, testName):
-        """Register the fact that a test passed."""
-        self._passCount += 1
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestPassed()
+    def registerTestFailed(self, suiteName, testName, stackTrace):
+        self.activeResults._registerTestFailed(suiteName, testName, stackTrace)
+        self._popActiveResults()
+
+    def registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
+        self.activeResults._registerTestError(suiteName, testName, stackTrace, numErrors)
+        if testName not in ("beforeClass", "afterClass"):
+            self._popActiveResults()
 
     def registerTestIgnored(self, suiteName, testName):
         self.activeResults._registerTestIgnored(suiteName, testName)
-
-    def _registerTestIgnored(self, suiteName, testName):
-        """Register the fact that a test was ignored."""
-        self._ignoredCount += 1
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestIgnored()
+        self._popActiveResults()
 
     def countTests(self):
         total = self._testCount
@@ -191,7 +155,6 @@ class TestResults:
         result = None
         if testName == "beforeClass" or testName == "afterClass" :
             result = TestResult(suiteName, testName)
-            result.registerTestStarted()
         else:
             for trialResult in self.activeResults.individualResults:
                 # TODO : also check 
@@ -200,4 +163,92 @@ class TestResults:
                     break
 
         return result
+
+
+    def _pushActiveResults(self, name):
+        self.suiteStack.append(self.activeResults)
+        results = TestResults(name);
+        self.activeResults.suiteResults.append(results)
+        self.activeResults = results
+
+    def _popActiveResults(self):
+        self.activeResults = self.suiteStack.pop()
+
+    def _registerTestStarted(self, suiteName, testName):
+        """Register the fact that a test started running."""
+        
+        self._testCount += 1
+        result = self._getTestResult(suiteName, testName)
+        if result is not None:
+            if result.TestName in ("beforeClass", "afterClass"):
+                return TestResult(suiteName, testName)
+            else:
+                raise KeyError("Test {} in same suite twice".format(result.TestName))
+        result = TestResult(suiteName, testName)
+        result.registerTestStarted()
+        self.individualResults.append(result)
+        return result
+
+    def _registerTestPassed(self, suiteName, testName):
+        """Register the fact that a test passed."""
+        self._passCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestPassed()
+
+    def _registerTestFailed(self, suiteName, testName, stackTrace):
+        """Register the fact that a test failed."""
+        self.stackTraces.extend(stackTrace)
+        self._failCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestFailed(stackTrace)
+
+    def _registerTestIgnored(self, suiteName, testName):
+        """Register the fact that a test was ignored."""
+        self._ignoredCount += 1
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestIgnored()
+
+    def _registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
+        """Register the fact that a test failed.
+        
+        Parameters
+        ----------
+        stackTrace : list of strings forming the stack trace for this error."""
+        self.stackTraces.extend(stackTrace)
+        self._errorCount += numErrors
+        result = self._getTestResult(suiteName, testName)
+        result.registerTestError(stackTrace)
+
+    def __repr__(self):
+        return """TestResults : {}
+Direct:
+------
+tests       {}
+pass        {}
+fail        {}
+error       {}
+ignore      {}
+stackTrace  {}
+
+Overall
+-------
+tests       {}
+pass        {}
+fail        {}
+error       {}
+ignore      {}
+stackTrace  {}""".format(self.name,
+                         self._testCount,
+                         self._passCount,
+                         self._failCount,
+                         self._errorCount,
+                         self._ignoredCount,
+                         self.stackTraces,
+                         self.countTests(),
+                         self.countPasses(),
+                         self.countFailures(),
+                         self.countErrors(),
+                         self.countIgnored(),
+                         self.getStackTraces())
+                        
 
