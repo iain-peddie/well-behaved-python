@@ -66,7 +66,7 @@ line2
         # Where
         result = results.registerTestStarted("suite", "test")
         results.registerTestPassed("suite", "test")
-        result.EndTime = result.StartTime + timedelta(minutes = 1)
+        result.endTime = result.startTime + timedelta(minutes = 1)
 
         # When
         
@@ -101,7 +101,7 @@ line2
         after = results.countFailures()
 
         expect(after).toEqual(before + 1)
-        expect(results.stackTraces).toEqual(["line1\n"])
+        expect(results.getStackTraces()).toEqual(["line1\n"])
         
     def test_register_test_error_increments_failCount_and_stores_stackTrace(self):
         results = self.results
@@ -112,7 +112,7 @@ line2
         after = results.countErrors()
 
         expect(after).toEqual(before + 1)
-        expect(results.stackTraces).toEqual(["line1\n"])
+        expect(results.getStackTraces()).toEqual(["line1\n"])
         
     def test_register_test_ingored_increments_ingoredCount(self):
         results = self.results
@@ -147,8 +147,6 @@ line2
 
         # Then
         expect(result.getDuration()).toBeGreaterThan(timedelta())
-        expect(results.getDuration().total_seconds()).toEqual(
-            result.getDuration().total_seconds())
         
     def test_result_error_updates_result(self):
         # Where

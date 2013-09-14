@@ -61,7 +61,7 @@ class TestSuite(TestComponent):
         try:
             suiteResults = results.registerSuiteStarted(self.suiteName)
             self.testClass.beforeClass()
-            for test in self.tests:
+            for test in self.tests:                
                 test.run(results)
             try:
                 self.testClass.afterClass()
@@ -69,6 +69,7 @@ class TestSuite(TestComponent):
                 trace = self.getStackTrace(ex)
                 results.registerTestError(self.suiteName, "afterClass", trace)
         except Exception as ex:
+#            print("exception: {}".format(ex))
             trace = self.getStackTrace(ex)
             results.registerTestError(self.suiteName, "beforeClass", trace, self.countTests())
 
