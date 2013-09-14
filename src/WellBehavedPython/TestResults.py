@@ -21,9 +21,6 @@
 from datetime import *
 import traceback
 
-from .TestResult import TestResult
-
-
 class TestResults:
     """Class containing the results of a test run.
 

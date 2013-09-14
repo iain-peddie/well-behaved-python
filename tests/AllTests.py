@@ -8,7 +8,6 @@ from WellBehavedPythonTests.ExpectTests import *
 from WellBehavedPythonTests.TestCaseTests import *
 from WellBehavedPythonTests.TestSuiteTests import *
 from WellBehavedPythonTests.TestResultsTests import *
-from WellBehavedPythonTests.TestResultTests import *
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 
 from WellBehavedPython.TestSuite import TestSuite
@@ -18,7 +17,6 @@ if __name__ == "__main__":
     try:
         results = TestResults()
         suite = TestSuite("AllTests")
-        suite.add(TestResultTests.suite())
         suite.add(TestResultsTests.suite())
         suite.add(TestCaseTests.suite())
         suite.add(TestSuiteTests.suite())
