@@ -66,7 +66,7 @@ line2
         # Where
         result = results.registerTestStarted("suite", "test")
         results.registerTestPassed("suite", "test")
-        result.EndTime = result.StartTime + timedelta(minutes = 1)
+        result.endTime = result.startTime + timedelta(minutes = 1)
 
         # When
         
@@ -147,8 +147,6 @@ line2
 
         # Then
         expect(result.getDuration()).toBeGreaterThan(timedelta())
-        expect(results.getDuration().total_seconds()).toEqual(
-            result.getDuration().total_seconds())
         
     def test_result_error_updates_result(self):
         # Where

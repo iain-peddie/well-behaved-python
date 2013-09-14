@@ -18,7 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 
-from datetime import timedelta
+from datetime import *
 import traceback
 
 from .TestResult import TestResult
@@ -39,10 +39,11 @@ class TestResults:
         self._errorCount = 0
         self._ignoredCount = 0
         self.stackTraces = []
-        self.individualResults = []
         self.suiteResults = []
         self.suiteStack = []
         self.activeResults = self
+        self.startTime = None
+        self.endTime = None
 
     def registerSuiteStarted(self, suiteName):
         self._pushActiveResults(suiteName)
@@ -134,9 +135,10 @@ class TestResults:
             self.pluralise(number, pluraliseFlag))
 
     def getDuration(self):
-        totalDuration = timedelta()
-        for result in self.individualResults:
-            totalDuration += result.getDuration()
+        if self.endTime is None and self.startTime is None:
+            totalDuration = timedelta()
+        else:
+            totalDuration = self.endTime - self.startTime #timedelta()
         for suite in self.suiteResults:
             totalDuration += suite.getDuration()
         return totalDuration
@@ -149,22 +151,6 @@ class TestResults:
         
         return plural
         
-    def _getTestResult(self, suiteName, testName):
-        from .api import expect
-        # TODO : check the result
-        result = None
-        if testName == "beforeClass" or testName == "afterClass" :
-            result = TestResult(suiteName, testName)
-        else:
-            for trialResult in self.activeResults.individualResults:
-                # TODO : also check 
-                if trialResult.TestName == testName:
-                    result = trialResult
-                    break
-
-        return result
-
-
     def _pushActiveResults(self, name):
         self.suiteStack.append(self.activeResults)
         results = TestResults(name);
@@ -178,35 +164,24 @@ class TestResults:
         """Register the fact that a test started running."""
         
         self._testCount += 1
-        result = self._getTestResult(suiteName, testName)
-        if result is not None:
-            if result.TestName in ("beforeClass", "afterClass"):
-                return TestResult(suiteName, testName)
-            else:
-                raise KeyError("Test {} in same suite twice".format(result.TestName))
-        result = TestResult(suiteName, testName)
-        result.registerTestStarted()
-        self.individualResults.append(result)
-        return result
+        self.startTime = datetime.now()
+        return self
 
     def _registerTestPassed(self, suiteName, testName):
         """Register the fact that a test passed."""
         self._passCount += 1
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestPassed()
+        self._registerTestFinished(suiteName, testName)
 
     def _registerTestFailed(self, suiteName, testName, stackTrace):
         """Register the fact that a test failed."""
         self.stackTraces.extend(stackTrace)
         self._failCount += 1
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestFailed(stackTrace)
+        self._registerTestFinished(suiteName, testName)
 
     def _registerTestIgnored(self, suiteName, testName):
         """Register the fact that a test was ignored."""
         self._ignoredCount += 1
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestIgnored()
+        self._registerTestFinished(suiteName, testName)
 
     def _registerTestError(self, suiteName, testName, stackTrace, numErrors = 1):
         """Register the fact that a test failed.
@@ -216,8 +191,10 @@ class TestResults:
         stackTrace : list of strings forming the stack trace for this error."""
         self.stackTraces.extend(stackTrace)
         self._errorCount += numErrors
-        result = self._getTestResult(suiteName, testName)
-        result.registerTestError(stackTrace)
+        self._registerTestFinished(suiteName, testName)
+
+    def _registerTestFinished(self, suiteName, testName):
+        self.endTime = datetime.now()
 
     def __repr__(self):
         return """TestResults : {}
