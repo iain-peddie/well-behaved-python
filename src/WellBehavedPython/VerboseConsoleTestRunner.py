@@ -44,15 +44,16 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
 
-    def registerSuiteStarted(self, suiteName):
+    def registerSuiteStarted(self, suiteName):        
         ConsoleTestRunner.registerSuiteStarted(self, suiteName)
+        self._output.write("{}...\n\n".format(suiteName))
         return self
 
     def registerSuiteCompleted(self, suiteName):
         ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
 
     def registerTestStarted(self, suiteName, testName):
-        """Regsiter the start of a test."""        
+        """Registers the start of a test."""        
         self._output.write(testName)
         self.lastResult = self.results.registerTestStarted(suiteName, testName)
 
