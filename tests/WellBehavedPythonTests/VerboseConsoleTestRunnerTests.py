@@ -77,6 +77,8 @@ class VerboseConsoleTestRunnerTests(TestCase):
         expect(self.output.getvalue()).toMatch("from 2 tests")
         expect(self.output.getvalue()).toMatch("""
 test_pass.* passed in [0-9\\.]+s
+TestCase.*
+
 test_pass.* passed in [0-9\\.]+s""")
         
 
@@ -171,5 +173,16 @@ test_pass.* passed in [0-9\\.]+s""")
 Failing test
 .*File.*\\.py""")
 
+    def test_that_runner_prints_suite_name_on_suite_entry(self):
+        # Where
+        runner = self.runner
+        runner.results = TestResults()
+        
+        # When
+        runner.registerSuiteStarted("subSuiteName")
 
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toContain("""subSuiteName...
+""")
 
