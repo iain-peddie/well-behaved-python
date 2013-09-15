@@ -295,4 +295,87 @@ line2
         # Then
         expect(childResults.countTests()).toEqual(1)
         expect(childResults.countPasses()).toEqual(1)
+
+    def test_that_result_with_only_passes_coutns_as_passed(self):
+        # Where
+        results = self.results
+
+        # When
+        results.registerTestStarted("subsuite", "passing")
+        results.registerTestPassed("subsuite", "passing")
+
+        # Then
+        expect(results.getStateDescription()).toEqual("passed")
+
+    def test_that_result_with_ignored_test_counts_as_ignored(self):
+        # Where
+        results = self.results
+
+        # When
+        results.registerTestStarted("subsuite", "passing")
+        results.registerTestPassed("subsuite", "passing")
+        results.registerTestStarted("subsuite", "ignored")
+        results.registerTestIgnored("subsuite", "ignored")
+        # Then
+        expect(results.getStateDescription()).toEqual("ignored")
+        
+    def test_that_result_with_failed_test_counts_as_failed(self):
+        # Where
+        results = self.results
+
+        # When
+        results.registerTestStarted("subsuite", "ignored")
+        results.registerTestIgnored("subsuite", "ignored")
+        results.registerTestStarted("subsuite", "failed")
+        results.registerTestFailed("subsuite", "failed" , ["mock", "stack", "trace"])
+        # Then
+        expect(results.getStateDescription()).toEqual("failed")
+
+    def test_that_result_with_failed_test_counts_as_ignored(self):
+        # Where
+        results = self.results
+
+        # When
+        results.registerTestStarted("subsuite", "passing")
+        results.registerTestPassed("subsuite", "passing")
+        results.registerTestStarted("subsuite", "error")
+        results.registerTestError("subsuite", "error" , ["mock", "stack", "trace"])
+        # Then
+        expect(results.getStateDescription()).toEqual("error")
+
+    def test_that_description_operates_on_activeSuite(self):
+        # Where
+        results = self.results
+
+        # When
+        results.registerTestStarted("results", "failing")
+        results.registerTestFailed("results", "failing", ["mock", "stack", "trace"])
+        subResults = results.registerSuiteStarted("subResults")
+        results.registerTestStarted("subResults", "passing")
+        results.registerTestPassed("subResults", "passing")
+        description = results.getStateDescription()
+        results.registerSuiteCompleted("subResults")
+
+        # Then
+        expect(subResults.countFailures()).toEqual(0)
+        expect(results.countFailures()).toEqual(1)
+        expect(description).toEqual("passed")
+        expect(results.getStateDescription()).toEqual("failed")
+
+    def test_that_duration_operates_on_activesuite(self):
+        # Where
+        results = self.results
+        results.startTime = datetime.now()
+        results.endTime = results.startTime + timedelta(seconds = 2)
+
+        # When
+        results.registerSuiteStarted("subSuite")
+        results.registerTestStarted("subSuite", "pass")
+        results.registerTestPassed("subSuite", "pass")
+        duration = results.getDuration()
+        results.registerSuiteCompleted("subSuite")
+
+        # Then
+        expect(results.getDuration().total_seconds()).toBeGreaterThan(2)
+        expect(duration.total_seconds()).toBeLessThan(results.getDuration().total_seconds())
         

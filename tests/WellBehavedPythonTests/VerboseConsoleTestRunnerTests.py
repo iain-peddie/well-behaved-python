@@ -76,9 +76,6 @@ class VerboseConsoleTestRunnerTests(TestCase):
         expect(self.output.getvalue()).toMatch("Starting test run of 2 tests")
         expect(self.output.getvalue()).toMatch("from 2 tests")
         expect(self.output.getvalue()).toMatch("""
-test_pass.* passed in [0-9\\.]+s
-TestCase.*
-
 test_pass.* passed in [0-9\\.]+s""")
         
 
@@ -185,4 +182,38 @@ Failing test
         theOutput = self.output.getvalue()
         expect(theOutput).toContain("""subSuiteName...
 """)
+
+    def test_that_runner_prints_suite_passed_and_time_on_suite_exit(self):
+        # Where
+        suiteName = "subSuiteName"
+        runner = self.runner
+        results = TestResults()
+        results.registerSuiteStarted(suiteName)
+        results.registerTestStarted(suiteName, "test")
+        results.registerTestPassed(suiteName, "test")
+        runner.results = results
+
+        # When
+        runner.registerSuiteCompleted(suiteName)
+        
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toMatch("subSuiteName.* passed in [0-9][\\.0-9]*s")
+
+    def test_that_runner_prints_test_failed_on_suite_exit_if_one_test_failed(self):
+        # Where
+        suiteName = "subSuiteName"
+        runner = self.runner
+        results = TestResults()
+        results.registerSuiteStarted(suiteName)
+        results.registerTestStarted(suiteName, "test")
+        results.registerTestFailed(suiteName, "test", ["mock", "stack", "trace"])
+        runner.results = results
+
+        # When
+        runner.registerSuiteCompleted(suiteName)
+        
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toMatch("subSuiteName.* failed in [0-9][\\.0-9]*s")
 

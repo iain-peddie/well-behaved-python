@@ -50,7 +50,14 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         return self
 
     def registerSuiteCompleted(self, suiteName):
+        # get the duration first, before suite completed pops the 
+        # results stack
+        duration = self.results.getDuration()
         ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
+        result = self.results.getStateDescription()
+        self._output.write("\n{}".format(suiteName))
+        self._writeClosingString(result, duration)
+        self._output.write("\n")
 
     def registerTestStarted(self, suiteName, testName):
         """Registers the start of a test."""        
@@ -78,7 +85,11 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         self.registerTestFinished(suiteName, testName, "ignored")
 
     def registerTestFinished(self, suiteName, testName, stateMessage):
-        time = self.lastResult.getDuration().total_seconds()
+        duration = self.lastResult.getDuration()
+        self._writeClosingString(stateMessage, duration)
+
+    def _writeClosingString(self, stateMessage, duration):
+        time = duration.total_seconds()
         self._output.write("... {} in {:f}s\n".format(stateMessage, time))
 
 
