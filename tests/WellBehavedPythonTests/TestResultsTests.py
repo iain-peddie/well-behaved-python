@@ -362,4 +362,20 @@ line2
         expect(description).toEqual("passed")
         expect(results.getStateDescription()).toEqual("failed")
 
+    def test_that_duration_operates_on_activesuite(self):
+        # Where
+        results = self.results
+        results.startTime = datetime.now()
+        results.endTime = results.startTime + timedelta(seconds = 2)
+
+        # When
+        results.registerSuiteStarted("subSuite")
+        results.registerTestStarted("subSuite", "pass")
+        results.registerTestPassed("subSuite", "pass")
+        duration = results.getDuration()
+        results.registerSuiteCompleted("subSuite")
+
+        # Then
+        expect(results.getDuration().total_seconds()).toBeGreaterThan(2)
+        expect(duration.total_seconds()).toBeLessThan(results.getDuration().total_seconds())
         

@@ -147,6 +147,9 @@ class TestResults:
             self.pluralise(number, pluraliseFlag))
 
     def getDuration(self):
+        return self.activeResults._getDuration()
+
+    def _getDuration(self):
         if self.endTime is None and self.startTime is None:
             totalDuration = timedelta()
         else:
