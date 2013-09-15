@@ -50,8 +50,10 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         return self
 
     def registerSuiteCompleted(self, suiteName):
-        ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
+        # get the duration first, before suite completed pops the 
+        # results stack
         duration = self.results.getDuration()
+        ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
         result = self.results.getStateDescription()
         self._output.write("\n{}".format(suiteName))
         self._writeClosingString(result, duration)
