@@ -100,6 +100,21 @@ class TestResults:
             total += results.countIgnored()
         return total
 
+    def getStateDescription(self):
+        return self.activeResults._getStateDescription()
+
+    def _getStateDescription(self):
+        result = "passed"
+        if self.countIgnored() > 0:
+            result = "ignored"
+        if self.countFailures() > 0:
+            result = "failed"
+        if self.countErrors() > 0:
+            result = "error"
+        return result
+
+
+
     def getStackTraces(self):
         allTraces = self.stackTraces[:]
         for results in self.suiteResults:
