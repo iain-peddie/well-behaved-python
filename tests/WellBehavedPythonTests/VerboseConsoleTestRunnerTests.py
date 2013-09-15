@@ -200,8 +200,7 @@ Failing test
         theOutput = self.output.getvalue()
         expect(theOutput).toMatch("subSuiteName.* passed in [0-9][\\.0-9]*s")
 
-    # ignored while writing results summary method
-    def xtest_that_runner_prints_test_failed_on_suite_exit_if_one_test_failed(self):
+    def test_that_runner_prints_test_failed_on_suite_exit_if_one_test_failed(self):
         # Where
         suiteName = "subSuiteName"
         runner = self.runner
@@ -217,5 +216,4 @@ Failing test
         # Then
         theOutput = self.output.getvalue()
         expect(theOutput).toMatch("subSuiteName.* failed in [0-9][\\.0-9]*s")
-
 

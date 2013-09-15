@@ -52,7 +52,7 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
     def registerSuiteCompleted(self, suiteName):
         ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
         duration = self.results.getDuration()
-        result = "passed"
+        result = self.results.getStateDescription()
         self._output.write("\n{}".format(suiteName))
         self._writeClosingString(result, duration)
         self._output.write("\n")
