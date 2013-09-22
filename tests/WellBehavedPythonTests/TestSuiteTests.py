@@ -331,3 +331,17 @@ class TestSuiteTests(TestCase):
         # Then
         expect(results.countTests()).toEqual(1)
         expect(suiteResults.countTests()).toEqual(1)
+
+    def test_get_longest_description_for_suite_with_one_test(self):
+        # Where
+        suite = TestCaseWithPassingTest.suite()
+        count = 0
+        indentationPerCount = 3
+
+        # When
+        
+        length = suite.getLongestDescriptionLength(count, indentationPerCount)
+
+        # Then
+        expect(length).toEqual(len("test_pass") + (1 + count) * indentationPerCount)
+

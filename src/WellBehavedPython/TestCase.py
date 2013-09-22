@@ -102,7 +102,10 @@ class TestCase(TestComponent):
         """Gets the length of the longest description.
 
         This is used to align outcomes for console test runners."""
-        return len(self.testMethodName) + nestingCount * indentationPerCount
+
+        
+        length =  len(self.testMethodName) + nestingCount * indentationPerCount
+        return length
 
     @classmethod
     def beforeClass(type):
