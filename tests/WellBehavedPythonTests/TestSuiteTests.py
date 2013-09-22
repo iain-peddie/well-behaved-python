@@ -140,7 +140,7 @@ class TestSuiteTests(TestCase):
 
     def test_autosuite_discovers_correct_tests(self):
         suite = TestCaseWithTwoPassingTests.suite()
-        expectedTestMethodNames = ["test_example1", "test_example2" ];
+        expectedTestMethodNames = ["test_example1", "test_another_example" ];
 
         expect(suite.suiteName).toEqual("TestCaseWithTwoPassingTests")
         expect(len(suite.tests)).toEqual(2)
@@ -344,4 +344,17 @@ class TestSuiteTests(TestCase):
 
         # Then
         expect(length).toEqual(len("test_pass") + (1 + count) * indentationPerCount)
+
+    def test_get_longest_description_for_suite_with_two_tests(self):
+        # Where
+        suite = TestCaseWithTwoPassingTests.suite()
+        count = 0
+        indentationPerCount = 3
+
+        # When
+        
+        length = suite.getLongestDescriptionLength(count, indentationPerCount)
+
+        # Then
+        expect(length).toEqual(len("test_another_example") + (1 + count) * indentationPerCount)
 

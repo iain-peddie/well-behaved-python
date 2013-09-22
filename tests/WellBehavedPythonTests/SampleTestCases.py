@@ -71,8 +71,10 @@ class TestCaseWithTwoPassingTests(TestCase):
     def test_example1(self):
         print("test_example1")
 
-    def test_example2(self):
-        print("test_example2")
+    def test_another_example(self):
+        print("test_another_example")
+
+
 
 class TestCaseWithBeforeAndAfterClass(TestCase):
 
