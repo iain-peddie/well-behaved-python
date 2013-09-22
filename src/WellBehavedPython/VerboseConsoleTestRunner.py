@@ -35,6 +35,9 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         self._currentResult = 0
         self.outputBuffer = io.StringIO()
         self.bufferOutput = bufferOutput
+        self.indentationSize = 3 # spaces per indentation level
+        self.indentationCount = 0 # current indentation level
+        self._updateIndentation()
         if self.bufferOutput:
             sys.stdout = self.outputBuffer
             sys.stderr = self.outputBuffer
@@ -46,7 +49,9 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
 
     def registerSuiteStarted(self, suiteName):        
         ConsoleTestRunner.registerSuiteStarted(self, suiteName)
-        self._output.write("{}...\n\n".format(suiteName))
+        self._output.write("{}{}...\n\n".format(self.indentation, suiteName))
+        self.indentationCount += 1
+        self._updateIndentation()
         return self
 
     def registerSuiteCompleted(self, suiteName):
@@ -55,13 +60,15 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         duration = self.results.getDuration()
         ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
         result = self.results.getStateDescription()
-        self._output.write("\n{}".format(suiteName))
+        self.indentationCount -= 1
+        self._updateIndentation()
+        self._output.write("\n{}{}".format(self.indentation, suiteName))
         self._writeClosingString(result, duration)
         self._output.write("\n")
 
     def registerTestStarted(self, suiteName, testName):
         """Registers the start of a test."""        
-        self._output.write(testName)
+        self._output.write("{}{}".format(self.indentation, testName))
         self.lastResult = self.results.registerTestStarted(suiteName, testName)
 
     def registerTestFailed(self, suiteName, testName, stackTrace):
@@ -91,6 +98,9 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
     def _writeClosingString(self, stateMessage, duration):
         time = duration.total_seconds()
         self._output.write("... {} in {:f}s\n".format(stateMessage, time))
+
+    def _updateIndentation(self):
+        self.indentation = " " * (self.indentationSize * self.indentationCount)
 
 
     

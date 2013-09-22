@@ -31,7 +31,6 @@ if __name__ == "__main__":
             runner = ConsoleTestRunner(bufferOutput = True)
         results = runner.run(suite)
 
-        # TODO : is test run success
         exit(results.countFailures() + results.countErrors() > 0)
     except Exception as ex:
         sys.stdout = sys.__stdout__
