@@ -98,6 +98,12 @@ class TestCase(TestComponent):
         """Counts the active number of tests configured to run."""
         return 1
 
+    def getLongestDescriptionLength(self, nestingCount, indentationPerCount):
+        """Gets the length of the longest description.
+
+        This is used to align outcomes for console test runners."""
+        return len(self.testMethodName) + nestingCount * indentationPerCount
+
     @classmethod
     def beforeClass(type):
         """Static method called before any tests in the class are called.
