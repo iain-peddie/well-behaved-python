@@ -76,7 +76,7 @@ class VerboseConsoleTestRunnerTests(TestCase):
         expect(self.output.getvalue()).toMatch("Starting test run of 2 tests")
         expect(self.output.getvalue()).toMatch("from 2 tests")
         expect(self.output.getvalue()).toMatch("""
-test_pass.* passed in [0-9\\.]+s""")
+ *test_pass.* passed in [0-9\\.]+s""")
         
 
     def test_that_runner_returns_test_result(self):
@@ -216,4 +216,21 @@ Failing test
         # Then
         theOutput = self.output.getvalue()
         expect(theOutput).toMatch("subSuiteName.* failed in [0-9][\\.0-9]*s")
+
+    def test_subsuites_indented_relative_to_parent(self):
+        # Where
+        outerSuite = TestSuite("OuterTestSuite")
+        innerSuite = TestCaseWithPassingTest.suite()
+        outerSuite.add(innerSuite)
+
+        runner = self.runner
+
+        # When
+        runner.run(outerSuite)
+
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toMatch("\n   TestCaseWithPassingTest")
+        expect(theOutput).toMatch("\n      test_pass")
+        expect(theOutput).toMatch("\nOuterTestSuite... passed")
 
