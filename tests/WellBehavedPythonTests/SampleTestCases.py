@@ -71,8 +71,10 @@ class TestCaseWithTwoPassingTests(TestCase):
     def test_example1(self):
         print("test_example1")
 
-    def test_example2(self):
-        print("test_example2")
+    def test_another_example(self):
+        print("test_another_example")
+
+
 
 class TestCaseWithBeforeAndAfterClass(TestCase):
 
@@ -121,4 +123,12 @@ class TestCaseWithAfterClassSaboteur(TestCaseWithBeforeAndAfterClass):
         raise KeyError("Saboteur sabotages afterClass")
 
     def test_two(self):
+        pass
+
+class TestCaseWithLongTestName(TestCase):
+
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    def test_case_with_test_name_longer_than_test_case_name(self):
         pass

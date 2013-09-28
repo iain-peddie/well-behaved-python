@@ -52,6 +52,15 @@ class TestSuite(TestComponent):
             count += test.countTests()
         return count
 
+    def getLongestDescriptionLength(self, nestingCount, indentationPerCount):
+        length = 0
+        for test in self.tests:
+            newLength = test.getLongestDescriptionLength(nestingCount + 1, indentationPerCount)
+            if newLength > length:
+                length = newLength
+        return length
+
+
 
     def run(self, results):
         """Runs all the tests in the suite."""

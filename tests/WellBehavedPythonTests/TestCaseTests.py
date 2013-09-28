@@ -144,4 +144,27 @@ class TestCaseTests(TestCase):
 
         # Then
         expect(test.countTests()).toEqual(1)
+
+    def test_that_get_maximum_description_returns_3_plus_test_name_length_for_0_indentation(self):
+        # Where
+        test = TestCaseTests("targetGoodMethod")
+        count = 0
+        indentationPerCount = 3
+
+        # When
+        longest = test.getLongestDescriptionLength(count, indentationPerCount)
+        
+        # Then
+        expect(longest).toEqual(len("targetGoodMethod"))
                 
+    def test_that_get_maximum_description_adds_indentation_to_result(self):
+        # Where
+        test = TestCaseTests("targetGoodMethod")
+        count = 1
+        indentationPerCount = 3
+
+        # When
+        longest = test.getLongestDescriptionLength(count, indentationPerCount)
+        
+        # Then
+        expect(longest).toEqual(len("targetGoodMethod") + indentationPerCount * count)
