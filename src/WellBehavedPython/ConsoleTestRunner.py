@@ -18,6 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .TestResults import TestResults
+from .TestSuite import TestSuite
 
 import io
 import traceback
@@ -36,6 +37,7 @@ class ConsoleTestRunner:
         self.outputBuffer = io.StringIO()
         self.bufferOutput = bufferOutput
         self.resultsStack = []
+        self.suite = TestSuite()
         if self.bufferOutput:
             sys.stdout = self.outputBuffer
             sys.stderr = self.outputBuffer
@@ -57,6 +59,7 @@ class ConsoleTestRunner:
         """
         try:
             self.results = TestResults()
+            self.suite = suite
             self._testCount = suite.countTests()
             self._output.write("Starting test run of {} test{}\n".format(
                 self._testCount, self.results.pluralise(self._testCount)))

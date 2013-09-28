@@ -351,8 +351,7 @@ class TestSuiteTests(TestCase):
         count = 0
         indentationPerCount = 3
 
-        # When
-        
+        # When        
         length = suite.getLongestDescriptionLength(count, indentationPerCount)
 
         # Then

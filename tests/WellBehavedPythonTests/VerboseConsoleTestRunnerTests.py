@@ -174,13 +174,15 @@ Failing test
         # Where
         runner = self.runner
         runner.results = TestResults()
+        runner.suite = TestSuite()
+        runner.suite.getLongestDescriptionLength = lambda nestingCount, intendationPerCount: 50
         
         # When
         runner.registerSuiteStarted("subSuiteName")
 
         # Then
         theOutput = self.output.getvalue()
-        expect(theOutput).toContain("""subSuiteName...
+        expect(theOutput).toMatch("""subSuiteName\\.+
 """)
 
     def test_that_runner_prints_suite_passed_and_time_on_suite_exit(self):
@@ -232,5 +234,34 @@ Failing test
         theOutput = self.output.getvalue()
         expect(theOutput).toMatch("\n   TestCaseWithPassingTest")
         expect(theOutput).toMatch("\n      test_pass")
-        expect(theOutput).toMatch("\nOuterTestSuite... passed")
+        expect(theOutput).toMatch("\nOuterTestSuite\\.+ passed")
+
+    def test_that_tests_indented_to_equal_levels(self):
+        # Where
+        suite = TestCaseWithTwoPassingTests.suite()
+        runner = self.runner
+
+        # When
+        runner.run(suite)
+
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toContain("   test_example1..........");
+        expect(theOutput).toContain("   test_another_example...");
+
+    def test_that_suites_dotted_to_sample_level_as_tests(self):
+        # Where
+        suite = TestCaseWithLongTestName.suite()
+        runner = self.runner
+        runner.suite = suite
+        runner._updateDotsLevel()
+
+        # When
+        runner.run(suite)
+
+        # Then
+        theOutput = self.output.getvalue()
+        expect(theOutput).toContain("TestCaseWithLongTestName.................................\n");
+        expect(theOutput).toContain("TestCaseWithLongTestName................................. passed");
+        expect(theOutput).toContain("   test_case_with_test_name_longer_than_test_case_name... passed");
 

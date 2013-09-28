@@ -37,6 +37,7 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         self.bufferOutput = bufferOutput
         self.indentationSize = 3 # spaces per indentation level
         self.indentationCount = 0 # current indentation level
+        self.dotsLevel = 3 # the column to fill dots into
         self._updateIndentation()
         if self.bufferOutput:
             sys.stdout = self.outputBuffer
@@ -49,7 +50,10 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
 
     def registerSuiteStarted(self, suiteName):        
         ConsoleTestRunner.registerSuiteStarted(self, suiteName)
-        self._output.write("{}{}...\n\n".format(self.indentation, suiteName))
+        self._updateDotsLevel()
+        suiteString = "{}{}".format(self.indentation, suiteName)
+        suiteString = self.addDotsTo(suiteString)
+        self._output.write("{}\n\n".format(suiteString))
         self.indentationCount += 1
         self._updateIndentation()
         return self
@@ -62,14 +66,22 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         result = self.results.getStateDescription()
         self.indentationCount -= 1
         self._updateIndentation()
-        self._output.write("\n{}{}".format(self.indentation, suiteName))
+        dottedSuiteName = self.addDotsTo("{}{}".format(self.indentation, suiteName))
+        self._output.write("\n{}".format(dottedSuiteName))
         self._writeClosingString(result, duration)
         self._output.write("\n")
 
     def registerTestStarted(self, suiteName, testName):
         """Registers the start of a test."""        
-        self._output.write("{}{}".format(self.indentation, testName))
+        testName = "{}{}".format(self.indentation, testName)
+                           
+        nameWithDots = self.addDotsTo(testName)
+        self._output.write(nameWithDots)
         self.lastResult = self.results.registerTestStarted(suiteName, testName)
+
+    def addDotsTo(self, inputString):
+        dots = "." * (self.dotsLevel - len(inputString))
+        return inputString + dots
 
     def registerTestFailed(self, suiteName, testName, stackTrace):
         """Register a test failed."""
@@ -97,10 +109,12 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
 
     def _writeClosingString(self, stateMessage, duration):
         time = duration.total_seconds()
-        self._output.write("... {} in {:f}s\n".format(stateMessage, time))
+        self._output.write(" {} in {:f}s\n".format(stateMessage, time))
 
     def _updateIndentation(self):
         self.indentation = " " * (self.indentationSize * self.indentationCount)
 
+    def _updateDotsLevel(self):
+        self.dotsLevel = 3 + self.suite.getLongestDescriptionLength(0, self.indentationSize)
 
     

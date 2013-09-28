@@ -124,3 +124,11 @@ class TestCaseWithAfterClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
     def test_two(self):
         pass
+
+class TestCaseWithLongTestName(TestCase):
+
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)        
+
+    def test_case_with_test_name_longer_than_test_case_name(self):
+        pass
