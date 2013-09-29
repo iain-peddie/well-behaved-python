@@ -133,7 +133,7 @@ line2
         results.registerTestPassed("suite", "test")
 
         # Then
-        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(result.getDuration()).toBeGreaterThanOrEqualTo(timedelta())
         expect(results.getDuration().total_seconds()).toEqual(
             result.getDuration().total_seconds())
 
@@ -146,7 +146,7 @@ line2
         results.registerTestFailed("suite", "test", ["stacktrace"])
 
         # Then
-        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(result.getDuration()).toBeGreaterThanOrEqualTo(timedelta())
         
     def test_result_error_updates_result(self):
         # Where
@@ -157,7 +157,7 @@ line2
         results.registerTestError("suite", "test", ["stacktrace"])
 
         # Then
-        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(result.getDuration()).toBeGreaterThanOrEqualTo(timedelta())
         expect(results.getDuration().total_seconds()).toEqual(
             result.getDuration().total_seconds())
 
@@ -171,7 +171,7 @@ line2
         results.registerTestIgnored("suite", "test")
 
         # Then
-        expect(result.getDuration()).toBeGreaterThan(timedelta())
+        expect(result.getDuration()).toBeGreaterThanOrEqualTo(timedelta())
         expect(results.getDuration().total_seconds()).toEqual(
             result.getDuration().total_seconds())
 
@@ -376,6 +376,6 @@ line2
         results.registerSuiteCompleted("subSuite")
 
         # Then
-        expect(results.getDuration().total_seconds()).toBeGreaterThan(2)
+        expect(results.getDuration().total_seconds()).toBeGreaterThanOrEqualTo(2)
         expect(duration.total_seconds()).toBeLessThan(results.getDuration().total_seconds())
         
