@@ -15,7 +15,6 @@ from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
 
 if __name__ == "__main__":
     try:
-        results = TestResults()
         suite = TestSuite("AllTests")
         suite.add(TestResultsTests.suite())
         suite.add(TestCaseTests.suite())
