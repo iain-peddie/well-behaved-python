@@ -23,22 +23,32 @@ class TutorialTests(TestCase):
         TestCase.__init__(self, testName)
 ~~~~~
 
-We now have an empty test case class which we can run. This is now a good time to setup the running of it using
-a suite that can discover test methods in the class:
+We now have an empty test case class which we can run. This is now a good time to setup the running of it using a suite that can discover test methods in the class. 
 
 ~~~~~ python
-if __name__ == "__main__":
-    suite = TutorialTests.suite()
-    results = TestResults()
-    suite.run(results)
+from WellBehavedPython.TestSuite import *
+from WellBehavedPython.VerboseConsoleTestRunner import *
+from TutorialTests import *
 
-    print(results.summary())
+if __name__ == "__main__":
+    suite = TestSuite("all tests")
+    suite.add(TutorialTests.suite())
+    # add other suites using TestCaseClass.suite()
+
+    runner = VerboseConsoleTestRunner(bufferOutput = True)
+    results = runner.run(suite)    
 ~~~~~
+
+In the above test, we chose to run using the VerboseConsoleTestRunner. There is also a ConsoleTestRunner, which produces less verbose output.
 
 We can now run the test case, and get the useful message that we got 0 failures from zero tests
 ~~~~~ bash
 python3 tutorial.py
-0 failed from 0 test
+all tests...
+   TutorialTests...
+   TutorialTests... passed in 0.000s
+all tests.......... passed in 0.000s
+0 failed 0 errors 0 ignored from 0 tests
 ~~~~~
 
 A test method is any method within our test case class which starts with the word 'test'
@@ -51,6 +61,12 @@ A test method is any method within our test case class which starts with the wor
 We can run this test again, and see
 ~~~~~ bash
 python3 tutorial.py
+python3 tutorial.py
+all tests...............
+   TutorialTests........
+      test_something ... passed in 0.001s
+   TutorialTests........ passed in 0.002s
+all tests............... passed in 0.003s
 0 failed from 1 test
 ~~~~~
 
