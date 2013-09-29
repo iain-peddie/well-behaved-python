@@ -24,6 +24,7 @@ if __name__ == "__main__":
         suite.add(ExpectTests.suite())
         suite.add(ExpectNotTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
+        suite.add(VerboseConsoleTestRunnerTests.suite())
         
         buffer = True
 
