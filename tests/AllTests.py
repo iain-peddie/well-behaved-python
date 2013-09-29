@@ -17,6 +17,7 @@ if __name__ == "__main__":
     try:
         results = TestResults()
         suite = TestSuite("AllTests")
+
         suite.add(TestResultsTests.suite())
         suite.add(TestCaseTests.suite())
         suite.add(TestSuiteTests.suite())
@@ -24,15 +25,22 @@ if __name__ == "__main__":
         suite.add(ExpectNotTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
+        
+        buffer = True
 
         if len(sys.argv) > 1 and sys.argv[1] == '--verbose':
-            runner = VerboseConsoleTestRunner(bufferOutput = True)
+            runner = VerboseConsoleTestRunner(bufferOutput = buffer)
         else:
-            runner = ConsoleTestRunner(bufferOutput = True)
+            runner = ConsoleTestRunner(bufferOutput = buffer)
         results = runner.run(suite)
+
+        sys.__stdout__.flush()
+        sys.__stderr__.flush()
 
         exit(results.countFailures() + results.countErrors() > 0)
     except Exception as ex:
+        
+    
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         traceback.print_exc(file = sys.stdout)
