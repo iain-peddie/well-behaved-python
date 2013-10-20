@@ -62,8 +62,8 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         # get the duration first, before suite completed pops the 
         # results stack
         duration = self.results.getDuration()
-        ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
         result = self.results.getStateDescription()
+        ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
         self.indentationCount -= 1
         self._updateIndentation()
         dottedSuiteName = self.addDotsTo("{}{}".format(self.indentation, suiteName))
@@ -93,9 +93,9 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         self.results.registerTestPassed(suiteName, testName)
         self.registerTestFinished(suiteName, testName, "passed")
 
-    def registerTestError(self, suiteName, testName, stackTrace):
+    def registerTestError(self, suiteName, testName, stackTrace, numberErrors = 1):
         """Register a test failed."""
-        self.results.registerTestError(suiteName, testName, stackTrace)
+        self.results.registerTestError(suiteName, testName, stackTrace, numberErrors)
         self.registerTestFinished(suiteName, testName, "error")
 
     def registerTestIgnored(self, suiteName, testName):

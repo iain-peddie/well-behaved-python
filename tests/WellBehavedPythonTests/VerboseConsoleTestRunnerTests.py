@@ -265,3 +265,20 @@ Failing test
         expect(theOutput).toContain("TestCaseWithLongTestName................................. passed");
         expect(theOutput).toContain("   test_case_with_test_name_longer_than_test_case_name... passed");
 
+
+    def test_that_passing_subsuite_after_failing_subsuite_descibed_as_passing(self):
+        # Where
+        wholeSuite = TestSuite("Outer")
+        wholeSuite.add(TestCaseWithFailingTest.suite())
+        wholeSuite.add(TestCaseWithPassingTest.suite()) 
+
+        # When
+        runner = self.runner
+        runner.run(wholeSuite)
+
+        # Then 
+        output = self.output.getvalue()
+        expect(output).toContain("TestCaseWithFailingTest failed")
+        expect(output).toContain("TestCaseWithPassingTest passed")
+        expect(output).toMatch("Outer\\.+ failed")
+
