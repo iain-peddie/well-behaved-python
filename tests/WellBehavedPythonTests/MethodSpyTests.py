@@ -72,8 +72,17 @@ class MethodSpyTests(TestCase):
 
         # Then
         expect(spy.getNumberOfCalls()).toEqual(1, "Number of calls")
-
         
+    def test_that_spy_called_twice_getNumberOfCalls_returns_2(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy()
+        spy()
+
+        # Then
+        expect(spy.getNumberOfCalls()).toEqual(2, "Number of calls")
         
         
 
