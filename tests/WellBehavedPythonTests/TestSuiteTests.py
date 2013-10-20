@@ -357,3 +357,30 @@ class TestSuiteTests(TestCase):
         # Then
         expect(length).toEqual(len("test_another_example") + (1 + count) * indentationPerCount)
 
+    def test_that_passing_subsuite_after_failing_subsuite_has_zero_errors(self):
+        # Where
+        wholeSuite = TestSuite("Outer")
+        failingSubsuite = TestCaseWithFailingTest.suite()
+        passingSubsuite = TestCaseWithPassingTest.suite()
+        wholeSuite.add(failingSubsuite)
+        wholeSuite.add(passingSubsuite)        
+
+        # When
+        results = TestResults()
+        wholeSuite.run(results)
+        wholeResults = results.suiteResults[0]
+
+
+        # Then 
+        expect(len(wholeResults.suiteResults)).toEqual(2, userMessage="Should have two child results")
+        failingResults = wholeResults.suiteResults[0]
+        passingResults = wholeResults.suiteResults[1]
+
+        expect(failingResults.countTests()).toEqual(1, userMessage = "Failing results should contain one test")
+        expect(failingResults.countFailures()).toEqual(1, userMessage = "Failing results should contain one failure")
+        expect(passingResults.countTests()).toEqual(1, userMessage = "Passing results should contain one test")
+        expect(passingResults.countPasses()).toEqual(1, userMessage = "Passing results should contain one failure")
+        expect(passingResults.countFailures()).toEqual(0, userMessage = "Passing results should contain no failures")
+
+       
+

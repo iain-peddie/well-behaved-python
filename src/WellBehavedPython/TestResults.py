@@ -111,9 +111,8 @@ class TestResults:
             result = "failed"
         if self.countErrors() > 0:
             result = "error"
+
         return result
-
-
 
     def getStackTraces(self):
         allTraces = self.stackTraces[:]
