@@ -4,7 +4,10 @@ import sys
 
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ExpectNotTests import *
-from WellBehavedPythonTests.ExpectTests import *
+from WellBehavedPythonTests.StringExpectationsTests import *
+from WellBehavedPythonTests.DefaultExpectationsTests import *
+from WellBehavedPythonTests.DictionaryExpectationsTests import *
+from WellBehavedPythonTests.NumericExpectationsTests import *
 from WellBehavedPythonTests.MethodSpyTests import *
 from WellBehavedPythonTests.TestCaseTests import *
 from WellBehavedPythonTests.TestSuiteTests import *
@@ -21,7 +24,11 @@ if __name__ == "__main__":
         suite.add(TestResultsTests.suite())
         suite.add(TestCaseTests.suite())
         suite.add(TestSuiteTests.suite())
-        suite.add(ExpectTests.suite())
+        suite.add(DefaultExpectationsTests.suite())
+        suite.add(NumericExpectationsTests.suite())
+        suite.add(StringExpectationsTests.suite())
+        suite.add(ContainerExpectationsTests.suite())
+        suite.add(DictionaryExpectationsTests.suite())
         suite.add(ExpectNotTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
