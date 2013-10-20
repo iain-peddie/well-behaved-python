@@ -5,6 +5,7 @@ import sys
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ExpectNotTests import *
 from WellBehavedPythonTests.ExpectTests import *
+from WellBehavedPythonTests.MethodSpyTests import *
 from WellBehavedPythonTests.TestCaseTests import *
 from WellBehavedPythonTests.TestSuiteTests import *
 from WellBehavedPythonTests.TestResultsTests import *
@@ -24,6 +25,7 @@ if __name__ == "__main__":
         suite.add(ExpectNotTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
+        suite.add(MethodSpyTests.suite())
         
         buffer = True
 
