@@ -19,9 +19,15 @@
 
 class MethodSpy:
 
+    def __init__(self):
+        self.callCount = 0
+
+    def __call__(self):
+        self.callCount += 1
+
     def getNumberOfCalls(self):
-        return 0
+        return self.callCount
 
     def hasBeenCalled(self):
-        return False
+        return self.callCount > 0
 
