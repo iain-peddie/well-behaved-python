@@ -62,6 +62,11 @@ class VerboseConsoleTestRunner(ConsoleTestRunner):
         # get the duration first, before suite completed pops the 
         # results stack
         duration = self.results.getDuration()
+
+        # get the description before registering the suite as completed
+        # because the registration changes the active results being
+        # worked upon away from the currently active suite, which
+        # is what we want the description for
         result = self.results.getStateDescription()
         ConsoleTestRunner.registerSuiteCompleted(self, suiteName)
         self.indentationCount -= 1
