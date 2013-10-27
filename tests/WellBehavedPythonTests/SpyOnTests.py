@@ -39,4 +39,5 @@ class SpyOnTests(TestCase):
         spyOn(sampleObject.parameterlessMethod)
 
         # Then
-#        expect(sampleObject.parameterlessMethod).toBeAnInstanceOf(MethodSpy)
+        expect(sampleObject.parameterlessMethod
+               ).toBeAnInstanceOf(MethodSpy)
