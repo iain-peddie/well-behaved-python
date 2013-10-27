@@ -62,4 +62,10 @@ def expect(actual, normal = True):
         reverser = DefaultExpectations(actual, reverseStrategy)
         return DefaultExpectations(actual, strategy, reverser)    
 
+def spyOn(method):
+    instance = method.__self__
+    name = method.__name__
+    instance.__dict__[name] = MethodSpy(methodName = name)
+
+
 

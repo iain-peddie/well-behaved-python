@@ -7,6 +7,7 @@ from WellBehavedPythonTests.TestCaseTests import *
 from WellBehavedPythonTests.TestSuiteTests import *
 from WellBehavedPythonTests.TestResultsTests import *
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
+from WellBehavedPythonTests.SpyOnTests import *
 
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 from WellBehavedPythonTests.StringExpectationsTests import *
@@ -41,6 +42,7 @@ if __name__ == "__main__":
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
         suite.add(MethodSpyTests.suite())
+        suite.add(SpyOnTests.suite())
         
         buffer = True
 
