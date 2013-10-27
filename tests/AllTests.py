@@ -2,17 +2,19 @@
 
 import sys
 
+from WellBehavedPythonTests.MethodSpyTests import *
+from WellBehavedPythonTests.TestCaseTests import *
+from WellBehavedPythonTests.TestSuiteTests import *
+from WellBehavedPythonTests.TestResultsTests import *
+from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
+
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 from WellBehavedPythonTests.StringExpectationsTests import *
 from WellBehavedPythonTests.DefaultExpectationsTests import *
 from WellBehavedPythonTests.ContainerExpectationsTests import *
 from WellBehavedPythonTests.DictionaryExpectationsTests import *
 from WellBehavedPythonTests.NumericExpectationsTests import *
-from WellBehavedPythonTests.MethodSpyTests import *
-from WellBehavedPythonTests.TestCaseTests import *
-from WellBehavedPythonTests.TestSuiteTests import *
-from WellBehavedPythonTests.TestResultsTests import *
-from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
+from WellBehavedPythonTests.MethodSpyExpectationsTests import *
 
 from WellBehavedPython.TestSuite import TestSuite
 from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
@@ -34,6 +36,7 @@ if __name__ == "__main__":
         suite.add(ContainerNotExpectationsTests.suite())
         suite.add(DictionaryExpectationsTests.suite())
         suite.add(DictionaryNotExpectationsTests.suite())
+        suite.add(MethodSpyExpectationsTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
         suite.add(MethodSpyTests.suite())
