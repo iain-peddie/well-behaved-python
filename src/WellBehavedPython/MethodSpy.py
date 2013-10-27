@@ -19,11 +19,15 @@
 
 class MethodSpy:
 
-    def __init__(self):
+    def __init__(self, methodName = "anonymous"):
+        self.methodName = methodName
         self.callCount = 0
 
     def __call__(self):
         self.callCount += 1
+
+    def getDescription(self):
+        return "<{}>".format(self.methodName)
 
     def getNumberOfCalls(self):
         return self.callCount

@@ -39,7 +39,7 @@ class MethodSpyExpectations(BaseExpect):
 
     def formatForMessage(self, instance):
         if isinstance(instance, MethodSpy):
-            return "<anonymous>"
+            return instance.getDescription()
         print ("instance type is {}".format(type(instance)))
         return BaseExpect.formatForMessage(self, instance)
 

@@ -83,6 +83,15 @@ class MethodSpyTests(TestCase):
 
         # Then
         expect(spy.getNumberOfCalls()).toEqual(2, "Number of calls")
+
+    def test_that_spy_description_is_based_on_methodName(self):
+        # Where
+        anonymousSpy = self.spy
+        namedSpy= MethodSpy(methodName = "test_function")
+
+        # Then
+        expect(anonymousSpy.getDescription()).toEqual("<anonymous>")
+        expect(namedSpy.getDescription()).toEqual("<test_function>")
         
         
 
