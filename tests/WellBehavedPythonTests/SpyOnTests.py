@@ -41,3 +41,14 @@ class SpyOnTests(TestCase):
         # Then
         expect(sampleObject.parameterlessMethod
                ).toBeAnInstanceOf(MethodSpy)
+
+    def test_can_spy_and_expect_method_to_have_been_called(self):
+        # Where
+        sampleObject = SampleClass()
+        spyOn(sampleObject.parameterlessMethod)
+
+        # When
+        sampleObject.parameterlessMethod()
+
+        # Then
+        expect(sampleObject.parameterlessMethod).toHaveBeenCalled()        
