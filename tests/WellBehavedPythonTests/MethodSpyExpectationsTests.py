@@ -38,3 +38,16 @@ class MethodSpyExpectationsTests(TestCase):
         # Then
         expect(expecter).toBeAnInstanceOf(MethodSpyExpectations)
         expect(expecter).toBeAnInstanceOf(BaseExpect)
+
+    def test_expect_method_called_passes_when_method_has_been_called(self):
+        # Where
+        calledSpy = self.createMethodSpyWhichHasBeenCalled()
+
+        # Then
+        expect(calledSpy).toHaveBeenCalled()
+
+    def createMethodSpyWhichHasBeenCalled(self):
+        spy = MethodSpy()
+        spy()
+        return spy
+

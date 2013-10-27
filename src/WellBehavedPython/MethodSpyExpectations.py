@@ -34,3 +34,6 @@ class MethodSpyExpectations(BaseExpect):
         """
 
         BaseExpect.__init__(self, actual, strategy, reverseExpecter)
+
+    def toHaveBeenCalled(self):
+        pass
