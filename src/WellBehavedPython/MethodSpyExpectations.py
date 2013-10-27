@@ -18,6 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .BaseExpect import BaseExpect
+from .MethodSpy import MethodSpy
 
 class MethodSpyExpectations(BaseExpect):
 
@@ -33,4 +34,18 @@ class MethodSpyExpectations(BaseExpect):
                   to behave in the obvious way.
         """
 
+        self.spy = actual
         BaseExpect.__init__(self, actual, strategy, reverseExpecter)
+
+    def formatForMessage(self, instance):
+        if isinstance(instance, MethodSpy):
+            return instance.getDescription()
+        print ("instance type is {}".format(type(instance)))
+        return BaseExpect.formatForMessage(self, instance)
+
+    def toHaveBeenCalled(self):
+        message = self.buildMessage("to have been called", None, None)
+        if self.spy.hasBeenCalled():
+            self.success(message)
+        else:
+            self.fail(message)
