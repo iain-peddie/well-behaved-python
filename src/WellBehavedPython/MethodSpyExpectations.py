@@ -17,10 +17,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+from .DefaultExpectations import DefaultExpectations
 from .BaseExpect import BaseExpect
 from .MethodSpy import MethodSpy
 
-class MethodSpyExpectations(BaseExpect):
+class MethodSpyExpectations(DefaultExpectations):
 
     def __init__(self, actual, strategy, reverseExpecter = None):
         """Constructor
@@ -35,7 +36,7 @@ class MethodSpyExpectations(BaseExpect):
         """
 
         self.spy = actual
-        BaseExpect.__init__(self, actual, strategy, reverseExpecter)
+        DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
     def formatForMessage(self, instance):
         if isinstance(instance, MethodSpy):

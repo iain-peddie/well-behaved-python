@@ -62,4 +62,24 @@ def expect(actual, normal = True):
         reverser = DefaultExpectations(actual, reverseStrategy)
         return DefaultExpectations(actual, strategy, reverser)    
 
+def spyOn(method):
+    """spies on a given method.
+
+    Takes the given object method, creates a test spy and replaces the 
+    method in it's own instance with the test spy. This allows objects
+    to be changed dynamically and allows test to have the form
+
+    spyOn(object.method)
+    # ...
+    expect(object.method).toHaveBeenCalled()
+    
+    Which is a highly expressive way of writing tests.
+
+    Inputs
+    ------
+    method : a object method object. Can be specified as object.method. """
+
+    instance = method.__self__
+    name = method.__name__
+    instance.__dict__[name] = MethodSpy(methodName = name)
 
