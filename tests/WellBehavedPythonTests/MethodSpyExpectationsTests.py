@@ -23,10 +23,22 @@ from WellBehavedPython.api import *
 from WellBehavedPython.MethodSpyExpectations import MethodSpyExpectations
 from WellBehavedPython.BaseExpect import BaseExpect
 
-class MethodSpyExpectationsTests(TestCase):
-
+class MethodSpyExpectationsTestsBase(TestCase):
     def __init__(self, name):
         TestCase.__init__(self, name)
+
+    def createMethodSpyWhichHasNotBeenCalled(self):
+        spy = MethodSpy()
+        return spy
+
+    def createMethodSpyWhichHasBeenCalled(self):
+        spy = MethodSpy()
+        spy()
+        return spy
+
+class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
+    def __init__(self, name):
+        MethodSpyExpectationsTestsBase.__init__(self, name)
 
     def test_spy_expectations_registered_for_spies_by_default(self):
         # Where
@@ -46,8 +58,34 @@ class MethodSpyExpectationsTests(TestCase):
         # Then
         expect(calledSpy).toHaveBeenCalled()
 
-    def createMethodSpyWhichHasBeenCalled(self):
-        spy = MethodSpy()
-        spy()
-        return spy
+    def test_expect_method_called_fails_when_method_has_not_been_called(self):
+        # Where
+        uncalledSpy = self.createMethodSpyWhichHasNotBeenCalled()
+        
+        # Then
+        expect(lambda: expect(uncalledSpy).toHaveBeenCalled()).toRaise(
+            AssertionError, 
+            expectedMessage = 'Expected <anonymous> to have been called')
+    
 
+class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
+
+    def __init__(self, name):
+        MethodSpyExpectationsTestsBase.__init__(self, name)
+
+    def test_expect_method_not_called_fails_when_method_has_been_called(self):
+        # Where
+        calledSpy = self.createMethodSpyWhichHasBeenCalled()
+
+        # Then
+        expect(lambda: expect(calledSpy).Not.toHaveBeenCalled()).toRaise(
+            AssertionError, 
+            expectedMessage = 'Expected <anonymous> not to have been called')
+            
+
+    def test_expect_method_not_called_passes_when_method_has_not_been_called(self):
+        # Where
+        uncalledSpy = self.createMethodSpyWhichHasNotBeenCalled()
+        
+        # Then
+        expect(uncalledSpy).Not.toHaveBeenCalled()

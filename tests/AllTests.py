@@ -37,6 +37,7 @@ if __name__ == "__main__":
         suite.add(DictionaryExpectationsTests.suite())
         suite.add(DictionaryNotExpectationsTests.suite())
         suite.add(MethodSpyExpectationsTests.suite())
+        suite.add(MethodSpyNotExpectationsTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
         suite.add(MethodSpyTests.suite())
