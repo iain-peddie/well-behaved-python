@@ -170,138 +170,130 @@ Difference is:
             AssertionError,
             expectedMessageMatches = '^userMessage')                    
 
-class ContainerExpectationsTests(TestCase):
+
+
+
+class StringNotExpectationsTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
-    def test_expect_x_to_be_in_y_passes_when_x_is_in_y(self):
-        x = 602
-        y = [601, x, 603]
-        expect(x).toBeIn(y)
 
-    def test_expect_x_to_be_in_y_passes_when_item_equal_to_x_in_y(self):
-        # use numbers > 256 because of python internal behavior:
-        # all numbers < 255 are declared in the machine runtime and are always
-        # the same as each other. So x = 1; y = 1; least to x is y being true
+    def test_string_not_to_start_with_passes_if_strings_start_differently(self):
+        data = 'asdf'
+        expect(data).Not.toStartWith('zzz')
 
-        # We don't want that in this test (otherwise we'd be duplicating tests
-        # so we pick larger inteers to do this with
-        x = 602
-        y = [601, 602, 603]
-        expect(x).toBeIn(y)
-
-    def test_expect_x_to_be_in_y_raises_AssertionError_when_x_not_in_y(self):
-        x = 602
-        y = [601, 603, 605]
-        expect(lambda: expect(x).toBeIn(y)).toRaise(
+    def test_string_not_to_start_with_fails_if_strings_identical(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toStartWith('asdf')).toRaise(
             AssertionError,
-            expectedMessage = "Expected 602 to be in [601, 603, 605]")
+            expectedMessage = "Expected 'asdf' not to be a string starting with 'asdf'")
 
-    def test_expect_x_to_be_in_y_prepends_usermessage_when_condition_fails(self):
-        x = 602
-        y = [601, 603, 605]
-        expect(lambda: expect(x).toBeIn(y, "user message")).toRaise(
+    def test_string_not_to_start_With_fails_if_expected_starts_with_expected_start(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toStartWith('as')).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
-
-    def expect_y_to_contain_x_passes_when_x_in_y(self):
-        x = 602
-        y = [601, x, 603]
-        expect(y).toContain(x)
-
-    def expect_y_to_contain_x_passes_when_item_equal_to_x_in_y(self):
-        x = 602
-        y = [601, 602, 603]
-        expect(y).toContain(x)
-
-    def test_expect_y_to_contain_x_fails_when_x_not_in_y(self):
-        x = 602
-        y = [601, 603, 605]
-        expect(lambda: expect(y).toContain(x)).toRaise(
-            AssertionError,
-            expectedMessage = "Expected [601, 603, 605] to contain 602")    
-
-    def test_expect_y_to_contain_x_prepends_usermessage_to_message(self):
-        x = 602
-        y = [601, 603, 605]
-        expect(lambda: expect(y).toContain(x, "user message")).toRaise(
-            AssertionError,
-            expectedMessageMatches = "^user message")
-
-    def test_expect_0_to_be_superset_of_empty_passes(self):
-        expect([1]).toBeASupersetOf(())
-
-    def test_expect_01_to_be_superset_of_0_and_superset_of_1(self):
-        expect([0, 1]).toBeASupersetOf([0])
-        expect([0, 1]).toBeASupersetOf([1])
-
-    def test_expect_0_to_be_a_superset_of_1_fails(self):
-        expect(lambda: expect([0]).toBeASupersetOf(1)).toRaise(
-            AssertionError,
-            expectedMessage = "Expected [0] to be a superset of 1")
-
-    def test_expect_00_to_be_a_superset_of_empty_passes(self):
-        expect([0, 0]).toBeASupersetOf(())
-
-    def test_expect_0_to_be_a_superset_of_00_passes(self):
-        expect([0, 0]).toBeASupersetOf([0])
-
-    def test_toBeASuperset_prepends_userMessage(self):
-        expect(lambda: expect([0]).toBeASupersetOf(1, "userMessage")).toRaise(
-            AssertionError,
-            expectedMessageMatches = "^userMessage: ")
-
-    def test_expect_empty_list_to_be_a_subset_of_1_passes(self):
-        expect([]).toBeASubsetOf([1])
-
-    def test_expect_0_and_1_to_be_subsets_of_01_pass(self):
-        expect([0]).toBeASubsetOf([0, 1])
-        expect([1]).toBeASubsetOf([0, 1])
-
-    def test_expect_0_to_be_a_subset_of_1_fails(self):
-        expect(lambda: expect([0]).toBeASubsetOf([1])).toRaise(
-            AssertionError,
-            expectedMessage = "Expected [0] to be a subset of [1]")
-
-    def test_toBeASubset_prepends_userMessage(self):
-        expect(lambda: expect([0]).toBeASubsetOf([1], "userMessage")).toRaise(
-            AssertionError,
-            expectedMessageMatches = "^userMessage: ")
-
-    def test_expect_two_empty_lists_to_be_equal_passes(self):
-        expect([]).toEqual([])
-
-    def test_expect_two_empty_tuplet_to_be_equal_passes(self):
-        expect(tuple()).toEqual(tuple())
-
-    def test_expect_two_nonempty_identical_lists_to_be_equal_passes(self):
-        expect([1]).toEqual([1])
-
-    def test_expect_two_nonempty_nonidentical_lists_of_the_same_length_to_be_equal_fails(self):
-        expect(lambda:
-                   expect([0]).toEqual([1])).toRaise(
-            AssertionError,
-            expectedMessage = """Expected [0] to equal [1]
-First difference at index 0: 0 != 1""")
-
-    def test_containers_of_unequal_length_get_length_mismatch_message(self):
-        expect(lambda: expect([0]).toEqual([])).toRaise(
-            AssertionError,
-            expectedMessage = "Expected [0] to be a container of length 0")
-
-    def test_expect_container_equals_prepends_user_message_when_containers_equal_length(self):
-        expect(lambda:
-                   expect([0]).toEqual([1], "userMessage")).toRaise(
-            AssertionError,
-            expectedMessageMatches = "^userMessage")
-
-    def test_expect_container_equals_prepends_user_message_when_containers_unequal_length(self):
-        expect(lambda:
-                   expect([0]).toEqual([], "userMessage")).toRaise(
-            AssertionError,
-            expectedMessageMatches = "^userMessage")
+            expectedMessage = "Expected 'asdf' not to be a string starting with 'as'")
         
-    def test_tuple_comparse_to_equivalent_list(self):
-        expect((1, 2)).toEqual([1, 2])
+    def test_string_not_to_end_with_passes_if_strings_end_differently(self):
+        data = 'asdf'
+        expect(data).Not.toEndWith('zzz')
+
+    def test_string_not_to_end_with_fails_if_strings_identical(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toEndWith('asdf')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string ending with 'asdf'")
+
+    def test_string_not_to_end_With_fails_if_expected_ends_with_expected_end(self):
+        data = 'asdf'
+        expect(lambda: expect(data).Not.toEndWith('df')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string ending with 'df'")
+
+    def test_string__not_contains_fails_on_identical_strings(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('asdf')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'asdf'")
+
+    def test_string_not_contains_fails_when_data_starts_with_expected(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('as')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'as'")
+
+    def test_string_not_contains_fails_when_actual_ends_with_expected(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('df')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'df'")
+
+    def test_string_notcontains_fails_when_expected_embedded_in_actual(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('sd')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string containing 'sd'")
+
+    def test_string_not_contains_passesfails_when_expected_not_in_actual(self):
+        actual = 'asdf'
+        expect(actual).Not.toContain('zzz')
+
+    def test_string_not_contains_prepends_userMessage(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toContain('sd', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
+
+    def test_equals_doesnt_raise_if_two_strings_unequal(self):
+        actual = 'asdf'
+        expect(actual).Not.toEqual("zxc")
+
+    def test_equals_raises_correctly_if_strings_equal(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toEqual("asdf")).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to equal 'asdf'")
+
+    def test_expecting_string1_not_to_equal_double1_fails(self):
+        expect(lambda: expect("1").Not.toEqual(1)).toRaise(
+            AssertionError,
+            expectedMessage = ("Cannot compare instance of <class 'str'> to " +
+                               "instance of <class 'int'> because their types differ"))
 
 
+    def test_string_not_equals_prepends_userMessage_on_failure(self):
+        actual = 'asdf'
+        expect(lambda: expect(actual).Not.toEqual('asdf', 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
+
+    def test_string_not_matches_passes_when_string_doesnt_match_pattern(self):
+        actual = 'asdf'
+        pattern = 'z+'
+        expect(actual).Not.toMatch(pattern)
+
+    def test_string_not_matches_fails_when_string_matches_pattern(self):
+        actual = 'asdf'
+        pattern = '.*'
+        expect(lambda: expect(actual).Not.toMatch(pattern)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string matching regular expression pattern '.*'")
+
+    def test_string_not_matches_passes_when_string_doesnt_match_compiled_pattern(self):
+        actual = 'asdf'
+        pattern = re.compile('z+')
+        expect(actual).Not.toMatch(pattern)
+
+    def test_string_not_matches_fails_when_string_matches_compiled_pattern(self):
+        actual = 'asdf'
+        pattern = re.compile('.*')
+        expect(lambda: expect(actual).Not.toMatch(pattern)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected 'asdf' not to be a string matching regular expression pattern '.*'")
+
+    def test_string_not_matches_prepends_userMessage_on_failure(self):
+        actual = 'asdf'
+        pattern = 'asdf'
+        expect(lambda: expect(actual).Not.toMatch(pattern, 'userMessage')).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^userMessage')
 

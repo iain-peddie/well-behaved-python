@@ -102,3 +102,64 @@ class DictionaryExpectationsTests(TestCase):
         expect(lambda: expect(data).toEqual({'a': 2}, "userMessage")).toRaise(
             AssertionError,
             expectedMessageMatches= "^userMessage")
+
+class DictionaryNotExpectationsTests(TestCase):
+    def __init__(self, testFunctionName):
+        TestCase.__init__(self, testFunctionName)
+
+    def test_dictionary_not_contains_key_fails_when_key_in_dictionary(self):
+        data = { 'a' : 1 }
+        expect(lambda: expect(data).Not.toContainKey('a')).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to contain key 'a'")
+
+    def test_dictionary_not_contains_key_passes_when_key_not_in_dictionary(self):
+        data = {'a': 1}
+        expect(data).Not.toContainKey('b')
+
+    def test_dictionary_not_contains_key_prepends_userMessage(self):
+        data = { 'a' : 1 }
+        expect(lambda: expect(data).Not.toContainKey("a", "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches= "^userMessage: ")
+
+    def test_dictionary_not_contains_value_passes_when_value_not_in_dictionary(self):
+        data = { 'a': 1 }
+        expect(data).Not.toContainValue(2)
+
+    def test_dictionary_not_contains_value_fails_when_value_in_dictionary(self):
+        data = { 'a': 1 }
+        expect(lambda: expect(data).Not.toContainValue(1)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to contain value 1")
+
+    def test_dictionary_not_contains_value_fails_when_value_in_dictionary(self):
+        data = { 'a': 1 }
+        expect(lambda: expect(data).Not.toContainValue(1, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+        
+    def test_dictionary_not_equal_passes_if_number_of_items_is_different(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({})
+
+    def test_dictionary_not_equal_passes_if_keys_are_equal_in_number_and_one_key_differs(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({'b': 1})
+        
+    def test_dictionary_not_equal_passes_if_value_differs_under_same_key(self):
+        data = {'a': 1}
+        expect(data).Not.toEqual({'a': 2})
+
+    def test_dictionary_not_equal_fails_if_dictionaries_are_equal(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).Not.toEqual({'a': 1})).toRaise(
+            AssertionError,
+            expectedMessage = "Expected {'a': 1} not to equal {'a': 1}")
+
+    def test_dictionary_not_equal_prepends_userMessage_on_failure(self):
+        data = {'a': 1}
+        expect(lambda: expect(data).Not.toEqual({'a': 1}, "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+
