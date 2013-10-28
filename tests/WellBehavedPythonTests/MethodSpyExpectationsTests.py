@@ -32,9 +32,13 @@ class MethodSpyExpectationsTestsBase(TestCase):
         return spy
 
     def createMethodSpyWhichHasBeenCalled(self):
-        spy = MethodSpy()
-        spy()
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        self.call(spy)
         return spy
+
+    def call(self, spy):
+        spy()
+
 
 class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
     def __init__(self, name):
@@ -70,11 +74,30 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
     def test_expect_method_called_twice_passes_when_method_has_been_called_twice(self):
         # Where
         calledSpy = self.createMethodSpyWhichHasBeenCalled()
-        calledSpy() # call again
+        self.call(calledSpy)
 
         # Then
         expect(calledSpy).toHaveBeenCalled(times = 2)
-    
+
+    def test_expect_method_called_twice_failed_if_spy_only_called_once(self):
+        # Where
+        calledSpy = self.createMethodSpyWhichHasBeenCalled()
+
+        # Then
+        expect(lambda: expect(calledSpy).toHaveBeenCalled(times = 2)).toRaise(
+            AssertionError,
+            expectedMessage = 'Expected <anonymous> to have been called 2 times')
+
+    def test_expect_method_called_twice_failed_if_spy_only_called_three_times(self):
+        # Where
+        calledSpy = self.createMethodSpyWhichHasBeenCalled()
+        self.call(calledSpy)
+        self.call(calledSpy)
+
+        # Then
+        expect(lambda: expect(calledSpy).toHaveBeenCalled(times = 2)).toRaise(
+            AssertionError,
+            expectedMessage = 'Expected <anonymous> to have been called 2 times')
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 

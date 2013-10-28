@@ -44,8 +44,22 @@ class MethodSpyExpectations(DefaultExpectations):
         print ("instance type is {}".format(type(instance)))
         return BaseExpect.formatForMessage(self, instance)
 
-    def toHaveBeenCalled(self, times = 1):
+    def toHaveBeenCalled(self, times = None):
+        
         message = self.buildMessage("to have been called", None, None)
+        if times is None:
+            self._toHaveBeenCalledOnce(message)
+        else:
+            message = message + " {} times".format(times)
+            self._toHaveBeenCalledNTimes(times, message)
+
+    def _toHaveBeenCalledNTimes(self, times, message):
+        if self.spy.getNumberOfCalls() == times:
+            pass
+        else:
+            self.fail(message)
+
+    def _toHaveBeenCalledOnce(self, message):
         if self.spy.hasBeenCalled():
             self.success(message)
         else:
