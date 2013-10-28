@@ -66,6 +66,14 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
         expect(lambda: expect(uncalledSpy).toHaveBeenCalled()).toRaise(
             AssertionError, 
             expectedMessage = 'Expected <anonymous> to have been called')
+
+    def test_expect_method_called_twice_passes_when_method_has_been_called_twice(self):
+        # Where
+        calledSpy = self.createMethodSpyWhichHasBeenCalled()
+        calledSpy() # call again
+
+        # Then
+        expect(calledSpy).toHaveBeenCalled(times = 2)
     
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):

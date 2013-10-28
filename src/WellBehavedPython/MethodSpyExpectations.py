@@ -44,7 +44,7 @@ class MethodSpyExpectations(DefaultExpectations):
         print ("instance type is {}".format(type(instance)))
         return BaseExpect.formatForMessage(self, instance)
 
-    def toHaveBeenCalled(self):
+    def toHaveBeenCalled(self, times = 1):
         message = self.buildMessage("to have been called", None, None)
         if self.spy.hasBeenCalled():
             self.success(message)

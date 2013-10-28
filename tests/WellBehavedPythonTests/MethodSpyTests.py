@@ -91,7 +91,6 @@ class MethodSpyTests(TestCase):
 
         # Then
         expect(anonymousSpy.getDescription()).toEqual("<anonymous>")
-        expect(namedSpy.getDescription()).toEqual("<test_function>")
-        
+        expect(namedSpy.getDescription()).toEqual("<test_function>")        
         
 
