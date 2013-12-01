@@ -91,7 +91,36 @@ class MethodSpyTests(TestCase):
 
         # Then
         expect(anonymousSpy.getDescription()).toEqual("<anonymous>")
-        expect(namedSpy.getDescription()).toEqual("<test_function>")
-        
+        expect(namedSpy.getDescription()).toEqual("<test_function>")        
+
+    def test_that_ordinary_arguments_can_be_spied_on(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1, "two", [1, 1, 1])
+
+        # Then
+        expect(spy.getNumberOfCalls()).toEqual(1)
+        expect(spy.hasBeenCalledWith((1,"two", [1, 1, 1]))).toBeTrue()
+
+
+    def test_that_spy_stores_args_per_invocation(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1)
+        spy(2, "two")
+
+        # Then
+        expect(spy.getNumberOfCalls()).toEqual(2)
+        expectedFirstArguments = (1,)
+        expectedSecondArguments = (2, "two")
+
+        expect(spy.hasBeenCalledWith(expectedFirstArguments, 0)).toBeTrue()
+        expect(spy.hasBeenCalledWith(expectedSecondArguments, 1)).toBeTrue()
+        expect(spy.hasBeenCalledWith(expectedSecondArguments, 0)).toBeFalse()
+        expect(spy.hasBeenCalledWith(expectedSecondArguments, None)).toBeTrue()
         
 

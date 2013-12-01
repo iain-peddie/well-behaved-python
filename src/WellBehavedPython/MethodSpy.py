@@ -21,17 +21,50 @@ class MethodSpy:
 
     def __init__(self, methodName = "anonymous"):
         self.methodName = methodName
-        self.callCount = 0
+        self.callArguments = []
 
-    def __call__(self):
-        self.callCount += 1
+    def __call__(self, *args):
+        self.callArguments.append((args))
 
     def getDescription(self):
+        """Gets a description of this method spy.
+
+        Returns
+        -------
+        The description fo this method spy        
+        """
         return "<{}>".format(self.methodName)
 
     def getNumberOfCalls(self):
-        return self.callCount
+        """Gets the number of times this method spy has been called.
+
+        Returns
+        -------
+        The number of times this method spy has been called."""
+        return len(self.callArguments)
 
     def hasBeenCalled(self):
-        return self.callCount > 0
+        """Gets whether the spy has been called at all.
 
+        Returns
+        -------
+        True, if the spy has been called
+        False otherwise."""
+        return len(self.callArguments) > 0
+
+    def hasBeenCalledWith(self, expectedArgs, callIndex = 0):
+        """Gets whether the spy has been called with the given arguments.
+
+        Either returns whether the given arguments match any call, or whether
+        the callIndexth call matches the expected arguments.
+
+        Inputs
+        ------
+        expectedArgs : the expected input arguments
+        callIndex: The index of the call to compare against a specific
+                   call, or None to compare against all calls."""
+
+        if callIndex is not None:
+            return self.callArguments[callIndex] == expectedArgs
+        else:
+            return expectedArgs in self.callArguments
