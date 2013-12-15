@@ -22,9 +22,11 @@ class MethodSpy:
     def __init__(self, methodName = "anonymous"):
         self.methodName = methodName
         self.callArguments = []
+        self.keywordCallArguments = []
 
-    def __call__(self, *args):
+    def __call__(self, *args, **keywordArgs):
         self.callArguments.append((args))
+        self.keywordCallArguments.append(keywordArgs)
 
     def getDescription(self):
         """Gets a description of this method spy.
@@ -52,7 +54,7 @@ class MethodSpy:
         False otherwise."""
         return len(self.callArguments) > 0
 
-    def hasBeenCalledWith(self, expectedArgs, callIndex = 0):
+    def hasBeenCalledWith(self, expectedArgs = (), expectedKeywordArgs = {}, callIndex = None):
         """Gets whether the spy has been called with the given arguments.
 
         Either returns whether the given arguments match any call, or whether
@@ -65,6 +67,8 @@ class MethodSpy:
                    call, or None to compare against all calls."""
 
         if callIndex is not None:
-            return self.callArguments[callIndex] == expectedArgs
+            return (self.callArguments[callIndex] == expectedArgs and
+                    self.keywordCallArguments[callIndex] == expectedKeywordArgs)
         else:
-            return expectedArgs in self.callArguments
+            return (expectedArgs in self.callArguments and
+                    expectedKeywordArgs in self.keywordCallArguments)
