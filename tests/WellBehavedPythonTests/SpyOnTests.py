@@ -31,6 +31,10 @@ class SpyOnTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
+    def before(self):
+        self.SubjectObject = SampleClass()
+        spyOn(self.SubjectObject.parameterlessMethod)
+
     def test_spying_on_parameterless_method(self):
         # Where
         sampleObject = SampleClass()
@@ -44,11 +48,11 @@ class SpyOnTests(TestCase):
 
     def test_can_spy_and_expect_method_to_have_been_called(self):
         # Where
-        sampleObject = SampleClass()
-        spyOn(sampleObject.parameterlessMethod)
+        subjectObject = self.SubjectObject
 
         # When
-        sampleObject.parameterlessMethod()
+        subjectObject.parameterlessMethod()
 
         # Then
-        expect(sampleObject.parameterlessMethod).toHaveBeenCalled()        
+        expect(subjectObject.parameterlessMethod).toHaveBeenCalled()
+
