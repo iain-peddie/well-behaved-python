@@ -120,3 +120,4 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         
         # Then
         expect(uncalledSpy).Not.toHaveBeenCalled()
+
