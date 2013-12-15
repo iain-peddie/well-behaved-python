@@ -118,9 +118,20 @@ class MethodSpyTests(TestCase):
         expectedFirstArguments = (1,)
         expectedSecondArguments = (2, "two")
 
-        expect(spy.hasBeenCalledWith(expectedFirstArguments, 0)).toBeTrue()
-        expect(spy.hasBeenCalledWith(expectedSecondArguments, 1)).toBeTrue()
-        expect(spy.hasBeenCalledWith(expectedSecondArguments, 0)).toBeFalse()
-        expect(spy.hasBeenCalledWith(expectedSecondArguments, None)).toBeTrue()
-        
+        expect(spy.hasBeenCalledWith(expectedArgs = expectedFirstArguments, callIndex = 0)).toBeTrue()
+        expect(spy.hasBeenCalledWith(expectedSecondArguments, callIndex = 1)).toBeTrue()
+        expect(spy.hasBeenCalledWith(expectedSecondArguments, callIndex = 0)).toBeFalse()
+        expect(spy.hasBeenCalledWith(expectedSecondArguments, callIndex = None)).toBeTrue()
+
+    def test_that_spy_records_optional_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(first="the worst", second="the best")
+        expectedFirstArguments = {"first":"the worst", "second":"the best"}
+
+        # Then
+        expect(spy.hasBeenCalledWith(expectedKeywordArgs = expectedFirstArguments)).toBeTrue()
+        expect(spy.hasBeenCalledWith(expectedKeywordArgs = {})).toBeFalse()
 
