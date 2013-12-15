@@ -99,6 +99,32 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             AssertionError,
             expectedMessage = 'Expected <anonymous> to have been called 2 times')
 
+    def test_expect_toHaveBeenCalled_with_usermessage(self):
+        # Where
+        uncalledSpy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        # do nothing
+
+        # Then
+        expect(lambda:
+                   expect(uncalledSpy).toHaveBeenCalled(userMessage = "userMessage")).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage:")
+
+    def test_expect_toHaveBeenCalled_1_times_message(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        
+        # When
+
+        # Then
+        expect(lambda:
+                   expect(spy).toHaveBeenCalled(times = 1)).toRaise(
+            AssertionError, 
+            expectedMessage = "Expected <anonymous> to have been called 1 time")
+
+
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
     def __init__(self, name):
@@ -120,3 +146,5 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         
         # Then
         expect(uncalledSpy).Not.toHaveBeenCalled()
+
+
