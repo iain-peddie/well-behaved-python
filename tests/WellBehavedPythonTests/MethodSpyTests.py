@@ -135,3 +135,51 @@ class MethodSpyTests(TestCase):
         expect(spy.hasBeenCalledWith(expectedKeywordArgs = expectedFirstArguments)).toBeTrue()
         expect(spy.hasBeenCalledWith(expectedKeywordArgs = {})).toBeFalse()
 
+    def test_no_arguments_represented_as_parentheses(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments()
+
+        # Then
+        expect(string).toEqual('()')
+
+    def test_one_argument_represented_with_no_comma(self):
+        # Where
+        spy = self.spy
+        
+        # When
+        string = spy.formatCallArguments((1,))
+
+        # Then
+        expect(string).toEqual('(1)')
+
+    def test_string_argument_wrapped_in_quotes(self):
+        # Where
+        spy = self.spy
+        
+        # When
+        string = spy.formatCallArguments(('one',))
+
+        # Then
+        expect(string).toEqual("('one')")
+
+    def test_pos_args_separated_by_comma_space(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments((1, 'two'))
+
+        # Then
+        expect(string).toEqual("(1, 'two')")
+
+
+   # Represents no arguments as ()
+   # Represents one argument as (1)
+   # Represents two arguments as (1, 'two')
+   # Represents one keyword argument only as (a=1)
+   # Represents two keyword argumetns as (a=1, b='two') 
+   # Represents a mix of positional and keyword arguments as (1, a='two', b=[1 1 1]) 
+

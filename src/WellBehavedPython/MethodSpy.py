@@ -96,7 +96,7 @@ class MethodSpy:
 
         return report
 
-    def formatCallArguments(self, positionalArguments):
+    def formatCallArguments(self, positionalArguments = None):
         """Formats call arguments in a standard, hopefully sensible way.
 
         Inputs
@@ -108,6 +108,18 @@ class MethodSpy:
         # TODO : completed
         
         if positionalArguments is None:
-            return ""
-        return "{}".format(positionalArguments)
+            return "()"
+        
+        formatted = "("
+        delimiter = ""
+        for arg in positionalArguments:
+            if isinstance(arg, str):
+                formattedArg = "'{}'".format(arg)
+            else:
+                formattedArg = arg
+            formatted = "{}{}{}".format(formatted, delimiter, formattedArg)
+            delimiter = ", "
+            
+        formatted = "{})".format(formatted)
+        return formatted
 
