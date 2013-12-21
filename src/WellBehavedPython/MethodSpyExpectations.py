@@ -50,16 +50,35 @@ class MethodSpyExpectations(DefaultExpectations):
         if times is None:
             self._toHaveBeenCalledOnce(message)
         else:
-            if times == 1:
-                pluralSuffix = ""
-            else:
-                pluralSuffix = "s"
-            message = message + " {} time{}".format(times, pluralSuffix)
+            message = message + " " + self._numberTimesString(times)
             self._toHaveBeenCalledNTimes(times, message)
+
+    def _numberTimesString(self, times):
+        if times == 1:
+            pluralSuffix = ""
+        else:
+            pluralSuffix = "s"
+        return "{} time{}".format(times, pluralSuffix)            
+
+    def toHaveBeenCalledWith(self, *args):
+        reason = "to have been called with {}".format(self.spy.formatCallArguments(args));
+        if not self.spy.hasBeenCalled():
+            message = self.buildMessage(reason, None, None, extra = ", but it was not called")
+            self.fail(message)
+
+        extra = ", but it was called {} with:\n{}".format(self._numberTimesString(
+                self.spy.getNumberOfCalls()), 
+                                                          self.spy.generateCallReport())
+        message = self.buildMessage(reason, None, None, extra = extra)
+        
+        if self.spy.hasBeenCalledWith(args[:]):
+            self.success(message)
+        else:
+            self.fail(message)
 
     def _toHaveBeenCalledNTimes(self, times, message):
         if self.spy.getNumberOfCalls() == times:
-            pass
+            self.success(message)
         else:
             self.fail(message)
 
