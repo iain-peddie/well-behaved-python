@@ -72,7 +72,7 @@ class MethodSpyExpectations(DefaultExpectations):
         message = self.buildMessage(reason, None, None, extra = extra)
         
         if self.spy.hasBeenCalledWith(args[:]):
-            pass
+            self.success(message)
         else:
             self.fail(message)
 

@@ -200,3 +200,36 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         # Then
         expect(uncalledSpy).Not.toHaveBeenCalled()
 
+    def test_expect_method_not_called_with_passes_when_message_not_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # Then
+        expect(spy).Not.toHaveBeenCalledWith(1)
+
+    def test_expect_method_not_called_with_passes_when_positional_args_mismatch(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(1, "two")
+
+        # Then
+        expect(spy).Not.toHaveBeenCalledWith(3, "four")
+
+    def test_expect_method_not_called_with_1two_fails_when_spy_called_with_1two(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(1, "two")
+
+        # Then
+        expect(
+            lambda: expect(spy).Not.toHaveBeenCalledWith(1, 'two')).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> not to have been called with (1, 'two'), but it was called 1 time with:
+(1, 'two')
+""")
+
+
