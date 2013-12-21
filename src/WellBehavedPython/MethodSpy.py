@@ -92,7 +92,8 @@ class MethodSpy:
            return report 
         for callIndex in range(0, len(self.callArguments)):
             args = self.callArguments[callIndex]
-            report += self.formatCallArguments(args) + "\n"
+            keywordArgs = self.keywordCallArguments[callIndex]
+            report += self.formatCallArguments(args, keywordArgs) + "\n"
 
         return report
 
@@ -105,9 +106,6 @@ class MethodSpy:
                               arguments specified by position.
         keywordArguments : expected to be a dictionary containing keyword value pairs"""
         
-
-        # TODO : this method is still in progress, and needs to be
-        # TODO : completed
 
         if positionalArguments is None:
             positionalArguments = ()

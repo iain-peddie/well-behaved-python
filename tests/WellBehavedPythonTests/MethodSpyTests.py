@@ -204,6 +204,49 @@ class MethodSpyTests(TestCase):
 
         # Then
         expect(string).toEqual("(1, a=2, b='three')")
+
+    def test_call_report_handles_positional_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1)
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("(1)\n")
+
+    def test_call_report_handles_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(a=1)
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("(a=1)\n")        
+
+    def test_call_report_handles_positiona_and_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1, a=2)
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("(1, a=2)\n")
+
+    def test_call_report_handles_multiple_calls(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1)
+        spy(a='1')
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("""(1)
+(a='1')
+""")
     
 
    # Represents a mix of positional and keyword arguments as (1, a='two', b=[1 1 1]) 
