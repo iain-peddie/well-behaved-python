@@ -72,3 +72,42 @@ class MethodSpy:
         else:
             return (expectedArgs in self.callArguments and
                     expectedKeywordArgs in self.keywordCallArguments)
+
+    def generateCallReport(self):
+        """Generates a report of the number of call arguments, and what they were.
+
+        This report uses format for arguments. If the report for custom types is
+        badly formed, consider writing or updating the __repr__ method.
+
+        Returns
+        -------
+        A string containing the call arguments all on a single line, where possible.
+        The report for one call will span multiple lines if the standard representation
+        of the argument contains newlines. There is little that can be done about that,
+        without overriding the standard type formatting, which does not seem to be sensible
+        behavior."""
+
+        report = ""
+        if len(self.callArguments) == 0:
+           return report 
+        for callIndex in range(0, len(self.callArguments)):
+            args = self.callArguments[callIndex]
+            report += self.formatCallArguments(args) + "\n"
+
+        return report
+
+    def formatCallArguments(self, positionalArguments):
+        """Formats call arguments in a standard, hopefully sensible way.
+
+        Inputs
+        ------
+        positionalArguments : expected to be a tuple containing the
+                              arguments specified by position."""
+
+        # TODO : this method is still in progress, and needs to be
+        # TODO : completed
+        
+        if positionalArguments is None:
+            return ""
+        return "{}".format(positionalArguments)
+

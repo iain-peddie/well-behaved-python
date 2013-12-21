@@ -124,6 +124,59 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             AssertionError, 
             expectedMessage = "Expected <anonymous> to have been called 1 time")
 
+    def test_expect_called_with_passes_when_matching_one_call_exactly(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(1)
+
+        # Then
+        expect(spy).toHaveBeenCalledWith(1) # not to raise
+
+    def test_expect_method_called_with_fails_when_spy_never_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(2)).toRaise(
+            AssertionError,
+            expectedMessage = "Expected <anonymous> to have been called with (2,), but it was not called")
+
+    def test_expect_method_called_with_fails_when_positional_args_dont_match_one_call(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        
+        # When
+        spy(1, "two")
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(3, "four")).toRaise(
+            AssertionError, 
+            expectedMessage = """Expected <anonymous> to have been called with (3, 'four'), but it was called 1 time with:
+(1, 'two')
+""")
+
+    def test_expect_method_called_passes_when_method_matches_one_of_many_calls(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        
+        # When
+        spy(1, "two")
+        spy(5, "six")
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(3, "four")).toRaise(
+            AssertionError, 
+            expectedMessage = """Expected <anonymous> to have been called with (3, 'four'), but it was called 2 times with:
+(1, 'two')
+(5, 'six')
+""")        
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
@@ -146,14 +199,4 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         
         # Then
         expect(uncalledSpy).Not.toHaveBeenCalled()
-
-    def test_expect_called_with_passes_when_matching_one_call_exactly(self):
-        # Where
-        spy = self.createMethodSpyWhichHasNotBeenCalled()
-
-        # When
-        spy(1)
-
-        # Then
-        expect(spy).toHaveBeenCalledWith(1) # not to raise
 
