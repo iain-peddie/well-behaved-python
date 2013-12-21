@@ -147,3 +147,13 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         # Then
         expect(uncalledSpy).Not.toHaveBeenCalled()
 
+    def test_expect_called_with_passes_when_matching_one_call_exactly(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(1)
+
+        # Then
+        expect(spy).toHaveBeenCalledWith(1) # not to raise
+

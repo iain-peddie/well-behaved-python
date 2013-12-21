@@ -57,6 +57,9 @@ class MethodSpyExpectations(DefaultExpectations):
             message = message + " {} time{}".format(times, pluralSuffix)
             self._toHaveBeenCalledNTimes(times, message)
 
+    def toHaveBeenCalledWith(self, *args):
+        pass
+
     def _toHaveBeenCalledNTimes(self, times, message):
         if self.spy.getNumberOfCalls() == times:
             pass
