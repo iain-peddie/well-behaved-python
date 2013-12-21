@@ -92,22 +92,49 @@ class MethodSpy:
            return report 
         for callIndex in range(0, len(self.callArguments)):
             args = self.callArguments[callIndex]
-            report += self.formatCallArguments(args) + "\n"
+            keywordArgs = self.keywordCallArguments[callIndex]
+            report += self.formatCallArguments(args, keywordArgs) + "\n"
 
         return report
 
-    def formatCallArguments(self, positionalArguments):
+    def formatCallArguments(self, positionalArguments = None, keywordArguments = None):
         """Formats call arguments in a standard, hopefully sensible way.
 
         Inputs
         ------
         positionalArguments : expected to be a tuple containing the
-                              arguments specified by position."""
-
-        # TODO : this method is still in progress, and needs to be
-        # TODO : completed
+                              arguments specified by position.
+        keywordArguments : expected to be a dictionary containing keyword value pairs"""
         
+
         if positionalArguments is None:
-            return ""
-        return "{}".format(positionalArguments)
+            positionalArguments = ()
+        if keywordArguments is None:
+            keywordArguments = {}
+                
+        formatted = "("
+        delimiter = ""
+        
+        for arg in positionalArguments:
+            formattedArg = self._formatArgument(arg)
+            formatted = "{}{}{}".format(formatted, delimiter, formattedArg)
+            delimiter = ", "
+
+        keywords = list(keywordArguments.keys())
+        keywords.sort()
+
+        for argName in keywords:
+            argValue = self._formatArgument(keywordArguments[argName])
+            formatted = "{}{}{}={}".format(formatted, delimiter, argName, argValue)
+            delimiter = ", "
+            
+        formatted = "{})".format(formatted)
+        return formatted
+
+    def _formatArgument(self, arg):
+        if isinstance(arg, str):
+            formattedArg = "'{}'".format(arg)
+        else:
+            formattedArg = arg
+        return formattedArg
 

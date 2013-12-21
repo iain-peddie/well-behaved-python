@@ -135,3 +135,119 @@ class MethodSpyTests(TestCase):
         expect(spy.hasBeenCalledWith(expectedKeywordArgs = expectedFirstArguments)).toBeTrue()
         expect(spy.hasBeenCalledWith(expectedKeywordArgs = {})).toBeFalse()
 
+    def test_no_arguments_represented_as_parentheses(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments()
+
+        # Then
+        expect(string).toEqual('()')
+
+    def test_one_argument_represented_with_no_comma(self):
+        # Where
+        spy = self.spy
+        
+        # When
+        string = spy.formatCallArguments((1,))
+
+        # Then
+        expect(string).toEqual('(1)')
+
+    def test_string_argument_wrapped_in_quotes(self):
+        # Where
+        spy = self.spy
+        
+        # When
+        string = spy.formatCallArguments(('one',))
+
+        # Then
+        expect(string).toEqual("('one')")
+
+    def test_formatting_arguments_speartes_them_by_comma_space(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments((1, 'two'))
+
+        # Then
+        expect(string).toEqual("(1, 'two')")
+
+    def test_formatting_one_keyword_argument(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments(None, {'arg': 'value'})
+
+        # Then
+        expect(string).toEqual("(arg='value')")
+
+    def test_formatting_two_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments(None, {'a': 1, 'b': 'two'})
+
+        # Then
+        expect(string).toEqual("(a=1, b='two')")
+    
+    def test_formatting_positional_and_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments((1,), {'a': 2, 'b':'three'})
+
+        # Then
+        expect(string).toEqual("(1, a=2, b='three')")
+
+    def test_call_report_handles_positional_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1)
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("(1)\n")
+
+    def test_call_report_handles_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(a=1)
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("(a=1)\n")        
+
+    def test_call_report_handles_positiona_and_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1, a=2)
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("(1, a=2)\n")
+
+    def test_call_report_handles_multiple_calls(self):
+        # Where
+        spy = self.spy
+
+        # When
+        spy(1)
+        spy(a='1')
+
+        # Then
+        expect(spy.generateCallReport()).toEqual("""(1)
+(a='1')
+""")
+    
+
+   # Represents a mix of positional and keyword arguments as (1, a='two', b=[1 1 1]) 
+

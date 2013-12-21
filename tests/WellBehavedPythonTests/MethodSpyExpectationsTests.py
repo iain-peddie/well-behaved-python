@@ -144,7 +144,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
         expect(
             lambda: expect(spy).toHaveBeenCalledWith(2)).toRaise(
             AssertionError,
-            expectedMessage = "Expected <anonymous> to have been called with (2,), but it was not called")
+            expectedMessage = "Expected <anonymous> to have been called with (2), but it was not called")
 
     def test_expect_method_called_with_fails_when_positional_args_dont_match_one_call(self):
         # Where
