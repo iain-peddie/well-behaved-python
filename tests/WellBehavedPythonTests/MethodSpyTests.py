@@ -165,7 +165,7 @@ class MethodSpyTests(TestCase):
         # Then
         expect(string).toEqual("('one')")
 
-    def test_pos_args_separated_by_comma_space(self):
+    def test_formatting_arguments_speartes_them_by_comma_space(self):
         # Where
         spy = self.spy
 
@@ -175,11 +175,36 @@ class MethodSpyTests(TestCase):
         # Then
         expect(string).toEqual("(1, 'two')")
 
+    def test_formatting_one_keyword_argument(self):
+        # Where
+        spy = self.spy
 
-   # Represents no arguments as ()
-   # Represents one argument as (1)
-   # Represents two arguments as (1, 'two')
-   # Represents one keyword argument only as (a=1)
-   # Represents two keyword argumetns as (a=1, b='two') 
+        # When
+        string = spy.formatCallArguments(None, {'arg': 'value'})
+
+        # Then
+        expect(string).toEqual("(arg='value')")
+
+    def test_formatting_two_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments(None, {'a': 1, 'b': 'two'})
+
+        # Then
+        expect(string).toEqual("(a=1, b='two')")
+    
+    def test_formatting_positional_and_keyword_arguments(self):
+        # Where
+        spy = self.spy
+
+        # When
+        string = spy.formatCallArguments((1,), {'a': 2, 'b':'three'})
+
+        # Then
+        expect(string).toEqual("(1, a=2, b='three')")
+    
+
    # Represents a mix of positional and keyword arguments as (1, a='two', b=[1 1 1]) 
 

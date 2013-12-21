@@ -96,30 +96,47 @@ class MethodSpy:
 
         return report
 
-    def formatCallArguments(self, positionalArguments = None):
+    def formatCallArguments(self, positionalArguments = None, keywordArguments = None):
         """Formats call arguments in a standard, hopefully sensible way.
 
         Inputs
         ------
         positionalArguments : expected to be a tuple containing the
-                              arguments specified by position."""
+                              arguments specified by position.
+        keywordArguments : expected to be a dictionary containing keyword value pairs"""
+        
 
         # TODO : this method is still in progress, and needs to be
         # TODO : completed
-        
+
         if positionalArguments is None:
-            return "()"
-        
+            positionalArguments = ()
+        if keywordArguments is None:
+            keywordArguments = {}
+                
         formatted = "("
         delimiter = ""
+        
         for arg in positionalArguments:
-            if isinstance(arg, str):
-                formattedArg = "'{}'".format(arg)
-            else:
-                formattedArg = arg
+            formattedArg = self._formatArgument(arg)
             formatted = "{}{}{}".format(formatted, delimiter, formattedArg)
+            delimiter = ", "
+
+        keywords = list(keywordArguments.keys())
+        keywords.sort()
+
+        for argName in keywords:
+            argValue = self._formatArgument(keywordArguments[argName])
+            formatted = "{}{}{}={}".format(formatted, delimiter, argName, argValue)
             delimiter = ", "
             
         formatted = "{})".format(formatted)
         return formatted
+
+    def _formatArgument(self, arg):
+        if isinstance(arg, str):
+            formattedArg = "'{}'".format(arg)
+        else:
+            formattedArg = arg
+        return formattedArg
 
