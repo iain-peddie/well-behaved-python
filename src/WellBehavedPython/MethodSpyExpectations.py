@@ -78,7 +78,7 @@ class MethodSpyExpectations(DefaultExpectations):
 
     def _toHaveBeenCalledNTimes(self, times, message):
         if self.spy.getNumberOfCalls() == times:
-            pass
+            self.success(message)
         else:
             self.fail(message)
 

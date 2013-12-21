@@ -191,6 +191,16 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         expect(lambda: expect(calledSpy).Not.toHaveBeenCalled()).toRaise(
             AssertionError, 
             expectedMessage = 'Expected <anonymous> not to have been called')
+
+    def test_expect_method_not_called_n_times_fails_when_called_n_times(self):
+        # Where
+        calledSpy = self.createMethodSpyWhichHasBeenCalled()
+        calledSpy()
+
+        # Then
+        expect(lambda: expect(calledSpy).Not.toHaveBeenCalled(times = 2)).toRaise(
+            AssertionError, 
+            expectedMessage = 'Expected <anonymous> not to have been called 2 times')
             
 
     def test_expect_method_not_called_passes_when_method_has_not_been_called(self):
