@@ -226,7 +226,32 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             AssertionError, 
             expectedMessage = """Expected <anonymous> to have been called with (a=1), but it was called 1 time with:
 (a=2)
-""")        
+""")
+
+    def test_expect_called_with_passes_when_matching_one_mixed_args_call(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(1, a=2)
+
+        # Then
+        expect(spy).toHaveBeenCalledWith(1, a=2)
+
+    def test_expect_called_with_fails_with_mismatching_mixed_args_call(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(3, b=4)
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> to have been called with (1, a=2), but it was called 1 time with:
+(3, b=4)
+""")
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
