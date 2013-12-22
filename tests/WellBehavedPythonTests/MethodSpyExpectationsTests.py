@@ -188,6 +188,46 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
         # Then
         expect(spy).toHaveBeenCalledWith(a=1)
 
+    def test_expect_method_called_with_keywords_fails_when_never_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError, 
+            expectedMessage = "Expected <anonymous> to have been called with (a=1), but it was not called")
+
+    def test_expect_method_called_with_keywords_fails_when_no_call_matches_keywords(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(b=2)
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError, 
+            expectedMessage = """Expected <anonymous> to have been called with (a=1), but it was called 1 time with:
+(b=2)
+""")
+
+    def test_expect_method_called_with_keywords_fails_if_keywords_match_and_values_dont(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(a=2)
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError, 
+            expectedMessage = """Expected <anonymous> to have been called with (a=1), but it was called 1 time with:
+(a=2)
+""")        
+
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
     def __init__(self, name):
