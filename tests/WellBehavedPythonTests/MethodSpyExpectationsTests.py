@@ -176,6 +176,56 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             expectedMessage = """Expected <anonymous> to have been called with (3, 'four'), but it was called 2 times with:
 (1, 'two')
 (5, 'six')
+""")
+
+    def test_expect_method_called_with_keyword_passes_when_called_with_keywords(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(a=1)
+        
+        # Then
+        expect(spy).toHaveBeenCalledWith(a=1)
+
+    def test_expect_method_called_with_keywords_fails_when_never_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError, 
+            expectedMessage = "Expected <anonymous> to have been called with (a=1), but it was not called")
+
+    def test_expect_method_called_with_keywords_fails_when_no_call_matches_keywords(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(b=2)
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError, 
+            expectedMessage = """Expected <anonymous> to have been called with (a=1), but it was called 1 time with:
+(b=2)
+""")
+
+    def test_expect_method_called_with_keywords_fails_if_keywords_match_and_values_dont(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(a=2)
+
+        # Then
+        expect(
+            lambda: expect(spy).toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError, 
+            expectedMessage = """Expected <anonymous> to have been called with (a=1), but it was called 1 time with:
+(a=2)
 """)        
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
@@ -241,5 +291,48 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
             expectedMessage = """Expected <anonymous> not to have been called with (1, 'two'), but it was called 1 time with:
 (1, 'two')
 """)
+
+    def test_expect_method_not_called_with_keywords_passes_when_method_not_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # Then
+        expect(spy).Not.toHaveBeenCalledWith(a=1)
+
+    def test_expect_method_not_called_with_keywords_passes_when_keywords_mismatch(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(b=2)
+
+        # Then
+        expect(spy).Not.toHaveBeenCalledWith(a=1)
+
+    def test_expect_method_not_called_with_keyowrds_passes_when_keywords_match_but_values_dont(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(a=2)
+
+        # Then
+        expect(spy).Not.toHaveBeenCalledWith(a=1)
+
+    def test_expect_method_not_called_with_keywords_fails_when_keywords_and_values_match(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(a=1)
+
+        # Then
+        expect(
+            lambda: expect(spy).Not.toHaveBeenCalledWith(a=1)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> not to have been called with (a=1), but it was called 1 time with:
+(a=1)
+""")
+        
 
 

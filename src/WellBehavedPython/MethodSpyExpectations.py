@@ -60,8 +60,8 @@ class MethodSpyExpectations(DefaultExpectations):
             pluralSuffix = "s"
         return "{} time{}".format(times, pluralSuffix)            
 
-    def toHaveBeenCalledWith(self, *args):
-        reason = "to have been called with {}".format(self.spy.formatCallArguments(args));
+    def toHaveBeenCalledWith(self, *args, **keywordArgs):
+        reason = "to have been called with {}".format(self.spy.formatCallArguments(args, keywordArgs));
         if not self.spy.hasBeenCalled():
             message = self.buildMessage(reason, None, None, extra = ", but it was not called")
             self.fail(message)
@@ -71,7 +71,7 @@ class MethodSpyExpectations(DefaultExpectations):
                                                           self.spy.generateCallReport())
         message = self.buildMessage(reason, None, None, extra = extra)
         
-        if self.spy.hasBeenCalledWith(args[:]):
+        if self.spy.hasBeenCalledWith(args, keywordArgs):
             self.success(message)
         else:
             self.fail(message)
