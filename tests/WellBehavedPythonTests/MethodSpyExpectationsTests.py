@@ -108,7 +108,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(lambda:
-                   expect(uncalledSpy).toHaveBeenCalled(userMessage = "userMessage")).toRaise(
+                   expect(uncalledSpy).withOptions(userMessage = "userMessage").toHaveBeenCalled()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage:")
 
@@ -252,6 +252,29 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             expectedMessage = """Expected <anonymous> to have been called with (1, a=2), but it was called 1 time with:
 (3, b=4)
 """)
+
+    def test_expect_called_with_userMessage_when_no_calls(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # Then
+        expect(
+            lambda: expect(spy).withOptions(userMessage = "userMessage").toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
+
+    def test_expect_called_with_userMessage_when_no_calls(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(3, b=4)
+
+        # Then
+        expect(
+            lambda: expect(spy).withOptions(userMessage = "userMessage").toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
@@ -401,6 +424,19 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 (1, a=2)
 """)
         
+    def test_expect_not_calledWith_prepends_userMessage(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        spy(1, a=2)
+
+        expectSpyNot = expect(spy).Not
+        expectSpyNot.withOptions(userMessage = "userMessage")
+
+        # Then
+        expect(
+            lambda: expectSpyNot.toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessageMatches="^userMessage")
         
         
 
