@@ -36,40 +36,51 @@ class MethodSpyExpectations(DefaultExpectations):
         """
 
         self.spy = actual
+        self.userMessage = None
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
     def formatForMessage(self, instance):
+        """Formats instance for insertion into a message
+
+        Inputs
+        ------
+        instance : the instance of an object to format for a message."""
+
         if isinstance(instance, MethodSpy):
             return instance.getDescription()
-        print ("instance type is {}".format(type(instance)))
         return BaseExpect.formatForMessage(self, instance)
 
-    def toHaveBeenCalled(self, userMessage = None, times = None):
+    def toHaveBeenCalled(self, times = None):        
+        """Performs the specific logic of the expectation that a method has been called."""
         
-        message = self.buildMessage("to have been called", None, userMessage)
+        message = self.buildMessage("to have been called", None, self.userMessage)
         if times is None:
             self._toHaveBeenCalledOnce(message)
         else:
             message = message + " " + self._numberTimesString(times)
             self._toHaveBeenCalledNTimes(times, message)
 
+    def withOptions(self, userMessage=None):
+        self.userMessage = userMessage
+        return self
+
     def _numberTimesString(self, times):
         if times == 1:
             pluralSuffix = ""
         else:
             pluralSuffix = "s"
-        return "{} time{}".format(times, pluralSuffix)            
+        return "{} time{}".format(times, pluralSuffix)
 
     def toHaveBeenCalledWith(self, *args, **keywordArgs):
         reason = "to have been called with {}".format(self.spy.formatCallArguments(args, keywordArgs));
         if not self.spy.hasBeenCalled():
-            message = self.buildMessage(reason, None, None, extra = ", but it was not called")
+            message = self.buildMessage(reason, None, self.userMessage, extra = ", but it was not called")
             self.fail(message)
 
         extra = ", but it was called {} with:\n{}".format(self._numberTimesString(
                 self.spy.getNumberOfCalls()), 
                                                           self.spy.generateCallReport())
-        message = self.buildMessage(reason, None, None, extra = extra)
+        message = self.buildMessage(reason, None, self.userMessage, extra = extra)
         
         if self.spy.hasBeenCalledWith(args, keywordArgs):
             self.success(message)
