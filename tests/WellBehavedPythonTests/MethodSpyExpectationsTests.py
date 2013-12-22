@@ -176,7 +176,17 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             expectedMessage = """Expected <anonymous> to have been called with (3, 'four'), but it was called 2 times with:
 (1, 'two')
 (5, 'six')
-""")        
+""")
+
+    def test_expect_method_called_with_keyword_passes_when_called_with_keywords(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        spy(a=1)
+        
+        # Then
+        expect(spy).toHaveBeenCalledWith(a=1)
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
