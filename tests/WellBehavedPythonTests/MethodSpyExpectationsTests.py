@@ -108,7 +108,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(lambda:
-                   expect(uncalledSpy).withOptions(userMessage = "userMessage").toHaveBeenCalled()).toRaise(
+                   expect(uncalledSpy).withUserMessage("userMessage").toHaveBeenCalled()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage:")
 
@@ -272,9 +272,58 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(
-            lambda: expect(spy).withOptions(userMessage = "userMessage").toHaveBeenCalledWith(1, a=2)).toRaise(
+            lambda: expect(spy).withUserMessage("userMessage").toHaveBeenCalledWith(1, a=2)).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
+
+    def test_expect_called_at_index_with_only_looks_at_indexth_call(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        spy(1, a=2)
+        spy(3, b=4)
+        spy(5, c=6)
+        spy(7, d=8)
+
+        expect(
+            lambda: expect(spy).forCallNumber(1).toHaveBeenCalledWith(3, b=4)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> to have been called with (3, b=4) on the 1st call, but it was called with:
+=> (1, a=2)
+(3, b=4)
+(5, c=6)
+(7, d=8)
+""")        
+
+        expect(
+            lambda: expect(spy).forCallNumber(2).toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> to have been called with (1, a=2) on the 2nd call, but it was called with:
+(1, a=2)
+=> (3, b=4)
+(5, c=6)
+(7, d=8)
+""")
+
+        expect(
+            lambda: expect(spy).forCallNumber(3).toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> to have been called with (1, a=2) on the 3rd call, but it was called with:
+(1, a=2)
+(3, b=4)
+=> (5, c=6)
+(7, d=8)
+""")
+
+        expect(
+            lambda: expect(spy).forCallNumber(4).toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> to have been called with (1, a=2) on the 4th call, but it was called with:
+(1, a=2)
+(3, b=4)
+(5, c=6)
+=> (7, d=8)
+""")
+            
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
@@ -429,16 +478,59 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         spy = self.createMethodSpyWhichHasNotBeenCalled()
         spy(1, a=2)
 
-        expectSpyNot = expect(spy).Not
-        expectSpyNot.withOptions(userMessage = "userMessage")
-
         # Then
         expect(
-            lambda: expectSpyNot.toHaveBeenCalledWith(1, a=2)).toRaise(
+            lambda: expect(spy).withUserMessage("userMessage").Not.toHaveBeenCalledWith(1, a=2)).toRaise(
             AssertionError,
             expectedMessageMatches="^userMessage")
         
         
+    def test_expect_not_called_at_index_with_only_looks_at_indexth_call(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+        spy(1, a=2)
+        spy(3, b=4)
+        spy(5, c=6)
+        spy(7, d=8)
 
+        expect(
+            lambda: expect(spy).forCallNumber(1).Not.toHaveBeenCalledWith(1, a=2)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> not to have been called with (1, a=2) on the 1st call, but it was called with:
+=> (1, a=2)
+(3, b=4)
+(5, c=6)
+(7, d=8)
+""")        
+
+        expect(
+            lambda: expect(spy).forCallNumber(2).Not.toHaveBeenCalledWith(3, b=4)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> not to have been called with (3, b=4) on the 2nd call, but it was called with:
+(1, a=2)
+=> (3, b=4)
+(5, c=6)
+(7, d=8)
+""")
+
+        expect(
+            lambda: expect(spy).forCallNumber(3).Not.toHaveBeenCalledWith(5, c=6)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> not to have been called with (5, c=6) on the 3rd call, but it was called with:
+(1, a=2)
+(3, b=4)
+=> (5, c=6)
+(7, d=8)
+""")
+
+        expect(
+            lambda: expect(spy).forCallNumber(4).Not.toHaveBeenCalledWith(7, d=8)).toRaise(
+            AssertionError,
+            expectedMessage = """Expected <anonymous> not to have been called with (7, d=8) on the 4th call, but it was called with:
+(1, a=2)
+(3, b=4)
+(5, c=6)
+=> (7, d=8)
+""")
 
 

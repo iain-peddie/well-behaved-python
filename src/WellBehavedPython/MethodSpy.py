@@ -73,11 +73,15 @@ class MethodSpy:
             return (expectedArgs in self.callArguments and
                     expectedKeywordArgs in self.keywordCallArguments)
 
-    def generateCallReport(self):
+    def generateCallReport(self, specialCallIndex = None):
         """Generates a report of the number of call arguments, and what they were.
 
         This report uses format for arguments. If the report for custom types is
         badly formed, consider writing or updating the __repr__ method.
+
+        Inputs
+        ------
+        specialCallIndex : the call index to be marked out as special
 
         Returns
         -------
@@ -93,6 +97,8 @@ class MethodSpy:
         for callIndex in range(0, len(self.callArguments)):
             args = self.callArguments[callIndex]
             keywordArgs = self.keywordCallArguments[callIndex]
+            if callIndex == specialCallIndex:
+                report += "=> "
             report += self.formatCallArguments(args, keywordArgs) + "\n"
 
         return report
