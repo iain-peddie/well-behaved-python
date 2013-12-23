@@ -350,6 +350,16 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             lambda: expect(spy).toHaveBeenCalledAtLeast(2).times()).toRaise(
         AssertionError,
         expectedMessage = "Expected <anonymous> to have been called at least 2 times, but it was called 1 time.")
+
+    def test_expect_at_least_usermessage(self):
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+
+        # Then
+        expect(
+            lambda: expect(spy).withUserMessage("userMessage").toHaveBeenCalledAtLeast(2).times()).toRaise(
+        AssertionError,
+        expectedMessageMatches = "^userMessage")
             
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
@@ -587,4 +597,15 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
             lambda: expect(spy).Not.toHaveBeenCalledAtLeast(1).time()).toRaise(
             AssertionError,
             expectedMessage = "Expected <anonymous> not to have been called at least 1 time, but it was called 2 times.")
+
+    def test_expect_not_called_at_least_uses_userMessage(self):
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+        spy() # second call
+
+        # Then
+        expect(
+            lambda: expect(spy).withUserMessage("userMessage").Not.toHaveBeenCalledAtLeast(1).time()).toRaise(
+            AssertionError,
+            expectedMessageMatches = "^userMessage")
         
