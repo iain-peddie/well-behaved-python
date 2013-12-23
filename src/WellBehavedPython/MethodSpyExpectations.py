@@ -102,7 +102,7 @@ class MethodSpyExpectations(DefaultExpectations):
             extra = ", but it was never called."
         message = self.buildMessage(baseMessage, None, self.userMessage, extra)
         if actualTimes >= expectedTimes:
-            pass
+            self.success(message)
         else:
             self.fail(message)
         return self
