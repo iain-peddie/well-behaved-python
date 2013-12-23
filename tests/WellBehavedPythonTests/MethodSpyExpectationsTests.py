@@ -359,8 +359,19 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
         AssertionError,
         expectedMessage = "Expected <anonymous> to have been called at least 2 times, but it was called 1 time.")
 
+    def test_expect_method_called_at_most_one_time_passes_if_never_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # When
+        expect(spy).toHaveBeenCalledAtMost(1).time()
+
     def test_expect_method_called_at_most_one_time_passes_if_called_once(self):
-        pass                                                               
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+
+        # When
+        expect(spy).toHaveBeenCalledAtMost(1).time()
             
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):

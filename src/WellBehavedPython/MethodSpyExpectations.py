@@ -83,7 +83,14 @@ class MethodSpyExpectations(DefaultExpectations):
         return "{} time{}".format(times, pluralSuffix)
 
     def toHaveBeenCalled(self, times = None):        
-        """Performs the specific logic of the expectation that a method has been called."""
+        """Performs the specific logic of the expectation that a method has been called.
+
+        Inputs
+        ------
+        times : can be:
+                None, in which case the logic is has the method been called at all
+                an integer, in which case the logic is has the mehtod been called exactly 'times' times.
+        """
         
         message = self.buildMessage("to have been called", None, self.userMessage)
         if times is None:
@@ -93,6 +100,11 @@ class MethodSpyExpectations(DefaultExpectations):
             self._toHaveBeenCalledNTimes(times, message)
 
     def toHaveBeenCalledAtLeast(self, expectedTimes):
+        """Logic to asser the spy has been called at least expectedTimes
+
+        Inputs
+        ------
+        expectedTimes : the number of calls the spy should beat or match."""
         baseMessage  = "to have been called at least {}".format(self._numberTimesString(expectedTimes))
         actualTimes = self.spy.getNumberOfCalls()
 
@@ -105,6 +117,14 @@ class MethodSpyExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+        return self
+
+    def toHaveBeenCalledAtMost(self, expectedTimes):
+        """Logic to asser the spy has been called at least expectedTimes
+
+        Inputs
+        ------
+        expectedTimes : the number of calls the spy should be under or match."""
         return self
 
     def toHaveBeenCalledWith(self, *args, **keywordArgs):
