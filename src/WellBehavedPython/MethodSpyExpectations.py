@@ -131,7 +131,7 @@ class MethodSpyExpectations(DefaultExpectations):
         actualTimes = self.spy.getNumberOfCalls()
         
         if actualTimes <= expectedTimes:
-            pass
+            self.success(message)
         else:
             self.fail(message)
 

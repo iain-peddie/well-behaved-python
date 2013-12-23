@@ -620,4 +620,31 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
             lambda: expect(spy).Not.toHaveBeenCalledAtLeast(1).time()).toRaise(
             AssertionError,
             expectedMessage = "Expected <anonymous> not to have been called at least 1 time, but it was called 2 times.")
-        
+
+    def test_expect_method_not_called_at_most_one_time_passes_if_called_twice(self):
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+        spy() # second call
+
+        # Then 
+        expect(spy).Not.toHaveBeenCalledAtMost(1).time()
+
+    def test_expect_method_not_called_at_most_one_time_fails_if_called_once(self):
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+
+        # Then
+        expect(
+            lambda: expect(spy).Not.toHaveBeenCalledAtMost(1).time()).toRaise(
+            AssertionError, 
+            expectedMessage = "Expected <anonymous> not to have been called at most 1 time, but it was called 1 time.")
+
+    def test_expect_method_not_called_at_most_one_time_fails_if_never_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasNotBeenCalled()
+
+        # Then
+        expect(
+            lambda: expect(spy).Not.toHaveBeenCalledAtMost(1).time()).toRaise(
+            AssertionError, 
+            expectedMessage = "Expected <anonymous> not to have been called at most 1 time, but it was never called.")
