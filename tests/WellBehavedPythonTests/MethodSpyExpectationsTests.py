@@ -323,6 +323,13 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 (5, c=6)
 => (7, d=8)
 """)
+
+    def test_expect_method_called_at_least_one_time_passes_if_called(self):
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+
+        # Then
+        expect(spy).toHaveBeenCalledAtLeast(1).time()
             
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
