@@ -105,14 +105,13 @@ class MethodSpyExpectations(DefaultExpectations):
         Inputs
         ------
         expectedTimes : the number of calls the spy should beat or match."""
+
         baseMessage  = "to have been called at least {}".format(self._numberTimesString(expectedTimes))
+        extra = self._buildCalledTimesSubmessage()
+        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
+
         actualTimes = self.spy.getNumberOfCalls()
 
-        if self.spy.hasBeenCalled():
-            extra = ", but it was called {}.".format(self._numberTimesString(actualTimes))
-        else:
-            extra = ", but it was never called."
-        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
         if actualTimes >= expectedTimes:
             self.success(message)
         else:
@@ -125,7 +124,27 @@ class MethodSpyExpectations(DefaultExpectations):
         Inputs
         ------
         expectedTimes : the number of calls the spy should be under or match."""
+        extra = self._buildCalledTimesSubmessage()
+        baseMessage  = "to have been called at most {}".format(self._numberTimesString(expectedTimes))
+        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
+
+        actualTimes = self.spy.getNumberOfCalls()
+        
+        if actualTimes <= expectedTimes:
+            pass
+        else:
+            self.fail(message)
+
         return self
+
+    def _buildCalledTimesSubmessage(self):
+        actualTimes = self.spy.getNumberOfCalls()
+        if self.spy.hasBeenCalled():
+            submessage = ", but it was called {}.".format(self._numberTimesString(actualTimes))
+        else:
+            submessage = ", but it was never called."
+        return submessage
+
 
     def toHaveBeenCalledWith(self, *args, **keywordArgs):
         """Expects that the spy was called with a set of arguments matching the given set

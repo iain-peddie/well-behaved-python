@@ -372,6 +372,17 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # When
         expect(spy).toHaveBeenCalledAtMost(1).time()
+
+    def test_expect_method_Called_at_most_1_times_fails_if_called_two_times(self):
+        # Where
+        spy = self.createMethodSpyWhichHasBeenCalled()
+        spy()
+
+        # When
+        expect(
+            lambda: expect(spy).toHaveBeenCalledAtMost(1).time()).toRaise(
+            AssertionError, 
+            expectedMessage = "Expected <anonymous> to have been called at most 1 time, but it was called 2 times.")
             
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
