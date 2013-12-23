@@ -92,7 +92,19 @@ class MethodSpyExpectations(DefaultExpectations):
             message = message + " " + self._numberTimesString(times)
             self._toHaveBeenCalledNTimes(times, message)
 
-    def toHaveBeenCalledAtLeast(self, numberTimes):
+    def toHaveBeenCalledAtLeast(self, expectedTimes):
+        baseMessage  = "to have been called at least {}".format(self._numberTimesString(expectedTimes))
+        actualTimes = self.spy.getNumberOfCalls()
+
+        if self.spy.hasBeenCalled():
+            extra = ", but it was called {}.".format(self._numberTimesString(actualTimes))
+        else:
+            extra = ", but it was never called."
+        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
+        if actualTimes >= expectedTimes:
+            pass
+        else:
+            self.fail(message)
         return self
 
     def toHaveBeenCalledWith(self, *args, **keywordArgs):
@@ -147,9 +159,27 @@ class MethodSpyExpectations(DefaultExpectations):
             self.fail(message)
 
     def time(self):
-        # syntactic sugar to allow the readable phrase expect(spy).toHaveBeenCalledXXX(1).time() 
-        # where XXX is AtLeast, AtMost or Exactly
-        pass
+        """Do nothing method.
+
+        This method exists as syntactic sugar to allow the readable phrase expect(spy).toHaveBeenCalledXXX(1).time() 
+        with XXX being one of AtLeast, AtMost or Exactly.
+
+        Returns
+        -------
+        self : this allows more function calls to be chained allowing for a fluent syntax of expressions."""
+        return self
+
+    def times(self):
+        """Do nothing method.
+
+        This method exists as syntactic sugar to allow the readable phrase expect(spy).toHaveBeenCalledXXX(2).times() 
+        with XXX being one of AtLeast, AtMost or Exactly.
+
+        Returns
+        -------
+        self : this allows more function calls to be chained allowing for a fluent syntax of expressions."""
+        return self
+        
 
 
     def _numberToPositionString(self, number):
