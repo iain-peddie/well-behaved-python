@@ -51,16 +51,6 @@ class MethodSpyExpectations(DefaultExpectations):
             return instance.getDescription()
         return BaseExpect.formatForMessage(self, instance)
 
-    def toHaveBeenCalled(self, times = None):        
-        """Performs the specific logic of the expectation that a method has been called."""
-        
-        message = self.buildMessage("to have been called", None, self.userMessage)
-        if times is None:
-            self._toHaveBeenCalledAtAll(message)
-        else:
-            message = message + " " + self._numberTimesString(times)
-            self._toHaveBeenCalledNTimes(times, message)
-
     def withUserMessage(self, userMessage):
         """Sets an extra message to be put into the failure message
 
@@ -91,6 +81,31 @@ class MethodSpyExpectations(DefaultExpectations):
         else:
             pluralSuffix = "s"
         return "{} time{}".format(times, pluralSuffix)
+
+    def toHaveBeenCalled(self, times = None):        
+        """Performs the specific logic of the expectation that a method has been called."""
+        
+        message = self.buildMessage("to have been called", None, self.userMessage)
+        if times is None:
+            self._toHaveBeenCalledAtAll(message)
+        else:
+            message = message + " " + self._numberTimesString(times)
+            self._toHaveBeenCalledNTimes(times, message)
+
+    def toHaveBeenCalledAtLeast(self, expectedTimes):
+        baseMessage  = "to have been called at least {}".format(self._numberTimesString(expectedTimes))
+        actualTimes = self.spy.getNumberOfCalls()
+
+        if self.spy.hasBeenCalled():
+            extra = ", but it was called {}.".format(self._numberTimesString(actualTimes))
+        else:
+            extra = ", but it was never called."
+        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
+        if actualTimes >= expectedTimes:
+            self.success(message)
+        else:
+            self.fail(message)
+        return self
 
     def toHaveBeenCalledWith(self, *args, **keywordArgs):
         """Expects that the spy was called with a set of arguments matching the given set
@@ -142,6 +157,30 @@ class MethodSpyExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def time(self):
+        """Do nothing method.
+
+        This method exists as syntactic sugar to allow the readable phrase expect(spy).toHaveBeenCalledXXX(1).time() 
+        with XXX being one of AtLeast, AtMost or Exactly.
+
+        Returns
+        -------
+        self : this allows more function calls to be chained allowing for a fluent syntax of expressions."""
+        return self
+
+    def times(self):
+        """Do nothing method.
+
+        This method exists as syntactic sugar to allow the readable phrase expect(spy).toHaveBeenCalledXXX(2).times() 
+        with XXX being one of AtLeast, AtMost or Exactly.
+
+        Returns
+        -------
+        self : this allows more function calls to be chained allowing for a fluent syntax of expressions."""
+        return self
+        
+
 
     def _numberToPositionString(self, number):
         suffixes = { 1: "st", 
