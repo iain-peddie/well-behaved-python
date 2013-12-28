@@ -138,9 +138,9 @@ class NumericExpectationsTests(TestCase):
 
     def test_expect_less_than_or_equal_to_prepends_userMessage_to_message(self):
         expect(lambda:
-                   expect(2).toBeLessThanOrEqualTo(1, "user message")).toRaise(
+                   expect(2).withUserMessage("userMessage").toBeLessThanOrEqualTo(1)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_two_numbers_within_epsilon_are_equal(self):
         expect(1).toEqual(1+1e-10)
@@ -242,6 +242,6 @@ class NumericNotExpectationsTests(TestCase):
 
     def test_expect_not_less_than_or_equal_prepends_userMessage_to_message(self):
         expect(lambda:
-                   expect(1).Not.toBeLessThanOrEqualTo(1, "user message")).toRaise(
+                   expect(1).withUserMessage("userMessage").Not.toBeLessThanOrEqualTo(1)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
