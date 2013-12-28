@@ -82,14 +82,6 @@ class DefaultExpectations(BaseExpect):
         """Asserts that self.expected is something that evaulautes false,
         that is False, a zero number or an empty collection.
 
-        Inputs
-        ------
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
-
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
@@ -101,23 +93,15 @@ class DefaultExpectations(BaseExpect):
         else:
             self.success(message)
 
-    def toBeNone(self, userMessage = ""):
+    def toBeNone(self):
         """Indicates a success case if self.actual is None, and a failure otherwise        
-
-        Inputs
-        ------
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be None", None, userMessage)
+        message = self.buildMessage("to be None", None, self.userMessage)
         if self.actual is not None:
             self.fail(message)
         else:

@@ -104,9 +104,9 @@ class DefaultExpectationsTests(TestCase):
             expectedMessage = "Expected False to be None")
 
     def test_expect_toBeNone_prepends_user_message(self):
-        expect(lambda: expect(False).toBeNone("user message")).toRaise(
+        expect(lambda: expect(False).withUserMessage("userMessage").toBeNone()).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_1_instanceof_int_passes(self):
         expect(1).toBeAnInstanceOf(int)
@@ -303,12 +303,11 @@ class DefaultNotExpectationsTests(TestCase):
             expectedMessage = "Expected None not to be None")
 
     def test_expect_not_toBeNone_prepends_userMessage(self):
-        expect(lambda: expect(None).Not.toBeNone("user message")).toRaise(
+        expect(lambda: expect(None).withUserMessage("userMessage").Not.toBeNone()).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expect_not_1_instanceof_float_passes(self):
-        # TODO: this should be expectNot
         expect(1).Not.toBeAnInstanceOf(float)
 
     def test_expect_not_1_instanceof_int_fails(self):
