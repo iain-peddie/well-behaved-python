@@ -41,7 +41,7 @@ class StringExpectations(DefaultExpectations):
                          message
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, self.userMessage)
+        message = self.buildMessage("to equal ", expected)
         if self.actual == expected:
             self.success(message)
         else:
@@ -64,7 +64,7 @@ class StringExpectations(DefaultExpectations):
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string starting with ", expectedStart, self.userMessage)
+        message = self.buildMessage("to be a string starting with ", expectedStart)
         if len(expectedStart) > len(self.actual):
             message += ", but it was too short"
             self.fail(message)
@@ -119,7 +119,7 @@ class StringExpectations(DefaultExpectations):
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string containing ", expectedContents, self.userMessage)
+        message = self.buildMessage("to be a string containing ", expectedContents)
         if self.actual.find(expectedContents) > -1:
             self.success(message)
         else:        
@@ -144,7 +144,7 @@ class StringExpectations(DefaultExpectations):
         if type(pattern) == str:
             pattern = re.compile(pattern)
         message = self.buildMessage("to be a string matching regular expression pattern ",
-                                    pattern.pattern, self.userMessage)
+                                    pattern.pattern)
 
         if pattern.search(self.actual):
             self.success(message)

@@ -52,7 +52,7 @@ class DefaultExpectations(BaseExpect):
         AssertionError : raised if self.actual does not equal expected.
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, self.userMessage);
+        message = self.buildMessage("to equal ", expected);
         if self.actual == expected:
             self.success(message)
         else:        
@@ -67,7 +67,7 @@ class DefaultExpectations(BaseExpect):
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be True", None, self.userMessage)
+        message = self.buildMessage("to be True", None)
         if self.actual:
             self.success(message)
         else:
@@ -82,7 +82,7 @@ class DefaultExpectations(BaseExpect):
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be False", None, self.userMessage)
+        message = self.buildMessage("to be False", None)
         if self.actual:
             self.fail(message)
         else:
@@ -96,7 +96,7 @@ class DefaultExpectations(BaseExpect):
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be None", None, self.userMessage)
+        message = self.buildMessage("to be None", None)
         if self.actual is not None:
             self.fail(message)
         else:
@@ -115,7 +115,7 @@ class DefaultExpectations(BaseExpect):
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to be in ", expectedContainer, self.userMessage)
+        message = self.buildMessage("to be in ", expectedContainer)
         if self.actual in expectedContainer:
             self.success(message)
         else:
@@ -137,9 +137,8 @@ class DefaultExpectations(BaseExpect):
         extra = " but was an instance of {}".format(
                 type(self.actual))
         message = self.buildMessage("to be an instance of ",
-                                    klass, 
-                                    self.userMessage,
-                                    extra)
+                                    klass,                                    
+                                    extra = extra)
         if isinstance(self.actual, klass):
             self.success(message)
         else:
@@ -156,8 +155,7 @@ class DefaultExpectations(BaseExpect):
 
         if ex is not None:
             message = self.buildRaiseMessage(exceptionClass, ex,
-                                             expectedMessage, expectedMessageMatches,
-                                             self.userMessage)
+                                             expectedMessage, expectedMessageMatches)
             if isinstance(ex, exceptionClass):
 
                 if expectedMessage != None and expectedMessage != ex.args[0]:
@@ -171,11 +169,11 @@ class DefaultExpectations(BaseExpect):
             
         else:    
             message = self.buildMessage("to raise an instance of ", exceptionClass,
-                                        self.userMessage, ", but none was")
+                                        extra = ", but none was")
             self.fail(message)
 
 
-    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage):
+    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches):
         """Builds the message that goes into expected exception assertion messages
 
         Inputs
@@ -185,8 +183,6 @@ class DefaultExpectations(BaseExpect):
         expectedMessage: the complete expected exception message
         expectedMessageMatches: a string or compiled regular expression
               which the exception message is expected to match
-        userMessage: message from the user to be prepended onto the
-            whole message.
 
         Returns
         -------
@@ -219,5 +215,5 @@ class DefaultExpectations(BaseExpect):
             extra = extra + " with message {}".format(self.formatForMessage(ex.args[0]))            
 
         message = self.buildMessage(operation, comparison, 
-                                        userMessage, extra)
+                                    extra = extra)
         return message

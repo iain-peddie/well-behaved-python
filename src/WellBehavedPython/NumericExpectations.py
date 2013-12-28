@@ -49,7 +49,7 @@ class NumericExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be greater than ", expected, self.userMessage);
+        message = self.buildMessage("to be greater than ", expected);
         if self.actual > expected:
             self.success(message)
         else:
@@ -70,7 +70,7 @@ class NumericExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be greater than or equal to ", expected, self.userMessage);
+        message = self.buildMessage("to be greater than or equal to ", expected);
         if self.actual >= expected:
             self.success(message)
         else:
@@ -90,7 +90,7 @@ class NumericExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be less than ", expected, self.userMessage)
+        message = self.buildMessage("to be less than ", expected)
         if self.actual < expected:
             self.success(message)
         else:
@@ -111,7 +111,7 @@ class NumericExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be less than or equal to ", expected, self.userMessage)
+        message = self.buildMessage("to be less than or equal to ", expected)
         if self.actual <= expected:
             self.success(message)
         else:
@@ -126,7 +126,7 @@ class NumericExpectations(DefaultExpectations):
             abs(expected)
             abs(self.actual)
         except:
-            DefaultExpectations.toEqual(self, expected, self.userMessage)
+            DefaultExpectations.toEqual(self, expected)
             return
 
         if toleranceType == "absolute":
@@ -142,8 +142,7 @@ class NumericExpectations(DefaultExpectations):
         else:
             toleranceMessage = " within {} tolerance of {}".format(toleranceType, tolerance)       
 
-        message = self.buildMessage("to equal ", expected, self.userMessage,
-                                    toleranceMessage)
+        message = self.buildMessage("to equal ", expected, extra = toleranceMessage)
         if difference < tolerance:
             self.success(message)
         else:        

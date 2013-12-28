@@ -51,14 +51,14 @@ class DictionaryExpectations(DefaultExpectations):
         AssertionError : raised if self.actual does not equal expected.
 """
         if len(self.actual) == len(expected):
-            message = self.buildMessage("to equal ", expected, self.userMessage)
+            message = self.buildMessage("to equal ", expected)
             failCount = 0
             for key in self.actual.keys():
                 failCount += self._checkKey(key, expected, message)
             if failCount == 0:
                 self.success(message)
         else:
-            message = self.buildMessage("to be a dictionary containing ", len(expected), self.userMessage, " items")
+            message = self.buildMessage("to be a dictionary containing ", len(expected), extra = " items")
             self.fail(message)
 
     def toContainKey(self, expected):
@@ -73,7 +73,7 @@ class DictionaryExpectations(DefaultExpectations):
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage('to contain key ', expected, self.userMessage)
+        message = self.buildMessage('to contain key ', expected)
         if expected in self.actual:
             self.success(message)
         else:
@@ -90,7 +90,7 @@ class DictionaryExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage('to contain value ', expected, self.userMessage)
+        message = self.buildMessage('to contain value ', expected)
         if expected in self.actual.values():
             self.success(message)
         else:
