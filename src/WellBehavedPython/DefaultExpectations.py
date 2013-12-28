@@ -127,26 +127,24 @@ class DefaultExpectations(BaseExpect):
             self.fail(message)
 
 
-    def toBeAnInstanceOf(self, klass, userMessage = ""):
+    def toBeAnInstanceOf(self, klass):
         """Indicates a success case if self.actual is an instance of klass,
         and a failure otherwise        
 
         Inputs
         ------
         klass     : The expected class/type of the actual item
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to be an instance of ", klass, userMessage,
-                                     " but was an instance of {}".format(
-                type(self.actual)))
+        extra = " but was an instance of {}".format(
+                type(self.actual))
+        message = self.buildMessage("to be an instance of ",
+                                    klass, 
+                                    self.userMessage,
+                                    extra)
         if isinstance(self.actual, klass):
             self.success(message)
         else:

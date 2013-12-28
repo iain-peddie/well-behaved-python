@@ -130,9 +130,9 @@ class DefaultExpectationsTests(TestCase):
 
     def test_instance_of_prepends_usermessage(self):
         expect(lambda: 
-               expect(1).toBeAnInstanceOf(float, "user message")).toRaise(
+               expect(1).withUserMessage("userMessage").toBeAnInstanceOf(float)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expected_exception_passes_when_exception_matches(self):
         expect(raise_error).toRaise(KeyError)
@@ -334,11 +334,9 @@ class DefaultNotExpectationsTests(TestCase):
             " but was an instance of <class '.*DefaultNotExpectationsTests'>")        
 
     def test_instance_of_prepends_usermessage(self):
-        expect(lambda: expect(1).Not.toBeAnInstanceOf(
-                int, 
-                "user message")).toRaise(
+        expect(lambda: expect(1).withUserMessage("userMessage").Not.toBeAnInstanceOf(int)).toRaise(
                 AssertionError,
-                expectedMessageMatches = "^user message")
+                expectedMessageMatches = "^userMessage")
 
     def test_expect_not_exception_raised_passes_if_exception_not_raised(self):
         expect(lambda: None).Not.toRaise(Exception)

@@ -148,7 +148,7 @@ class TestSuiteTests(TestCase):
             # we use naked asserts while waiting for isInstanceOf and
             # toBeIn
             message = "Test index {}".format(i)
-            expect(suite.tests[i]).toBeAnInstanceOf(TestCaseWithTwoPassingTests, message)
+            expect(suite.tests[i]).withUserMessage(message).toBeAnInstanceOf(TestCaseWithTwoPassingTests)
             expect(suite.tests[i].testMethodName).withUserMessage(message).toBeIn(expectedTestMethodNames)
 
     def test_autosuite_ingores_xtests(self):
