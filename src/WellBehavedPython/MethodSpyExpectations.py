@@ -82,22 +82,33 @@ class MethodSpyExpectations(DefaultExpectations):
             pluralSuffix = "s"
         return "{} time{}".format(times, pluralSuffix)
 
-    def toHaveBeenCalled(self, times = None):        
+    def toHaveBeenCalled(self):        
         """Performs the specific logic of the expectation that a method has been called.
-
-        Inputs
-        ------
-        times : can be:
-                None, in which case the logic is has the method been called at all
-                an integer, in which case the logic is has the mehtod been called exactly 'times' times.
         """
         
         message = self.buildMessage("to have been called", None, self.userMessage)
-        if times is None:
-            self._toHaveBeenCalledAtAll(message)
+        if self.spy.hasBeenCalled():
+            self.success(message)
         else:
-            message = message + " " + self._numberTimesString(times)
-            self._toHaveBeenCalledNTimes(times, message)
+            self.fail(message)
+
+        return self
+
+    def toHaveBeenCalledExactly(self, expectedTimes):
+        """Logic to assert that the spy has been called exactly expectedTimes times.
+
+        Inputs
+        ------
+        expectedTimes : the number of times the spy is expected to have been called.
+"""
+        message = self._buildMethodSpyMessage("exactly", expectedTimes)
+
+        if self.spy.getNumberOfCalls() == expectedTimes:
+            self.success(message)
+        else:
+            self.fail(message)
+
+        return self
 
     def toHaveBeenCalledAtLeast(self, expectedTimes):
         """Logic to asser the spy has been called at least expectedTimes
@@ -106,9 +117,7 @@ class MethodSpyExpectations(DefaultExpectations):
         ------
         expectedTimes : the number of calls the spy should beat or match."""
 
-        baseMessage  = "to have been called at least {}".format(self._numberTimesString(expectedTimes))
-        extra = self._buildCalledTimesSubmessage()
-        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
+        message = self._buildMethodSpyMessage("at least", expectedTimes)
 
         actualTimes = self.spy.getNumberOfCalls()
 
@@ -124,9 +133,8 @@ class MethodSpyExpectations(DefaultExpectations):
         Inputs
         ------
         expectedTimes : the number of calls the spy should be under or match."""
-        extra = self._buildCalledTimesSubmessage()
-        baseMessage  = "to have been called at most {}".format(self._numberTimesString(expectedTimes))
-        message = self.buildMessage(baseMessage, None, self.userMessage, extra)
+
+        message = self._buildMethodSpyMessage("at most", expectedTimes)
 
         actualTimes = self.spy.getNumberOfCalls()
         
@@ -136,6 +144,12 @@ class MethodSpyExpectations(DefaultExpectations):
             self.fail(message)
 
         return self
+
+    def _buildMethodSpyMessage(self, comparisonWord, expectedTimes):
+        baseMessage = "to have been called {} {}".format(comparisonWord, 
+                                                         self._numberTimesString(expectedTimes))
+        extra = self._buildCalledTimesSubmessage()
+        return self.buildMessage(baseMessage, None, self.userMessage, extra)
 
     def _buildCalledTimesSubmessage(self):
         actualTimes = self.spy.getNumberOfCalls()
@@ -233,14 +247,4 @@ class MethodSpyExpectations(DefaultExpectations):
 
         return "{}{}".format(number, suffix)
 
-    def _toHaveBeenCalledNTimes(self, times, message):
-        if self.spy.getNumberOfCalls() == times:
-            self.success(message)
-        else:
-            self.fail(message)
 
-    def _toHaveBeenCalledAtAll(self, message):
-        if self.spy.hasBeenCalled():
-            self.success(message)
-        else:
-            self.fail(message)
