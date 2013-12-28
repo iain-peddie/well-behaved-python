@@ -68,7 +68,7 @@ class ContainerExpectations(DefaultExpectations):
             self.fail(message)
 
 
-    def toContain(self, expectedContainee, userMessage = ""):
+    def toContain(self, expectedContainee):
         """Indicates a success case if self.actual contains expectedContainee,
         and a failure otherwise        
 
@@ -85,7 +85,7 @@ class ContainerExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to contain ", expectedContainee, userMessage)
+        message = self.buildMessage("to contain ", expectedContainee, self.userMessage)
         if expectedContainee in self.actual:
             self.success(message)
         else:

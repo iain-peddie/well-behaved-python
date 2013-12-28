@@ -73,9 +73,9 @@ class ContainerExpectationsTests(TestCase):
     def test_expect_y_to_contain_x_prepends_usermessage_to_message(self):
         x = 602
         y = [601, 603, 605]
-        expect(lambda: expect(y).toContain(x, "user message")).toRaise(
+        expect(lambda: expect(y).withUserMessage("userMessage").toContain(x)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expect_0_to_be_superset_of_empty_passes(self):
         expect([1]).toBeASupersetOf(())
@@ -198,7 +198,7 @@ class ContainerNotExpectationsTests(TestCase):
     def test_expect_not_y_to_contain_x_prepends_usermessage(self):
         x = 602
         y = [601, 602, 603]
-        expect(lambda: expect(y).Not.toContain(x, "user message")).toRaise(
+        expect(lambda: expect(y).withUserMessage("user message").Not.toContain(x)).toRaise(
             AssertionError,
             expectedMessageMatches = "^user message")
 
