@@ -36,7 +36,6 @@ class MethodSpyExpectations(DefaultExpectations):
         """
 
         self.spy = actual
-        self.userMessage = None
         self.callIndex = None
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
@@ -50,18 +49,6 @@ class MethodSpyExpectations(DefaultExpectations):
         if isinstance(instance, MethodSpy):
             return instance.getDescription()
         return BaseExpect.formatForMessage(self, instance)
-
-    def withUserMessage(self, userMessage):
-        """Sets an extra message to be put into the failure message
-
-        Inputs
-        -----
-        userMessage : The extra sub-message to put into the expectation failure message."""
-
-        self.userMessage = userMessage
-        if self.Not is not None:
-            self.Not.withUserMessage(userMessage)
-        return self
 
     def forCallNumber(self, callNumber):
         """Indicates to only look at a certain call.

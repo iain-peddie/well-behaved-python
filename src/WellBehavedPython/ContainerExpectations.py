@@ -37,7 +37,7 @@ class ContainerExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
-    def toEqual(self, expected, userMessage = None):
+    def toEqual(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is equal 
@@ -46,11 +46,6 @@ class ContainerExpectations(DefaultExpectations):
         Inputs
         ------
         expected : the value that the actual value is expected to equal
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -58,7 +53,7 @@ class ContainerExpectations(DefaultExpectations):
 """
         self._compareTypes(expected)
         if len(self.actual) == len(expected):
-            message = self.buildMessage("to equal ", expected, userMessage)
+            message = self.buildMessage("to equal ", expected, self.userMessage)
             for i in range(0, len(self.actual)):
                 if self.actual[i] != expected[i]:
                     message = message + "\nFirst difference at index {}: {} != {}".format(
@@ -69,44 +64,34 @@ class ContainerExpectations(DefaultExpectations):
 
             self.success(message)
         else:        
-            message = self.buildMessage("to be a container of length ", len(expected), userMessage);
+            message = self.buildMessage("to be a container of length ", len(expected), self.userMessage);
             self.fail(message)
 
 
-    def toContain(self, expectedContainee, userMessage = ""):
+    def toContain(self, expectedContainee):
         """Indicates a success case if self.actual contains expectedContainee,
         and a failure otherwise        
 
         Inputs
         ------
         expectedContainee      : The item that self.actual is expected to contain
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to contain ", expectedContainee, userMessage)
+        message = self.buildMessage("to contain ", expectedContainee, self.userMessage)
         if expectedContainee in self.actual:
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeASupersetOf(self, expected, userMessage = ""):
+    def toBeASupersetOf(self, expected):
         """Indicates a success case if every item in expected is in self.actual
 
         Inputs
         ------
         expected      : The container of items that should all be in self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -115,24 +100,19 @@ class ContainerExpectations(DefaultExpectations):
         expectedSet = self._setFromObject(expected)
         actualSet = self._setFromObject(self.actual);
 
-        message = self.buildMessage("to be a superset of ", expected, userMessage)
+        message = self.buildMessage("to be a superset of ", expected, self.userMessage)
 
         if actualSet.issuperset(expectedSet):
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeASubsetOf(self, expected, userMessage = ""):
+    def toBeASubsetOf(self, expected):
         """Indicates a success case if every item in self.actual is in expected
 
         Inputs
         ------
         expected      : The container of items some of which should be in self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -141,7 +121,7 @@ class ContainerExpectations(DefaultExpectations):
         expectedSet = self._setFromObject(expected)
         actualSet = self._setFromObject(self.actual);
 
-        message = self.buildMessage("to be a subset of ", expected, userMessage)
+        message = self.buildMessage("to be a subset of ", expected, self.userMessage)
 
         if actualSet.issubset(expectedSet):
             self.success(message)
