@@ -36,16 +36,29 @@ class DictionaryExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
     
-    def toEqual(self, expected, userMessage=""):        
+    def toEqual(self, expected):        
+        """Compares the actual value to the expected value
+
+        Asserts that the actual value stored in the object is equal 
+        to the expected value.
+
+        Inputs
+        ------
+        expected : the value that the actual value is expected to equal
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected.
+"""
         if len(self.actual) == len(expected):
-            message = self.buildMessage("to equal ", expected, userMessage)
+            message = self.buildMessage("to equal ", expected, self.userMessage)
             failCount = 0
             for key in self.actual.keys():
                 failCount += self._checkKey(key, expected, message)
             if failCount == 0:
                 self.success(message)
         else:
-            message = self.buildMessage("to be a dictionary containing ", len(expected), userMessage, " items")
+            message = self.buildMessage("to be a dictionary containing ", len(expected), self.userMessage, " items")
             self.fail(message)
 
     def toContainKey(self, expected, userMessage = ""):
