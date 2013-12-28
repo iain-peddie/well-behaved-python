@@ -113,7 +113,7 @@ class ContainerExpectationsTests(TestCase):
             expectedMessage = "Expected [0] to be a subset of [1]")
 
     def test_toBeASubset_prepends_userMessage(self):
-        expect(lambda: expect([0]).toBeASubsetOf([1], "userMessage")).toRaise(
+        expect(lambda: expect([0]).withUserMessage("userMessage").toBeASubsetOf([1])).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage: ")
 
@@ -232,6 +232,6 @@ class ContainerNotExpectationsTests(TestCase):
                 expectedMessage = "Expected [0] not to be a subset of [0, 1]")
 
     def test_not_to_beASubset_prepends_userMessage(self):
-        expect(lambda: expect([0]).Not.toBeASubsetOf([0, 1], "userMessage")).toRaise(
+        expect(lambda: expect([0]).withUserMessage("userMessage").Not.toBeASubsetOf([0, 1])).toRaise(
                 AssertionError,
                 expectedMessageMatches = "^userMessage: ")

@@ -75,11 +75,6 @@ class ContainerExpectations(DefaultExpectations):
         Inputs
         ------
         expectedContainee      : The item that self.actual is expected to contain
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -97,11 +92,6 @@ class ContainerExpectations(DefaultExpectations):
         Inputs
         ------
         expected      : The container of items that should all be in self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -117,17 +107,12 @@ class ContainerExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toBeASubsetOf(self, expected, userMessage = ""):
+    def toBeASubsetOf(self, expected):
         """Indicates a success case if every item in self.actual is in expected
 
         Inputs
         ------
         expected      : The container of items some of which should be in self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -136,7 +121,7 @@ class ContainerExpectations(DefaultExpectations):
         expectedSet = self._setFromObject(expected)
         actualSet = self._setFromObject(self.actual);
 
-        message = self.buildMessage("to be a subset of ", expected, userMessage)
+        message = self.buildMessage("to be a subset of ", expected, self.userMessage)
 
         if actualSet.issubset(expectedSet):
             self.success(message)
