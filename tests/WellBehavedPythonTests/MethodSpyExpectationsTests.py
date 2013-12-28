@@ -77,27 +77,27 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
         self.call(calledSpy)
 
         # Then
-        expect(calledSpy).toHaveBeenCalled(times = 2)
+        expect(calledSpy).toHaveBeenCalledExactly(2).times()
 
     def test_expect_method_called_twice_failed_if_spy_only_called_once(self):
         # Where
         calledSpy = self.createMethodSpyWhichHasBeenCalled()
 
         # Then
-        expect(lambda: expect(calledSpy).toHaveBeenCalled(times = 2)).toRaise(
+        expect(lambda: expect(calledSpy).toHaveBeenCalledExactly(2).times).toRaise(
             AssertionError,
-            expectedMessage = 'Expected <anonymous> to have been called 2 times')
+            expectedMessage = 'Expected <anonymous> to have been called exactly 2 times, but it was called 1 time.')
 
-    def test_expect_method_called_twice_failed_if_spy_only_called_three_times(self):
+    def test_expect_method_called_twice_failed_if_spy_called_three_times(self):
         # Where
         calledSpy = self.createMethodSpyWhichHasBeenCalled()
         self.call(calledSpy)
         self.call(calledSpy)
 
         # Then
-        expect(lambda: expect(calledSpy).toHaveBeenCalled(times = 2)).toRaise(
+        expect(lambda: expect(calledSpy).toHaveBeenCalledExactly(2).times()).toRaise(
             AssertionError,
-            expectedMessage = 'Expected <anonymous> to have been called 2 times')
+            expectedMessage = 'Expected <anonymous> to have been called exactly 2 times, but it was called 3 times.')
 
     def test_expect_toHaveBeenCalled_with_usermessage(self):
         # Where
@@ -120,9 +120,9 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(lambda:
-                   expect(spy).toHaveBeenCalled(times = 1)).toRaise(
+                   expect(spy).toHaveBeenCalledExactly(1).time()).toRaise(
             AssertionError, 
-            expectedMessage = "Expected <anonymous> to have been called 1 time")
+            expectedMessage = "Expected <anonymous> to have been called exactly 1 time, but it was never called.")
 
     def test_expect_called_with_passes_when_matching_one_call_exactly(self):
         # Where
@@ -404,6 +404,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             lambda: expect(spy).withUserMessage("userMessage").toHaveBeenCalledAtMost(1).time()).toRaise(
             AssertionError, 
             expectedMessageMatches = "^userMessage")
+        
             
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
@@ -426,9 +427,9 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
         calledSpy()
 
         # Then
-        expect(lambda: expect(calledSpy).Not.toHaveBeenCalled(times = 2)).toRaise(
+        expect(lambda: expect(calledSpy).Not.toHaveBeenCalledExactly(2).times()).toRaise(
             AssertionError, 
-            expectedMessage = 'Expected <anonymous> not to have been called 2 times')
+            expectedMessage = 'Expected <anonymous> not to have been called exactly 2 times, but it was called 2 times.')
             
 
     def test_expect_method_not_called_passes_when_method_has_not_been_called(self):
@@ -691,4 +692,5 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
             lambda: expect(spy).withUserMessage("userMessage").Not.toHaveBeenCalledAtMost(1).time()).toRaise(
             AssertionError, 
             expectedMessageMatches = "^userMessage")
+
 
