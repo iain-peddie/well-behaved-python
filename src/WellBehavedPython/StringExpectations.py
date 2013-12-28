@@ -48,7 +48,7 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expected, message)
             self.fail(message)
 
-    def toStartWith(self, expectedStart, userMessage = ''):
+    def toStartWith(self, expectedStart):
         """Compares the actual value to the expected value
 
         Asserts that the text of the string starts with the
@@ -58,18 +58,13 @@ class StringExpectations(DefaultExpectations):
         ------
         expectedStart : the value that the actual text is expected
                         to start with
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string starting with ", expectedStart, userMessage)
+        message = self.buildMessage("to be a string starting with ", expectedStart, self.userMessage)
         if len(expectedStart) > len(self.actual):
             message += ", but it was too short"
             self.fail(message)
@@ -81,7 +76,7 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expectedStart, message)
             self.fail(message)
 
-    def toEndWith(self, expectedEnd, userMessage = ''):
+    def toEndWith(self, expectedEnd):
         """Compares the actual value to the expected value
 
         Asserts that the text of the string ends with the
@@ -91,18 +86,13 @@ class StringExpectations(DefaultExpectations):
         ------
         expectedEnd : the value that the actual text is expected
                       to end with
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string ending with ", expectedEnd, userMessage)
+        message = self.buildMessage("to be a string ending with ", expectedEnd, self.userMessage)
         if len(expectedEnd) > len(self.actual):
             message += ", but it was too short"
             self.fail(message)
