@@ -23,10 +23,21 @@ class MethodSpy:
         self.methodName = methodName
         self.callArguments = []
         self.keywordCallArguments = []
+        self.returnValue = None
 
     def __call__(self, *args, **keywordArgs):
         self.callArguments.append((args))
         self.keywordCallArguments.append(keywordArgs)
+        return self.returnValue
+
+    def andReturn(self, returnValue):
+        """Sets the return value when the method is called.
+
+        Inputs
+        ------
+        returnValue: the value to return when the spy is called."""        
+
+        self.returnValue = returnValue
 
     def getDescription(self):
         """Gets a description of this method spy.

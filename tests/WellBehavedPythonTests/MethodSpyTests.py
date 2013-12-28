@@ -249,6 +249,27 @@ class MethodSpyTests(TestCase):
 (a='1')
 """)
     
+    def test_that_unconfigured_spy_returns_None(self):
+        # Where
+        spy = self.spy
 
-   # Represents a mix of positional and keyword arguments as (1, a='two', b=[1 1 1]) 
+        # When
+        value = spy()
 
+        # Then
+        expect(value).toBeNone()
+
+    def test_that_spy_can_be_configured_to_return_a_set_value(self):
+        # Where
+        spy = self.spy
+        returnValue = 3
+        spy.andReturn(returnValue)
+
+        # When
+        value = spy()
+
+        # Then
+        expect(value).withUserMessage("Spy should return the configured return value of {}".format(
+                returnValue)).Not.toBeNone()
+        expect(value).toEqual(returnValue)
+        
