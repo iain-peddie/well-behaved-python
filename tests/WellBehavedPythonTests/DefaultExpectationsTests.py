@@ -86,14 +86,14 @@ class DefaultExpectationsTests(TestCase):
 
     def test_expect_true_prepends_usermessage_to_assertion(self):
         expect(lambda: expect(False).withUserMessage(
-                "user message").toBeTrue()).toRaise(
+                "userMessage").toBeTrue()).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expect_false_prepends_usermessage_to_assertion(self):
-        expect(lambda: expect(True).toBeFalse("user message")).toRaise(
+        expect(lambda: expect(True).withUserMessage("userMessage").toBeFalse()).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expecting_None_toBeNone_passes(self):
         expect(None).toBeNone()
@@ -290,7 +290,7 @@ class DefaultNotExpectationsTests(TestCase):
             expectedMessageMatches = "^user message")
 
     def test_expect_not_false_prepends_usermessage_to_assertion(self):
-        expect(lambda: expect(False).Not.toBeFalse("user message")).toRaise(
+        expect(lambda: expect(False).withUserMessage("user message").Not.toBeFalse()).toRaise(
             AssertionError,
             expectedMessageMatches = "^user message")
 

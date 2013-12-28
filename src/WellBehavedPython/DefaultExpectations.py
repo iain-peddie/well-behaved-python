@@ -67,14 +67,6 @@ class DefaultExpectations(BaseExpect):
         """Asserts that self.expected is something that evaluates true,
         that is True, a non-zero number or a non-empty collection.
 
-        Inputs
-        ------
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
-
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
@@ -86,7 +78,7 @@ class DefaultExpectations(BaseExpect):
         else:
             self.fail(message)
 
-    def toBeFalse(self, userMessage = ""):
+    def toBeFalse(self):
         """Asserts that self.expected is something that evaulautes false,
         that is False, a zero number or an empty collection.
 
@@ -103,7 +95,7 @@ class DefaultExpectations(BaseExpect):
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be False", None, userMessage)
+        message = self.buildMessage("to be False", None, self.userMessage)
         if self.actual:
             self.fail(message)
         else:
