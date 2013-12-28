@@ -149,7 +149,7 @@ class TestSuiteTests(TestCase):
             # toBeIn
             message = "Test index {}".format(i)
             expect(suite.tests[i]).toBeAnInstanceOf(TestCaseWithTwoPassingTests, message)
-            expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames, message)
+            expect(suite.tests[i].testMethodName).withUserMessage(message).toBeIn(expectedTestMethodNames)
 
     def test_autosuite_ingores_xtests(self):
         suite = TestCaseWithIgnoredTest.suite()

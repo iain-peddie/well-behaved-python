@@ -107,7 +107,7 @@ class DefaultExpectations(BaseExpect):
         else:
             self.success(message)
 
-    def toBeIn(self, expectedContainer, userMessage = ""):
+    def toBeIn(self, expectedContainer):
         """Indicates a success case if self.actual is in expectedContainer, 
         and a failure otherwise        
 
@@ -115,17 +115,12 @@ class DefaultExpectations(BaseExpect):
         ------
         expectedContainer :      The container that is expected to contain
                                  self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to be in ", expectedContainer, userMessage)
+        message = self.buildMessage("to be in ", expectedContainer, self.userMessage)
         if self.actual in expectedContainer:
             self.success(message)
         else:
