@@ -185,12 +185,12 @@ class TestSuiteTests(TestCase):
         afterAtEnd = TestCaseWithBeforeAndAfterClass.afterClassCalled
 
         # Then
-        expect(beforeAtStart).toBeFalse("beforeCalled should be false initially")
-        expect(afterAtStart).toBeFalse("afterCalled should be false initially")
-        expect(beforeAfterCallingBeforeClass).toBeTrue("beforeCalled should be true after calling beforeClass")
-        expect(afterAfterCallingAfterClass).toBeTrue("afterCalled should be false after calling afterClass")
-        expect(beforeAtEnd).toBeFalse("beforeCalled should be false after calling reset()")
-        expect(afterAtEnd).toBeFalse("beforeCalled should be false after calling reset()")
+        expect(beforeAtStart).withUserMessage("beforeCalled should be false initially").toBeFalse()
+        expect(afterAtStart).withUserMessage("afterCalled should be false initially").toBeFalse()
+        expect(beforeAfterCallingBeforeClass).withUserMessage("beforeCalled should be true after calling beforeClass").toBeTrue()
+        expect(afterAfterCallingAfterClass).withUserMessage("afterCalled should be false after calling afterClass").toBeTrue()
+        expect(beforeAtEnd).withUserMessage("beforeCalled should be false after calling reset()").toBeFalse()
+        expect(afterAtEnd).withUserMessage("beforeCalled should be false after calling reset()").toBeFalse()
 
     def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
         # Where
@@ -239,8 +239,9 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).toBeTrue(
-            "beforeClass should have been called")
+        expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).withUserMessage(
+                        "beforeClass should have been called").toBeTrue()
+
 
     def test_suite_run_calls_afterClass_after_tests_run(self):
         # Where
@@ -260,8 +261,9 @@ class TestSuiteTests(TestCase):
         expect(results.countErrors()).toEqual(0)
         expect(results.countFailures()).toEqual(
             0, "failure would indicate afterClaass called too early")
-        expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).toBeTrue(
-            "afterClass should have been called")
+        expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).withUserMessage(
+            "afterClass should have been called").toBeTrue()
+            
 
     def test_error_in_beforeClass_marks_all_children_as_error(self):
         # Where

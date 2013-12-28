@@ -37,7 +37,7 @@ class DefaultExpectations(BaseExpect):
 
         BaseExpect.__init__(self, actual, strategy, reverseExpecter)
 
-    def toEqual(self, expected, userMessage = None):
+    def toEqual(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is equal 
@@ -57,13 +57,13 @@ class DefaultExpectations(BaseExpect):
         AssertionError : raised if self.actual does not equal expected.
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, userMessage);
+        message = self.buildMessage("to equal ", expected, self.userMessage);
         if self.actual == expected:
             self.success(message)
         else:        
             self.fail(message)
 
-    def toBeTrue(self, userMessage = ""):
+    def toBeTrue(self):
         """Asserts that self.expected is something that evaluates true,
         that is True, a non-zero number or a non-empty collection.
 
@@ -80,7 +80,7 @@ class DefaultExpectations(BaseExpect):
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be True", None, userMessage)
+        message = self.buildMessage("to be True", None, self.userMessage)
         if self.actual:
             self.success(message)
         else:
