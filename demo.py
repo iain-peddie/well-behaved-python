@@ -20,6 +20,7 @@
 # import the API
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.api import *
+from WellBehavedPython.VerboseConsoleTestRunner import VerboseConsoleTestRunner
 
 def outer():
     raise KeyError("you are locked out")
@@ -63,9 +64,9 @@ class DemoTests(TestCase):
     def test_add_user_message(self):
         # We can add user messages to expect calls, to identify
         # what has gone wrong more clearly
-        expect(True).toBeTrue("A literal True value should be true...")
+        expect(True).withUserMessage("A literal True value should be true").toBeTrue()
         # Failure message would be:
-        # "A literal True values should be true: Expected True to be True"
+        # "A literal True value should be true: Expected True to be True"
 
     ## Expected Exceptions
 
@@ -244,7 +245,5 @@ zzzz""")
 
 if __name__ == "__main__":
     suite = DemoTests.suite()
-    results = TestResults()
-    suite.run(results)
-
-    print(results.summary())
+    runner = VerboseConsoleTestRunner(bufferOutput = True)
+    runner.run(suite)
