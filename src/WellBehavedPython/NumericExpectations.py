@@ -35,7 +35,7 @@ class NumericExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
-    def toBeGreaterThan(self, expected, userMessage = ""):
+    def toBeGreaterThan(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is greater than
@@ -44,23 +44,18 @@ class NumericExpectations(DefaultExpectations):
         Inputs
         ------
         expected : the value that the actual value is expected to be greater than
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be greater than ", expected, userMessage);
+        message = self.buildMessage("to be greater than ", expected);
         if self.actual > expected:
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeGreaterThanOrEqualTo(self, expected, userMessage = ""):
+    def toBeGreaterThanOrEqualTo(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is greater than
@@ -70,23 +65,18 @@ class NumericExpectations(DefaultExpectations):
         ------
         expected : The value that the actual value is expected to be greater than
                    or equal to.
-        userMessage (optional) : A message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be greater than or equal to ", expected, userMessage);
+        message = self.buildMessage("to be greater than or equal to ", expected);
         if self.actual >= expected:
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeLessThan(self, expected, userMessage = ""):
+    def toBeLessThan(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is less than
@@ -95,23 +85,18 @@ class NumericExpectations(DefaultExpectations):
         Inputs
         ------
         expected : the value that the actual value is expected to be less than
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be less than ", expected, userMessage)
+        message = self.buildMessage("to be less than ", expected)
         if self.actual < expected:
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeLessThanOrEqualTo(self, expected, userMessage = ""):
+    def toBeLessThanOrEqualTo(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is less than
@@ -121,23 +106,18 @@ class NumericExpectations(DefaultExpectations):
         ------
         expected : the value that the actual value is expected to be less than
                    or equal to.
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be less than or equal to ", expected, userMessage)
+        message = self.buildMessage("to be less than or equal to ", expected)
         if self.actual <= expected:
             self.success(message)
         else:
             self.fail(message)
         
-    def toEqual(self, expected, userMessage = "", tolerance = 1e-8, toleranceType = ""):
+    def toEqual(self, expected, tolerance = 1e-8, toleranceType = ""):
         self._compareTypes(expected)
 
         FLOOR_TOLERANCE = 1e-20
@@ -146,7 +126,7 @@ class NumericExpectations(DefaultExpectations):
             abs(expected)
             abs(self.actual)
         except:
-            DefaultExpectations.toEqual(self, expected, userMessage)
+            DefaultExpectations.toEqual(self, expected)
             return
 
         if toleranceType == "absolute":
@@ -162,8 +142,7 @@ class NumericExpectations(DefaultExpectations):
         else:
             toleranceMessage = " within {} tolerance of {}".format(toleranceType, tolerance)       
 
-        message = self.buildMessage("to equal ", expected, userMessage,
-                                    toleranceMessage)
+        message = self.buildMessage("to equal ", expected, extra = toleranceMessage)
         if difference < tolerance:
             self.success(message)
         else:        

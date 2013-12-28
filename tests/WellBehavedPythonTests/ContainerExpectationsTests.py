@@ -49,9 +49,9 @@ class ContainerExpectationsTests(TestCase):
     def test_expect_x_to_be_in_y_prepends_usermessage_when_condition_fails(self):
         x = 602
         y = [601, 603, 605]
-        expect(lambda: expect(x).toBeIn(y, "user message")).toRaise(
+        expect(lambda: expect(x).withUserMessage("userMessage").toBeIn(y)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def expect_y_to_contain_x_passes_when_x_in_y(self):
         x = 602
@@ -179,9 +179,9 @@ class ContainerNotExpectationsTests(TestCase):
     def test_expect_not_x_to_be_in_y_prepends_usermessage_on_failure(self):
         x = 602
         y = [601, 602, 603]
-        expect(lambda: expect(x).Not.toBeIn(y, "user message")).toRaise(
+        expect(lambda: expect(x).withUserMessage("userMessage").Not.toBeIn(y)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expect_not_y_to_contain_x_passes_when_x_not_in_y(self):
         x = 602

@@ -37,7 +37,7 @@ class DefaultExpectations(BaseExpect):
 
         BaseExpect.__init__(self, actual, strategy, reverseExpecter)
 
-    def toEqual(self, expected, userMessage = None):
+    def toEqual(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is equal 
@@ -46,92 +46,63 @@ class DefaultExpectations(BaseExpect):
         Inputs
         ------
         expected : the value that the actual value is expected to equal
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : raised if self.actual does not equal expected.
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, userMessage);
+        message = self.buildMessage("to equal ", expected);
         if self.actual == expected:
             self.success(message)
         else:        
             self.fail(message)
 
-    def toBeTrue(self, userMessage = ""):
+    def toBeTrue(self):
         """Asserts that self.expected is something that evaluates true,
         that is True, a non-zero number or a non-empty collection.
 
-        Inputs
-        ------
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
-
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be True", None, userMessage)
+        message = self.buildMessage("to be True", None)
         if self.actual:
             self.success(message)
         else:
             self.fail(message)
 
-    def toBeFalse(self, userMessage = ""):
+    def toBeFalse(self):
         """Asserts that self.expected is something that evaulautes false,
         that is False, a zero number or an empty collection.
 
-        Inputs
-        ------
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
-
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be False", None, userMessage)
+        message = self.buildMessage("to be False", None)
         if self.actual:
             self.fail(message)
         else:
             self.success(message)
 
-    def toBeNone(self, userMessage = ""):
+    def toBeNone(self):
         """Indicates a success case if self.actual is None, and a failure otherwise        
-
-        Inputs
-        ------
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage("to be None", None, userMessage)
+        message = self.buildMessage("to be None", None)
         if self.actual is not None:
             self.fail(message)
         else:
             self.success(message)
 
-    def toBeIn(self, expectedContainer, userMessage = ""):
+    def toBeIn(self, expectedContainer):
         """Indicates a success case if self.actual is in expectedContainer, 
         and a failure otherwise        
 
@@ -139,49 +110,41 @@ class DefaultExpectations(BaseExpect):
         ------
         expectedContainer :      The container that is expected to contain
                                  self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to be in ", expectedContainer, userMessage)
+        message = self.buildMessage("to be in ", expectedContainer)
         if self.actual in expectedContainer:
             self.success(message)
         else:
             self.fail(message)
 
 
-    def toBeAnInstanceOf(self, klass, userMessage = ""):
+    def toBeAnInstanceOf(self, klass):
         """Indicates a success case if self.actual is an instance of klass,
         and a failure otherwise        
 
         Inputs
         ------
         klass     : The expected class/type of the actual item
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to be an instance of ", klass, userMessage,
-                                     " but was an instance of {}".format(
-                type(self.actual)))
+        extra = " but was an instance of {}".format(
+                type(self.actual))
+        message = self.buildMessage("to be an instance of ",
+                                    klass,                                    
+                                    extra = extra)
         if isinstance(self.actual, klass):
             self.success(message)
         else:
             self.fail(message)
 
-    def toRaise(self, exceptionClass, userMessage = "", expectedMessage = None, expectedMessageMatches = None):
+    def toRaise(self, exceptionClass, expectedMessage = None, expectedMessageMatches = None):
         from .Expect import Expect
         ex = None
 
@@ -191,7 +154,8 @@ class DefaultExpectations(BaseExpect):
             ex = _ex
 
         if ex is not None:
-            message = self.buildRaiseMessage(exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage)
+            message = self.buildRaiseMessage(exceptionClass, ex,
+                                             expectedMessage, expectedMessageMatches)
             if isinstance(ex, exceptionClass):
 
                 if expectedMessage != None and expectedMessage != ex.args[0]:
@@ -205,11 +169,11 @@ class DefaultExpectations(BaseExpect):
             
         else:    
             message = self.buildMessage("to raise an instance of ", exceptionClass,
-                                        userMessage, ", but none was")
+                                        extra = ", but none was")
             self.fail(message)
 
 
-    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches, userMessage):
+    def buildRaiseMessage(self, exceptionClass, ex, expectedMessage, expectedMessageMatches):
         """Builds the message that goes into expected exception assertion messages
 
         Inputs
@@ -219,8 +183,6 @@ class DefaultExpectations(BaseExpect):
         expectedMessage: the complete expected exception message
         expectedMessageMatches: a string or compiled regular expression
               which the exception message is expected to match
-        userMessage: message from the user to be prepended onto the
-            whole message.
 
         Returns
         -------
@@ -253,5 +215,5 @@ class DefaultExpectations(BaseExpect):
             extra = extra + " with message {}".format(self.formatForMessage(ex.args[0]))            
 
         message = self.buildMessage(operation, comparison, 
-                                        userMessage, extra)
+                                    extra = extra)
         return message

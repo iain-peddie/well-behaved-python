@@ -36,58 +36,61 @@ class DictionaryExpectations(DefaultExpectations):
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
     
-    def toEqual(self, expected, userMessage=""):        
+    def toEqual(self, expected):        
+        """Compares the actual value to the expected value
+
+        Asserts that the actual value stored in the object is equal 
+        to the expected value.
+
+        Inputs
+        ------
+        expected : the value that the actual value is expected to equal
+
+        Exceptions
+        ----------
+        AssertionError : raised if self.actual does not equal expected.
+"""
         if len(self.actual) == len(expected):
-            message = self.buildMessage("to equal ", expected, userMessage)
+            message = self.buildMessage("to equal ", expected)
             failCount = 0
             for key in self.actual.keys():
                 failCount += self._checkKey(key, expected, message)
             if failCount == 0:
                 self.success(message)
         else:
-            message = self.buildMessage("to be a dictionary containing ", len(expected), userMessage, " items")
+            message = self.buildMessage("to be a dictionary containing ", len(expected), extra = " items")
             self.fail(message)
 
-    def toContainKey(self, expected, userMessage = ""):
+    def toContainKey(self, expected):
         """Asserts that self.actual has expected as a key. 
 
         Inputs
         ------
         expected: The key that is expected to be contained within self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
 
-        message = self.buildMessage('to contain key ', expected, userMessage)
+        message = self.buildMessage('to contain key ', expected)
         if expected in self.actual:
             self.success(message)
         else:
             self.fail(message)
 
-    def toContainValue(self, expected, userMessage = ""):
+    def toContainValue(self, expected):
         """Asserts that self.actual has expected as a value against any key. 
 
         Inputs
         ------
         expected: The value that is expected to be contained within self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage('to contain value ', expected, userMessage)
+        message = self.buildMessage('to contain value ', expected)
         if expected in self.actual.values():
             self.success(message)
         else:
@@ -105,7 +108,7 @@ class DictionaryExpectations(DefaultExpectations):
                 # We use try/catch and a local fail clause so that
                 # if this is a expect.Not... then we have the correct
                 # strategy logic
-                WellBehavedPython.api.expect(self.actual[key]).toEqual(expected[key], message)
+                WellBehavedPython.api.expect(self.actual[key]).withUserMessage(message).toEqual(expected[key])
             except AssertionError as ex:
                 self.fail(ex.args[0])
                 return 1

@@ -104,16 +104,17 @@ The simplest asserts expect things to be true or false:
 These assertions lead to messages of 'Expected False to be True', or
 'Expected True to be False'.
 
-Each assertion method takes an optional parameter called userMessage
-which can be used to improve the messages, and identify particular
-expectations which have failed to be matched:
+Each assertion object has an optional method withUserMessage, which returns
+self. This allows an optional  user specified message to be specified, and
+chained in. This is particularly useful for improving output messages when more than
+one physical expectation is in the test:
 
 ~~~~~ python 
 
     def test_add_user_message(self):
         # We can add user messages to expect calls, to identify
         # what has gone wrong more clearly
-        expect(True).toBeTrue("A literal True value should be true...")
+        expect(True).withUserMessage("A literal True value should be true...").toBeTrue()
         # Failure message would be:
         # "A literal True values should be true: Expected True to be True"
 ~~~~~
@@ -201,8 +202,13 @@ class DemoTests(TestCase):
 
 ~~~~~
 
-These methods will pass if an exception of the expected type is thrown,
-and fail otherwise. But sometimes the code could thrown the expected exception in more than one place, or we need to check the message being generated as well as the exception. In that case we can use either the optional expectedMessage argument (for explicit matching of full strings) or the expectedMessageMatches (which checks that the message matches the given regular expression):
+These methods will pass if an exception of the expected type is
+thrown, and fail otherwise. But sometimes the code could have thrown the
+expected exception in more than one place, or we need to check the
+message being generated as well as the exception. In that case we can
+use either the optional expectedMessage argument (for explicit
+matching of full strings) or the expectedMessageMatches (which checks
+that the message matches the given regular expression):
 
 ~~~~~ python
 

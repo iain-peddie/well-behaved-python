@@ -80,7 +80,7 @@ Difference is:
 
     def test_string_starts_with_prepends_userMessage_on_failure(self):
         data = 'asdf'
-        expect(lambda: expect(data).toEndWith('eeeasdf', 'userMessage')).toRaise(
+        expect(lambda: expect(data).withUserMessage('userMessage').toEndWith('eeeasdf')).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -108,7 +108,7 @@ Difference is:
 
     def test_string_contains_prepends_userMessage(self):
         actual = 'asdf'
-        expect(lambda: expect(actual).toContain('zzz', 'userMessage')).toRaise(
+        expect(lambda: expect(actual).withUserMessage('userMessage').toContain('zzz')).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
 
@@ -124,7 +124,7 @@ Difference is:
 + world""")
 
     def test_string_equals_prepends_userMessage_on_failure(self):
-        expect(lambda: expect('hello').toEqual('world', 'userMessage')).toRaise(
+        expect(lambda: expect('hello').withUserMessage('userMessage').toEqual('world')).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
@@ -166,7 +166,7 @@ Difference is:
     def test_expect_string_to_match_prepends_userMessage_on_failure(self):
         actual = 'asdf'
         pattern = re.compile('^[^asdf]+$')
-        expect(lambda: expect(actual).toMatch(pattern, 'userMessage')).toRaise(
+        expect(lambda: expect(actual).withUserMessage('userMessage').toMatch(pattern)).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')                    
 
@@ -239,7 +239,7 @@ class StringNotExpectationsTests(TestCase):
 
     def test_string_not_contains_prepends_userMessage(self):
         actual = 'asdf'
-        expect(lambda: expect(actual).Not.toContain('sd', 'userMessage')).toRaise(
+        expect(lambda: expect(actual).withUserMessage('userMessage').Not.toContain('sd')).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
 
@@ -262,7 +262,7 @@ class StringNotExpectationsTests(TestCase):
 
     def test_string_not_equals_prepends_userMessage_on_failure(self):
         actual = 'asdf'
-        expect(lambda: expect(actual).Not.toEqual('asdf', 'userMessage')).toRaise(
+        expect(lambda: expect(actual).withUserMessage('userMessage').Not.toEqual('asdf')).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
 
@@ -293,7 +293,7 @@ class StringNotExpectationsTests(TestCase):
     def test_string_not_matches_prepends_userMessage_on_failure(self):
         actual = 'asdf'
         pattern = 'asdf'
-        expect(lambda: expect(actual).Not.toMatch(pattern, 'userMessage')).toRaise(
+        expect(lambda: expect(actual).withUserMessage('userMessage').Not.toMatch(pattern)).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
 

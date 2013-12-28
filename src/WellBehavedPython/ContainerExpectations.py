@@ -53,7 +53,7 @@ class ContainerExpectations(DefaultExpectations):
 """
         self._compareTypes(expected)
         if len(self.actual) == len(expected):
-            message = self.buildMessage("to equal ", expected, self.userMessage)
+            message = self.buildMessage("to equal ", expected)
             for i in range(0, len(self.actual)):
                 if self.actual[i] != expected[i]:
                     message = message + "\nFirst difference at index {}: {} != {}".format(
@@ -64,7 +64,7 @@ class ContainerExpectations(DefaultExpectations):
 
             self.success(message)
         else:        
-            message = self.buildMessage("to be a container of length ", len(expected), self.userMessage);
+            message = self.buildMessage("to be a container of length ", len(expected));
             self.fail(message)
 
 
@@ -80,7 +80,7 @@ class ContainerExpectations(DefaultExpectations):
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage("to contain ", expectedContainee, self.userMessage)
+        message = self.buildMessage("to contain ", expectedContainee)
         if expectedContainee in self.actual:
             self.success(message)
         else:
@@ -100,7 +100,7 @@ class ContainerExpectations(DefaultExpectations):
         expectedSet = self._setFromObject(expected)
         actualSet = self._setFromObject(self.actual);
 
-        message = self.buildMessage("to be a superset of ", expected, self.userMessage)
+        message = self.buildMessage("to be a superset of ", expected)
 
         if actualSet.issuperset(expectedSet):
             self.success(message)
@@ -121,7 +121,7 @@ class ContainerExpectations(DefaultExpectations):
         expectedSet = self._setFromObject(expected)
         actualSet = self._setFromObject(self.actual);
 
-        message = self.buildMessage("to be a subset of ", expected, self.userMessage)
+        message = self.buildMessage("to be a subset of ", expected)
 
         if actualSet.issubset(expectedSet):
             self.success(message)

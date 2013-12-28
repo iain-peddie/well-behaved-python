@@ -24,7 +24,7 @@ import re
 
 class StringExpectations(DefaultExpectations):
     
-    def toEqual(self, expected, userMessage = ''):
+    def toEqual(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is equal 
@@ -33,11 +33,6 @@ class StringExpectations(DefaultExpectations):
         Inputs
         ------
         expected : the value that the actual value is expected to equal
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -46,14 +41,14 @@ class StringExpectations(DefaultExpectations):
                          message
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, userMessage)
+        message = self.buildMessage("to equal ", expected)
         if self.actual == expected:
             self.success(message)
         else:
             message = self._diffStrings(self.actual, expected, message)
             self.fail(message)
 
-    def toStartWith(self, expectedStart, userMessage = ''):
+    def toStartWith(self, expectedStart):
         """Compares the actual value to the expected value
 
         Asserts that the text of the string starts with the
@@ -63,18 +58,13 @@ class StringExpectations(DefaultExpectations):
         ------
         expectedStart : the value that the actual text is expected
                         to start with
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string starting with ", expectedStart, userMessage)
+        message = self.buildMessage("to be a string starting with ", expectedStart)
         if len(expectedStart) > len(self.actual):
             message += ", but it was too short"
             self.fail(message)
@@ -86,7 +76,7 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expectedStart, message)
             self.fail(message)
 
-    def toEndWith(self, expectedEnd, userMessage = ''):
+    def toEndWith(self, expectedEnd):
         """Compares the actual value to the expected value
 
         Asserts that the text of the string ends with the
@@ -96,18 +86,13 @@ class StringExpectations(DefaultExpectations):
         ------
         expectedEnd : the value that the actual text is expected
                       to end with
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string ending with ", expectedEnd, userMessage)
+        message = self.buildMessage("to be a string ending with ", expectedEnd, self.userMessage)
         if len(expectedEnd) > len(self.actual):
             message += ", but it was too short"
             self.fail(message)
@@ -118,7 +103,7 @@ class StringExpectations(DefaultExpectations):
             message = self._diffStrings(self.actual, expectedEnd, message)
             self.fail(message)
     
-    def toContain(self, expectedContents, userMessage = ''):
+    def toContain(self, expectedContents):
         """Compares the actual text to the expected contents
 
         Asserts that the text of the string containsh the
@@ -128,25 +113,20 @@ class StringExpectations(DefaultExpectations):
         ------
         expectedConetnts : the value that the actual text is expected
                            to contain
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : raised if self.actual does not equal expected.
 """
 
-        message = self.buildMessage("to be a string containing ", expectedContents, userMessage)
+        message = self.buildMessage("to be a string containing ", expectedContents)
         if self.actual.find(expectedContents) > -1:
             self.success(message)
         else:        
             self.fail(message)
 
 
-    def toMatch(self, pattern, userMessage = ''):
+    def toMatch(self, pattern):
         """Compares the actual value to the pattern
 
         Asserts that the actual value matches the given regular expression
@@ -156,11 +136,6 @@ class StringExpectations(DefaultExpectations):
         ------
         pattern: The string or compiled regular expression pattern that the
                  actual value is epxected to match
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -169,7 +144,7 @@ class StringExpectations(DefaultExpectations):
         if type(pattern) == str:
             pattern = re.compile(pattern)
         message = self.buildMessage("to be a string matching regular expression pattern ",
-                                    pattern.pattern, userMessage)
+                                    pattern.pattern)
 
         if pattern.search(self.actual):
             self.success(message)

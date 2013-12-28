@@ -44,7 +44,7 @@ class DictionaryExpectationsTests(TestCase):
                    
     def test_dictionary_contains_key_prepends_userMessage(self):
         data = {'a': 1}
-        expect(lambda: expect(data).toContainKey("b", "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").toContainKey("b")).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -65,7 +65,7 @@ class DictionaryExpectationsTests(TestCase):
 
     def test_dictionary_contains_value_prepends_userMessage(self):
         data = {'a': 1}
-        expect(lambda: expect(data).toContainValue(2, "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").toContainValue(2)).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -93,13 +93,13 @@ class DictionaryExpectationsTests(TestCase):
 
     def test_dictionary_equal_prepends_userMessage_to_allMessageTypes(self):
         data = {'a': 1}
-        expect(lambda: expect(data).toEqual({}, "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").toEqual({})).toRaise(
             AssertionError,
             expectedMessageMatches= "^userMessage")
-        expect(lambda: expect(data).toEqual({'b': 1}, "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").toEqual({'b': 1})).toRaise(
             AssertionError,
             expectedMessageMatches= "^userMessage")
-        expect(lambda: expect(data).toEqual({'a': 2}, "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").toEqual({'a': 2})).toRaise(
             AssertionError,
             expectedMessageMatches= "^userMessage")
 
@@ -119,7 +119,7 @@ class DictionaryNotExpectationsTests(TestCase):
 
     def test_dictionary_not_contains_key_prepends_userMessage(self):
         data = { 'a' : 1 }
-        expect(lambda: expect(data).Not.toContainKey("a", "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").Not.toContainKey("a")).toRaise(
             AssertionError,
             expectedMessageMatches= "^userMessage: ")
 
@@ -135,7 +135,7 @@ class DictionaryNotExpectationsTests(TestCase):
 
     def test_dictionary_not_contains_value_fails_when_value_in_dictionary(self):
         data = { 'a': 1 }
-        expect(lambda: expect(data).Not.toContainValue(1, "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").Not.toContainValue(1)).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
@@ -159,7 +159,7 @@ class DictionaryNotExpectationsTests(TestCase):
 
     def test_dictionary_not_equal_prepends_userMessage_on_failure(self):
         data = {'a': 1}
-        expect(lambda: expect(data).Not.toEqual({'a': 1}, "userMessage")).toRaise(
+        expect(lambda: expect(data).withUserMessage("userMessage").Not.toEqual({'a': 1})).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 

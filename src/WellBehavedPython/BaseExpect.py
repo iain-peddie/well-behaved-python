@@ -111,7 +111,7 @@ class BaseExpect:
             self.Not.withUserMessage(userMessage)
         return self
 
-    def buildMessage(self, operation, expected, userMessage, extra = ""):
+    def buildMessage(self, operation, expected, userMessage = None, extra = ""):
         """Builds the message that goes into assertion messages
 
         Inputs
@@ -130,6 +130,8 @@ class BaseExpect:
         is raised.
 """
 
+        assert userMessage is None, "userMessage is being removed: {}".format(userMessage)
+
         operation = self.strategy.decorateOperation(operation)
            
         formattedActual = self.formatForMessage(self.actual)
@@ -138,8 +140,8 @@ class BaseExpect:
         else:
             formattedExpected = ""
 
-        if userMessage and len(userMessage) > 0:
-            prepend = userMessage + ": "
+        if self.userMessage and len(self.userMessage) > 0:
+            prepend = self.userMessage + ": "
         else:
             prepend = ""
 

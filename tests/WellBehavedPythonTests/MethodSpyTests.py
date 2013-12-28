@@ -61,7 +61,8 @@ class MethodSpyTests(TestCase):
         spy()
 
         # Then
-        expect(spy.hasBeenCalled()).toBeTrue("Called spy should claim to have been called")
+        expect(spy.hasBeenCalled()).withUserMessage(
+            "Called spy should claim to have been called").toBeTrue()
 
     def test_that_spy_called_once_getNumberOfCalls_returns_1(self):
         # Where
@@ -71,7 +72,7 @@ class MethodSpyTests(TestCase):
         spy()
 
         # Then
-        expect(spy.getNumberOfCalls()).toEqual(1, "Number of calls")
+        expect(spy.getNumberOfCalls()).withUserMessage("Number of calls").toEqual(1)
         
     def test_that_spy_called_twice_getNumberOfCalls_returns_2(self):
         # Where
@@ -82,7 +83,7 @@ class MethodSpyTests(TestCase):
         spy()
 
         # Then
-        expect(spy.getNumberOfCalls()).toEqual(2, "Number of calls")
+        expect(spy.getNumberOfCalls()).withUserMessage("Number of calls").toEqual(2)
 
     def test_that_spy_description_is_based_on_methodName(self):
         # Where

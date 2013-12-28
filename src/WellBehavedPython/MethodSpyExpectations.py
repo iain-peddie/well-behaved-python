@@ -73,7 +73,7 @@ class MethodSpyExpectations(DefaultExpectations):
         """Performs the specific logic of the expectation that a method has been called.
         """
         
-        message = self.buildMessage("to have been called", None, self.userMessage)
+        message = self.buildMessage("to have been called", None)
         if self.spy.hasBeenCalled():
             self.success(message)
         else:
@@ -136,7 +136,7 @@ class MethodSpyExpectations(DefaultExpectations):
         baseMessage = "to have been called {} {}".format(comparisonWord, 
                                                          self._numberTimesString(expectedTimes))
         extra = self._buildCalledTimesSubmessage()
-        return self.buildMessage(baseMessage, None, self.userMessage, extra)
+        return self.buildMessage(baseMessage, None, extra = extra)
 
     def _buildCalledTimesSubmessage(self):
         actualTimes = self.spy.getNumberOfCalls()

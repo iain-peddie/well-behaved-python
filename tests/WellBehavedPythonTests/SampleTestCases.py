@@ -74,8 +74,6 @@ class TestCaseWithTwoPassingTests(TestCase):
     def test_another_example(self):
         print("test_another_example")
 
-
-
 class TestCaseWithBeforeAndAfterClass(TestCase):
 
     beforeClassCalled = False
@@ -98,8 +96,8 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
         testCase.afterClassCalled = False
 
     def test_statics(self):
-        expect(self.beforeClassCalled).toBeTrue("beforeClass was not called")
-        expect(self.afterClassCalled).toBeFalse("afterClass was called before test")
+        expect(self.beforeClassCalled).withUserMessage("beforeClass was not called").toBeTrue()
+        expect(self.afterClassCalled).withUserMessage("afterClass was called before test").toBeFalse()
 
 class TestCaseWithBeforeClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
