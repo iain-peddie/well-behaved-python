@@ -117,7 +117,7 @@ class NumericExpectations(DefaultExpectations):
         else:
             self.fail(message)
         
-    def toEqual(self, expected, userMessage = "", tolerance = 1e-8, toleranceType = ""):
+    def toEqual(self, expected, tolerance = 1e-8, toleranceType = ""):
         self._compareTypes(expected)
 
         FLOOR_TOLERANCE = 1e-20
@@ -126,7 +126,7 @@ class NumericExpectations(DefaultExpectations):
             abs(expected)
             abs(self.actual)
         except:
-            DefaultExpectations.toEqual(self, expected, userMessage)
+            DefaultExpectations.toEqual(self, expected, self.userMessage)
             return
 
         if toleranceType == "absolute":
@@ -142,7 +142,7 @@ class NumericExpectations(DefaultExpectations):
         else:
             toleranceMessage = " within {} tolerance of {}".format(toleranceType, tolerance)       
 
-        message = self.buildMessage("to equal ", expected, userMessage,
+        message = self.buildMessage("to equal ", expected, self.userMessage,
                                     toleranceMessage)
         if difference < tolerance:
             self.success(message)

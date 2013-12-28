@@ -108,7 +108,7 @@ class DictionaryExpectations(DefaultExpectations):
                 # We use try/catch and a local fail clause so that
                 # if this is a expect.Not... then we have the correct
                 # strategy logic
-                WellBehavedPython.api.expect(self.actual[key]).toEqual(expected[key], message)
+                WellBehavedPython.api.expect(self.actual[key]).withUserMessage(message).toEqual(expected[key])
             except AssertionError as ex:
                 self.fail(ex.args[0])
                 return 1

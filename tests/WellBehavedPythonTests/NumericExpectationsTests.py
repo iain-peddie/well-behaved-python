@@ -48,7 +48,7 @@ class NumericExpectationsTests(TestCase):
             expectedMessage = "Expected 1 to equal 2.0 within relative tolerance of 1e-08")
 
     def test_equals_message_prepended_to_assert_message(self):
-        expect(lambda: expect(1).toEqual(2, "user message")).toRaise(
+        expect(lambda: expect(1).withUserMessage("user message").toEqual(2)).toRaise(
                 AssertionError,
                 expectedMessageMatches = "^user message")
 
