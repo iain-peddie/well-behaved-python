@@ -55,7 +55,7 @@ class NumericExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toBeGreaterThanOrEqualTo(self, expected, userMessage = ""):
+    def toBeGreaterThanOrEqualTo(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is greater than
@@ -65,17 +65,12 @@ class NumericExpectations(DefaultExpectations):
         ------
         expected : The value that the actual value is expected to be greater than
                    or equal to.
-        userMessage (optional) : A message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by sucess or fail.
 """
-        message = self.buildMessage("to be greater than or equal to ", expected, userMessage);
+        message = self.buildMessage("to be greater than or equal to ", expected, self.userMessage);
         if self.actual >= expected:
             self.success(message)
         else:

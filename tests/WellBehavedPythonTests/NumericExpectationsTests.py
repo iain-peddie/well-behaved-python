@@ -93,9 +93,9 @@ class NumericExpectationsTests(TestCase):
 
     def test_expect_greater_than_or_equal_to_prepends_userMessage_to_message(self):
         expect(lambda:
-                   expect(1).toBeGreaterThanOrEqualTo(2, "user message")).toRaise(
+                   expect(1).withUserMessage("userMessage").toBeGreaterThanOrEqualTo(2)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expect_0_less_than_1_passes(self):
         expect(0).toBeLessThan(1)    
@@ -209,9 +209,9 @@ class NumericNotExpectationsTests(TestCase):
 
     def test_expect_not_greater_than_or_equal_prepends_userMessae_to_message(self):
         expect(lambda:
-                   expect(1).Not.toBeGreaterThanOrEqualTo(1, "user message")).toRaise(
+                   expect(1).withUserMessage("userMessage").Not.toBeGreaterThanOrEqualTo(1)).toRaise(
             AssertionError,
-            expectedMessageMatches = "^user message")
+            expectedMessageMatches = "^userMessage")
 
     def test_expect_1_not_less_than_1_passes(self):
         expect(1).Not.toBeLessThan(1)
