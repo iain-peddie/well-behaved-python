@@ -272,4 +272,25 @@ class MethodSpyTests(TestCase):
         expect(value).withUserMessage("Spy should return the configured return value of {}".format(
                 returnValue)).Not.toBeNone()
         expect(value).toEqual(returnValue)
+
+    def test_that_spy_can_be_configured_to_raise_a_given_exception(self):
+        # Where
+        spy = self.spy
+        spy.andRaise(KeyError)
+
+        #
+        expect(lambda: spy()).withUserMessage('spy configured as saboteur should raise the given exception class').toRaise(KeyError)
+
+    def test_that_when_exceptions_and_return_values_combined_exceptions_win(self):
+        # Where
+        spy = self.spy
+        anotherSpy = MethodSpy()
+
+        spy.andReturn(2).andRaise(KeyError)
+        anotherSpy.andRaise(KeyError).andReturn(3)
+        
+        # Then
+        expect(spy).toRaise(KeyError)
+        expect(anotherSpy).toRaise(KeyError)
+
         
