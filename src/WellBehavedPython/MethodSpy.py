@@ -69,8 +69,9 @@ class MethodSpy:
         returnValue: the value to return when the spy is called."""        
 
         self.returnValue = returnValue
+        return self
 
-    def andThrow(self, exceptionClass):
+    def andRaise(self, exceptionClass):
         """Sets an exception class to throw an instance of when called.
 
         Inputs
@@ -78,6 +79,7 @@ class MethodSpy:
         exceptionClass : the class to instantiate. It is expected that this can be called with
                          a string argument."""
         self.exceptionClass = exceptionClass
+        return self
 
     def getDescription(self):
         """Gets a description of this method spy.
