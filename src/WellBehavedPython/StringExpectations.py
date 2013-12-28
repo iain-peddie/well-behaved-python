@@ -24,7 +24,7 @@ import re
 
 class StringExpectations(DefaultExpectations):
     
-    def toEqual(self, expected, userMessage = ''):
+    def toEqual(self, expected):
         """Compares the actual value to the expected value
 
         Asserts that the actual value stored in the object is equal 
@@ -33,11 +33,6 @@ class StringExpectations(DefaultExpectations):
         Inputs
         ------
         expected : the value that the actual value is expected to equal
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
@@ -46,7 +41,7 @@ class StringExpectations(DefaultExpectations):
                          message
 """
         self._compareTypes(expected)
-        message = self.buildMessage("to equal ", expected, userMessage)
+        message = self.buildMessage("to equal ", expected, self.userMessage)
         if self.actual == expected:
             self.success(message)
         else:

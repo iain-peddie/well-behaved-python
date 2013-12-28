@@ -124,7 +124,7 @@ Difference is:
 + world""")
 
     def test_string_equals_prepends_userMessage_on_failure(self):
-        expect(lambda: expect('hello').toEqual('world', 'userMessage')).toRaise(
+        expect(lambda: expect('hello').withUserMessage('userMessage').toEqual('world')).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
@@ -262,7 +262,7 @@ class StringNotExpectationsTests(TestCase):
 
     def test_string_not_equals_prepends_userMessage_on_failure(self):
         actual = 'asdf'
-        expect(lambda: expect(actual).Not.toEqual('asdf', 'userMessage')).toRaise(
+        expect(lambda: expect(actual).withUserMessage('userMessage').Not.toEqual('asdf')).toRaise(
             AssertionError,
             expectedMessageMatches = '^userMessage')
 
