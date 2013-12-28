@@ -272,4 +272,12 @@ class MethodSpyTests(TestCase):
         expect(value).withUserMessage("Spy should return the configured return value of {}".format(
                 returnValue)).Not.toBeNone()
         expect(value).toEqual(returnValue)
+
+    def test_that_spy_can_be_configured_to_throw_a_given_exception(self):
+        # Where
+        spy = self.spy
+        spy.andThrow(KeyError)
+
+        #
+        expect(lambda: spy()).withUserMessage('spy configured as saboteur should raise the given exception class').toRaise(KeyError)
         
