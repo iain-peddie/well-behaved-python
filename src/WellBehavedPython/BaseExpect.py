@@ -50,6 +50,7 @@ class BaseExpect:
         self.actual = actual
         self.strategy = strategy
         self.Not = reverseExpecter
+        self.userMessage = None
 
     def fail(self, message = ""):
         """Indicate a test condition has failed.
@@ -97,6 +98,18 @@ class BaseExpect:
         if match:
             formatted =  "".join(match.groups([1,2]))
         return formatted
+
+    def withUserMessage(self, userMessage):
+        """Sets an extra message to be put into the failure message
+
+        Inputs
+        -----
+        userMessage : The extra sub-message to put into the expectation failure message."""
+
+        self.userMessage = userMessage
+        if self.Not is not None:
+            self.Not.withUserMessage(userMessage)
+        return self
 
     def buildMessage(self, operation, expected, userMessage, extra = ""):
         """Builds the message that goes into assertion messages

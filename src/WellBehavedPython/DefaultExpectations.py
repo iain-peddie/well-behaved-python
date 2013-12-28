@@ -21,8 +21,6 @@ import re
 
 from .BaseExpect import BaseExpect
 
-
-
 class DefaultExpectations(BaseExpect):
     
     def __init__(self, actual, strategy, reverseExpecter = None):

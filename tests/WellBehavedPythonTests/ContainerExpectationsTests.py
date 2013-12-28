@@ -96,7 +96,7 @@ class ContainerExpectationsTests(TestCase):
         expect([0, 0]).toBeASupersetOf([0])
 
     def test_toBeASuperset_prepends_userMessage(self):
-        expect(lambda: expect([0]).toBeASupersetOf(1, "userMessage")).toRaise(
+        expect(lambda: expect([0]).withUserMessage("userMessage").toBeASupersetOf(1)).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage: ")
 
@@ -140,13 +140,13 @@ First difference at index 0: 0 != 1""")
 
     def test_expect_container_equals_prepends_user_message_when_containers_equal_length(self):
         expect(lambda:
-                   expect([0]).toEqual([1], "userMessage")).toRaise(
+                   expect([0]).withUserMessage("userMessage").toEqual([1])).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
     def test_expect_container_equals_prepends_user_message_when_containers_unequal_length(self):
         expect(lambda:
-                   expect([0]).toEqual([], "userMessage")).toRaise(
+                   expect([0]).withUserMessage("userMessage").toEqual([])).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
@@ -219,7 +219,7 @@ class ContainerNotExpectationsTests(TestCase):
         expect([0]).Not.toBeASupersetOf(1)
 
     def test_toBeASuperset_prepends_userMessage(self):
-        expect(lambda: expect([0, 1]).Not.toBeASupersetOf([0], "userMessage")).toRaise(
+        expect(lambda: expect([0, 1]).withUserMessage("userMessage").Not.toBeASupersetOf([0])).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage: ")
 
