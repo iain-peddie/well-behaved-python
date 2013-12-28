@@ -29,8 +29,23 @@ class MethodSpyTests(TestCase):
     def __init__(self, testFunctionName):
         TestCase.__init__(self, testFunctionName)
 
+    def targetMethod(self):
+        """Method with a manual spy.
+
+        This method is used for testing of andCallThrough."""
+        self.targetMethodCalled = True
+
+    def targetMethodWithPositionalArgs(self, a):
+        self.targetMethodCalled = True
+        self.targetArgs = a
+
+    def targetMethodWithKeywordArgs(self, first=None):
+        self.targetMethodCalled = True
+        self.targetArgs = first
+
     def before(self):
-        self.spy = MethodSpy()
+        self.spy = MethodSpy("anonymous", self.targetMethod)
+        self.targetMethodCalled = False
 
     def test_setup(self):
         pass
@@ -293,4 +308,78 @@ class MethodSpyTests(TestCase):
         expect(spy).toRaise(KeyError)
         expect(anotherSpy).toRaise(KeyError)
 
+    def test_that_targetMethod_sets_called_flag(self):
+        # Where
+        valueBefore = self.targetMethodCalled
+
+        # When
+        self.targetMethod()
+        valueAfter = self.targetMethodCalled
+
+        # Then
+        expect(valueBefore).withUserMessage('called flag should be false by default').toBeFalse()
+        expect(valueAfter).withUserMessage('called flag should be true after call').toBeTrue()
+
+    def test_that_targetMethodWithPoisitionalArgs_sets_called_flag(self):
+        # Where
+        valueBefore = self.targetMethodCalled
+
+        # When
+        self.targetMethodWithPositionalArgs(1)
+        valueAfter = self.targetMethodCalled
+
+        # Then
+        expect(valueBefore).withUserMessage('called flag should be false by default').toBeFalse()
+        expect(valueAfter).withUserMessage('called flag should be true after call').toBeTrue()
+        expect(self.targetArgs).toEqual(1)
+
+    def test_that_targetMethodWithKeywordArgs_sets_called_flag(self):
+        # Where
+        valueBefore = self.targetMethodCalled
+
+        # When
+        self.targetMethodWithKeywordArgs(first='the worst')
+        valueAfter = self.targetMethodCalled
+
+        # Then
+        expect(valueBefore).withUserMessage('called flag should be false by default').toBeFalse()
+        expect(valueAfter).withUserMessage('called flag should be true after call').toBeTrue()
+        expect(self.targetArgs).toEqual('the worst')
+        
+
+    def test_that_spy_with_call_through_set_calls_original_method(self):
+        # Where
+        spy = self.spy
+        spy.andCallThrough()
+
+        # When
+        spy()
+
+        # Then
+        expect(self.targetMethodCalled).toBeTrue()
+
+    def test_that_spy_with_call_through_set_passes_positional_args_to_original_method(self):
+        # Where
+        spy = MethodSpy("targetMethodWithPositionalArgs", self.targetMethodWithPositionalArgs)
+        spy.andCallThrough()
+
+        # When
+        spy(1)
+
+        # Then
+        expect(self.targetMethodCalled).toBeTrue()
+        expect(self.targetArgs).toEqual(1)
+
+    def test_that_spy_with_call_through_set_passes_keyword_args_to_original_method(self):
+        # Where
+        spy = MethodSpy('targetMethodWithKeywordArgs', self.targetMethodWithKeywordArgs)
+        spy.andCallThrough()
+
+        # When
+        spy(first = 'the worst')
+       
+        # Then
+        expect(self.targetMethodCalled).toBeTrue()
+        expect(self.targetArgs).toEqual('the worst')
+ 
         
