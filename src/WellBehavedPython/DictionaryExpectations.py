@@ -79,23 +79,18 @@ class DictionaryExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toContainValue(self, expected, userMessage = ""):
+    def toContainValue(self, expected):
         """Asserts that self.actual has expected as a value against any key. 
 
         Inputs
         ------
         expected: The value that is expected to be contained within self.actual
-        userMessage (optional) : a message that is prepended to the assertion
-                                 error message if the condition fails. This
-                                 allows users to get a quicker identification
-                                 of the line in a test which is failing if more
-                                 than one value is being tested for equality.
 
         Exceptions
         ----------
         AssertionError : may be raised by success or fail
 """
-        message = self.buildMessage('to contain value ', expected, userMessage)
+        message = self.buildMessage('to contain value ', expected, self.userMessage)
         if expected in self.actual.values():
             self.success(message)
         else:
