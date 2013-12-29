@@ -34,6 +34,7 @@ class MethodSpyTests(TestCase):
 
         This method is used for testing of andCallThrough."""
         self.targetMethodCalled = True
+        return 'targetMethodReturnValue'
 
     def targetMethodWithPositionalArgs(self, a):
         self.targetMethodCalled = True
@@ -42,6 +43,9 @@ class MethodSpyTests(TestCase):
     def targetMethodWithKeywordArgs(self, first=None):
         self.targetMethodCalled = True
         self.targetArgs = first
+
+    def targetMethodWhichRaisesException(self):
+        raise KeyError('raised by target method')
 
     def before(self):
         self.spy = MethodSpy("anonymous", self.targetMethod)
@@ -382,4 +386,25 @@ class MethodSpyTests(TestCase):
         expect(self.targetMethodCalled).toBeTrue()
         expect(self.targetArgs).toEqual('the worst')
  
+    def test_that_spy_with_call_through_set_returns_method_value(self):
+        # Where
+        spy = self.spy
+        spy.andCallThrough()
+
+        # When
+        value = spy()
+
+        # Then
+        expectedValue = self.targetMethod()
+        expect(value).Not.toBeNone()
+        expect(value).toEqual(expectedValue)
+
+    def test_that_call_through_exception_bubbles_to_test(self):
+        # Where
+        spy = MethodSpy('targetMethodWhichRaisesException', self.targetMethodWhichRaisesException)
+        spy.andCallThrough()
+
+        # Then
+        expect(spy).toRaise(KeyError, expectedMessageMatches = 'raised by target method')
+
         
