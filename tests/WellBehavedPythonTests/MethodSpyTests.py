@@ -51,9 +51,6 @@ class MethodSpyTests(TestCase):
         self.spy = MethodSpy("anonymous", self.targetMethod)
         self.targetMethodCalled = False
 
-    def test_setup(self):
-        pass
-
     def test_that_uncalled_spy_hasBeenCalled_returns_False(self):
         # Where
         spy = self.spy
@@ -407,4 +404,27 @@ class MethodSpyTests(TestCase):
         # Then
         expect(spy).toRaise(KeyError, expectedMessageMatches = 'raised by target method')
 
-        
+    def test_that_return_value_beats_call_through_return_value(self):
+        # Where
+        overridenReturnValue = 'overriden return value'
+        spy1 = MethodSpy('targetMethod', self.targetMethod)
+        spy1.andCallThrough().andReturn(overridenReturnValue)
+
+        spy2 = MethodSpy('targetMethod', self.targetMethod)
+        spy2.andReturn(overridenReturnValue)
+
+        # When
+        actualValue1 = spy1()
+        actualValue2 = spy2()
+
+        # Then
+        expect(actualValue1).toEqual(overridenReturnValue)
+        expect(actualValue2).toEqual(overridenReturnValue)
+
+    def test_that_call_through_exception_beats_andRaise_exception(self):
+        # Where
+        spy = MethodSpy('targetMethodWhichRaisesException', self.targetMethodWhichRaisesException)
+        spy.andCallThrough().andRaise(IOError)
+
+        # Then
+        expect(spy).toRaise(KeyError)        
