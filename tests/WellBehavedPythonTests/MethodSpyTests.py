@@ -428,3 +428,23 @@ class MethodSpyTests(TestCase):
 
         # Then
         expect(spy).toRaise(KeyError)        
+
+    def test_that_spy_andCall_calls_method_provided(self):
+        # Where
+        self.lambdaCalled = False
+        expectedReturnValue = 'inner method'
+
+        def innerMethod():
+            self.lambdaCalled = True
+            return expectedReturnValue
+
+        spy = self.spy
+        spy.andCall(innerMethod)
+
+        
+        # When
+        actualReturnValue = spy()
+
+        # Then
+        expect(self.lambdaCalled).toBeTrue()
+        expect(actualReturnValue).toEqual(expectedReturnValue)

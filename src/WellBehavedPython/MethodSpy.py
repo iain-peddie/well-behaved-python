@@ -88,6 +88,17 @@ class MethodSpy:
         self.callThrough = True
         return self
 
+    def andCall(self, replacementMethod):
+        """Replaces the target method, and sets the call through flag.
+        
+        Inputs
+        ------
+        replacementMethod: An item which is callable, and is called when this method spy is."""
+
+        self.methodObject = replacementMethod
+        self.callThrough = True
+        return self
+
     def getDescription(self):
         """Gets a description of this method spy.
 
