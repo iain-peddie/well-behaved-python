@@ -31,7 +31,7 @@ class ExpectationsFactoryTests(TestCase):
         factory = ExpectationsFactory(lambda klass: False, None)
 
         # When
-        result = factory.shouldCreateFor(int)
+        result = factory.shouldCreateFor(1)
 
         # Then
         expect(result).toBeFalse()
@@ -41,7 +41,7 @@ class ExpectationsFactoryTests(TestCase):
         factory = ExpectationsFactory(lambda klass: True, None)
 
         # When
-        result = factory.shouldCreateFor(int)
+        result = factory.shouldCreateFor(1)
 
         # Then
         expect(result).toBeTrue()
