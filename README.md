@@ -530,3 +530,138 @@ When these assertions fail, it leads to messages that look like:
 "Expected 'asdf' to be a string matching regular expression pattern '[a-z]+0'"
 ~~~~~
 
+Checking if and how class methods have been called
+--------------------------------------------------
+
+We pass a method to be spied on to the spyOn method to create a method spy:
+
+~~~~~ python
+object = SomeClass()
+spyOn(object.method)
+~~~~~
+
+This replaces object.method with a method which accepts the same calling signature,
+and records the arguments each time the method was called.
+
+We can then expect object.method to have been called. First, we set up some
+sample methods:
+
+~~~~~ python
+class DemoTests:
+    # ...
+
+    def targetMethod(self):
+        self.wasCalled = True
+
+    def targetMethodWithParameters(self, a, b, c='c', d='d'):
+        self.wasCalled = True
+~~~~~
+
+Then we can create tests which spy on these methods. We can expect the methods
+to have been called at all, an exact number of times, at least N times or at
+most N times.
+
+~~~~~ python
+    def test_that_can_create_a_method_spy(self):
+        # Where
+        spyOn(self.targetMethod)
+
+        # When
+        self.wasCalled = False
+        self.targetMethod()
+
+        # Then
+        expect(self.wasCalled).toBeFalse()
+        expect(self.targetMethod).toHaveBeenCalled()
+        expect(self.targetMethod).toHaveBeenCalledExactly(1).time()
+        expect(self.targetMethod).toHaveBeenCalledAtLeast(1).time()
+        expect(self.targetMethod).toHaveBeenCalledAtMost(3).times()
+~~~~~
+
+This leads to error messages of the form
+~~~~~ bash
+"Expected <targetMethod> to have been called"
+"Expected <targetMethod> to have been called exactly 1 time, but it was never called."
+"Expected <targetMethod> to have been called at least 1 time, but it was never called."
+"Expected <targetMethod> to have been called at most 3 times, but it was called 4 times."
+~~~~~
+
+Sometimes, it is useful to check whether a method has been called with certain arguments, using
+toHaveBeenCalledWith. We can also indicate we only care about a single invocation by usining
+forCallNumber(). The numbers here are numbers, not indices - so to check for the first call, use
+1, not 0.
+
+~~~~~ python
+    def test_that_spies_can_expect_on_arguments_used(self):
+        # Where
+        spyOn(self.targetMethodWithParameters)
+        
+        # When
+        self.targetMethodWithParameters(1, 2, d='four')
+        self.targetMethodWithParameters(['a', 'b'], 3)
+
+        # Then
+        expect(self.targetMethodWithParameters).toHaveBeenCalledWith(1, 2, d='four')
+        expect(self.targetMethodWithParameters).toHaveBeenCalledWith(['a', 'b'], 3)
+        expect(self.targetMethodWithParameters).forCallNumber(1).Not.toHaveBeenCalledWith(['a', 'b'], 3)
+~~~~~
+
+It is possible to configure a spy to return a specific value:
+~~~~~ python
+    def test_spying_and_overriding_return_value(self):
+        # Where
+        spyOn(self.targetMethod).andReturn(5)
+
+        # When
+        value = self.targetMethod()
+
+        # Then
+        expect(value).toEqual(5)
+~~~~~
+
+Or to raise an exception when called. This is useful for testing exception handling code:
+~~~~~ python
+
+    def test_creating_a_test_saboteur(self):
+        # Where
+        spyOn(self.targetMethod).andRaise(KeyError)
+
+        # Then
+        expect(self.targetMethod).toRaise(KeyError)
+
+~~~~~
+
+We can also tell the spy to call through to the original method as well:
+~~~~~ python
+    def test_creaating_a_spy_which_calls_through(self):
+        # Where
+        spyOn(self.targetMethod).andCallThrough()
+
+        # When
+        self.wasCalled = False
+        self.targetMethod()
+
+        # Then
+        expect(self.targetMethod).toHaveBeenCalled()
+        expect(self.wasCalled).toBeTrue()
+~~~~~
+
+If any extra behaviour is needed, it is possible to configure the spy to also call
+through to any callable object:
+~~~~~ python
+    def test_that_a_spy_with_arbitrary_beahviour_can_be_created(self):
+        # Where
+        self.manualWasCalled = False
+        def inner_method():
+            self.manualWasCalled = True
+
+        spyOn(self.targetMethod).andCall(inner_method)
+        
+        # When
+        self.targetMethod()
+
+        # Then
+        expect(self.targetMethod).toHaveBeenCalled()
+        expect(self.manualWasCalled).toBeTrue()
+~~~~~
+

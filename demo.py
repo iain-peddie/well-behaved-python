@@ -239,7 +239,86 @@ zzzz""")
 
         pattern = re.compile(".sd.")
         expect(actual).toMatch("a..f")
-        expect(actual).toMatch(pattern)                
+        expect(actual).toMatch(pattern)
+
+    ## Spying tests
+    def targetMethod(self):
+        self.wasCalled = True
+
+    def targetMethodWithParameters(self, a, b, c='c', d='d'):
+        self.wasCalled = True
+
+    def test_that_can_create_a_method_spy(self):
+        # Where
+        spyOn(self.targetMethod)
+
+        # When
+        self.wasCalled = False
+        self.targetMethod()
+
+        # Then
+        expect(self.wasCalled).toBeFalse()
+        expect(self.targetMethod).toHaveBeenCalled()
+        expect(self.targetMethod).toHaveBeenCalledExactly(1).time()
+        expect(self.targetMethod).toHaveBeenCalledAtLeast(1).time()
+        expect(self.targetMethod).toHaveBeenCalledAtMost(3).times()
+
+    def test_that_spies_can_expect_on_arguments_used(self):
+        # Where
+        spyOn(self.targetMethodWithParameters)
+        
+        # When
+        self.targetMethodWithParameters(1, 2, d='four')
+        self.targetMethodWithParameters(['a', 'b'], 3)
+
+        # Then
+        expect(self.targetMethodWithParameters).toHaveBeenCalledWith(1, 2, d='four')
+        expect(self.targetMethodWithParameters).toHaveBeenCalledWith(['a', 'b'], 3)
+        expect(self.targetMethodWithParameters).forCallNumber(1).Not.toHaveBeenCalledWith(['a', 'b'], 3)
+
+    def test_spying_and_overriding_return_value(self):
+        # Where
+        spyOn(self.targetMethod).andReturn(5)
+
+        # When
+        value = self.targetMethod()
+
+        # Then
+        expect(value).toEqual(5)
+
+    def test_creating_a_test_saboteur(self):
+        # Where
+        spyOn(self.targetMethod).andRaise(KeyError)
+
+        # Then
+        expect(self.targetMethod).toRaise(KeyError)
+
+    def test_creaating_a_spy_which_calls_through(self):
+        # Where
+        spyOn(self.targetMethod).andCallThrough()
+
+        # When
+        self.wasCalled = False
+        self.targetMethod()
+
+        # Then
+        expect(self.targetMethod).toHaveBeenCalled()
+        expect(self.wasCalled).toBeTrue()
+
+    def test_that_a_spy_with_arbitrary_beahviour_can_be_created(self):
+        # Where
+        self.manualWasCalled = False
+        def inner_method():
+            self.manualWasCalled = True
+
+        spyOn(self.targetMethod).andCall(inner_method)
+        
+        # When
+        self.targetMethod()
+
+        # Then
+        expect(self.targetMethod).toHaveBeenCalled()
+        expect(self.manualWasCalled).toBeTrue()
 
 # create a main that calls the test case:
 
