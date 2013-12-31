@@ -26,6 +26,7 @@ from .DictionaryExpectations import *
 from .NumericExpectations import *
 from .StringExpectations import *
 from .MethodSpyExpectations import *
+from .ExpectationsRegistry import *
 
 from .typeInference import *
 
@@ -41,26 +42,31 @@ def expect(actual, normal = True):
     else:
         strategy = ExpectNot()
         reverseStrategy = Expect()
-        
-    if isinstance(actual, str):
-        reverser = StringExpectations(actual, reverseStrategy, None)
-        return StringExpectations(actual, strategy, reverser)
-    elif isDictionary(actual):
-        reverser = DictionaryExpectations(actual, reverseStrategy, None)
-        return DictionaryExpectations(actual, strategy, reverser)
-    elif isIterable(actual):
-        reverser = ContainerExpectations(actual, reverseStrategy, None)
-        return ContainerExpectations(actual, strategy, reverser)
-    elif isNumeric(actual): 
-        reverser = NumericExpectations(actual, reverseStrategy, None)
-        return NumericExpectations(actual, strategy, reverser)    
-    elif isinstance(actual, MethodSpy):
-        reverser = MethodSpyExpectations(actual, reverseStrategy, None)
-        return MethodSpyExpectations(actual, strategy, reverser)
-    else:
-        reverser = DefaultExpectations(actual, reverseStrategy, None)
-        return DefaultExpectations(actual, strategy, reverser)    
 
+    expectationsFactories = []
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isinstance(actual, str), 
+            StringExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isDictionary(actual), 
+            DictionaryExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isIterable(actual),
+            ContainerExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isNumeric(actual), 
+            NumericExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isinstance(actual, MethodSpy),
+            MethodSpyExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: True, 
+            DefaultExpectations))
+
+    for factory in expectationsFactories:
+        if factory.shouldUseFor(actual):
+            return factory.createExpectations(actual, strategy, reverseStrategy)
+        
 def spyOn(method):
     """spies on a given method.
 

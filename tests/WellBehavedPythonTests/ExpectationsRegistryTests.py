@@ -31,7 +31,7 @@ class ExpectationsFactoryTests(TestCase):
         factory = ExpectationsFactory(lambda klass: False, None)
 
         # When
-        result = factory.shouldCreateFor(1)
+        result = factory.shouldUseFor(1)
 
         # Then
         expect(result).toBeFalse()
@@ -41,7 +41,29 @@ class ExpectationsFactoryTests(TestCase):
         factory = ExpectationsFactory(lambda klass: True, None)
 
         # When
-        result = factory.shouldCreateFor(1)
+        result = factory.shouldUseFor(1)
 
         # Then
         expect(result).toBeTrue()
+
+    def test_that_factory_creates_expect_and_expect_not_methods(self):
+        # Where
+        self.createCallCount = 0
+        self.reverser = None
+
+        def create_expecter(actual, strategy, reverser):
+            self.createCallCount += 1
+            if reverser is not None:
+                self.reverser = reverser
+            return 'mockExpecter'
+
+        factory = ExpectationsFactory(lambda item: True, create_expecter)
+        item = 1
+
+        # When
+
+        factory.createExpectations(item, 'mockStrategy', 'mockReverseStrategy')
+
+        # Then
+        expect(self.createCallCount).toEqual(2)
+        expect(self.reverser).toEqual('mockExpecter')
