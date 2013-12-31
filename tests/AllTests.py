@@ -17,6 +17,8 @@ from WellBehavedPythonTests.DictionaryExpectationsTests import *
 from WellBehavedPythonTests.NumericExpectationsTests import *
 from WellBehavedPythonTests.MethodSpyExpectationsTests import *
 
+from WellBehavedPythonTests.ExpectationsRegistryTests import *
+
 from WellBehavedPython.TestSuite import TestSuite
 from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
 
@@ -43,6 +45,7 @@ if __name__ == "__main__":
         suite.add(VerboseConsoleTestRunnerTests.suite())
         suite.add(MethodSpyTests.suite())
         suite.add(SpyOnTests.suite())
+        suite.add(ExpectationsFactoryTests.suite())
         
         buffer = True
 

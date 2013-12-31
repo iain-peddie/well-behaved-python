@@ -35,7 +35,6 @@ def expect(actual, normal = True):
     This will eventually create a specialised expectation object
     based on the class type."""
 
-
     if normal:
         strategy = Expect()
         reverseStrategy = ExpectNot()
@@ -44,22 +43,22 @@ def expect(actual, normal = True):
         reverseStrategy = Expect()
         
     if isinstance(actual, str):
-        reverser = StringExpectations(actual, reverseStrategy)
+        reverser = StringExpectations(actual, reverseStrategy, None)
         return StringExpectations(actual, strategy, reverser)
     elif isDictionary(actual):
-        reverser = DictionaryExpectations(actual, reverseStrategy)
+        reverser = DictionaryExpectations(actual, reverseStrategy, None)
         return DictionaryExpectations(actual, strategy, reverser)
-    elif isIterable(actual) and not isinstance(actual, str):
-        reverser = ContainerExpectations(actual, reverseStrategy)
+    elif isIterable(actual):
+        reverser = ContainerExpectations(actual, reverseStrategy, None)
         return ContainerExpectations(actual, strategy, reverser)
     elif isNumeric(actual): 
-        reverser = NumericExpectations(actual, reverseStrategy)
+        reverser = NumericExpectations(actual, reverseStrategy, None)
         return NumericExpectations(actual, strategy, reverser)    
     elif isinstance(actual, MethodSpy):
-        reverser = MethodSpyExpectations(actual, reverseStrategy)
+        reverser = MethodSpyExpectations(actual, reverseStrategy, None)
         return MethodSpyExpectations(actual, strategy, reverser)
     else:
-        reverser = DefaultExpectations(actual, reverseStrategy)
+        reverser = DefaultExpectations(actual, reverseStrategy, None)
         return DefaultExpectations(actual, strategy, reverser)    
 
 def spyOn(method):
