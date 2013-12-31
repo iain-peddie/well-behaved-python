@@ -28,7 +28,7 @@ class ExpectationsFactoryTests(TestCase):
 
     def test_that_factory_says_should_not_create_when_predicate_is_False(self):
         # Where
-        factory = ExpectationsFactory(lambda typeName: False, None)
+        factory = ExpectationsFactory(lambda klass: False, None)
 
         # When
         result = factory.shouldCreateFor(int)
@@ -36,3 +36,12 @@ class ExpectationsFactoryTests(TestCase):
         # Then
         expect(result).toBeFalse()
         
+    def test_that_factory_says_should_create_when_predicate_is_True(self):
+        # Where
+        factory = ExpectationsFactory(lambda klass: True, None)
+
+        # When
+        result = factory.shouldCreateFor(int)
+
+        # Then
+        expect(result).toBeTrue()

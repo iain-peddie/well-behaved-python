@@ -23,9 +23,8 @@ class ExpectationsFactory:
         self.createPredicate = createPredicate
         self.createExpectations = createExpectations
 
-    def shouldCreateFor(self, typeName):
-        return False
-
+    def shouldCreateFor(self, klass):
+        return self.createPredicate(klass)
 
 class ExpectationsRegistry:
     pass
