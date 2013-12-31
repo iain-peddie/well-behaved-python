@@ -22,9 +22,12 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.MethodSpy import *
 
 class SampleClass:
-    
+
+    def __init__(self):
+        self.targetMethodCalled = False
+
     def parameterlessMethod(self):
-        pass
+        self.targetMethodCalled = True
 
 class SpyOnTests(TestCase):
 
@@ -56,3 +59,29 @@ class SpyOnTests(TestCase):
         # Then
         expect(subjectObject.parameterlessMethod).toHaveBeenCalled()
 
+    def test_sample_class_is_manual_spy(self):
+        # Where
+        sample = SampleClass()
+        before = sample.targetMethodCalled
+
+        # When
+        sample.parameterlessMethod()
+        after = sample.targetMethodCalled
+
+        # Then
+        expect(before).withUserMessage('called should be false initially').toBeFalse()
+        expect(after).withUserMessage('called should be true after call').toBeTrue()                
+
+    def test_can_spy_on_and_call_through(self):
+        # Where
+        sample = SampleClass()
+        
+        # When
+        spyOn(sample.parameterlessMethod).andCallThrough()
+        sample.parameterlessMethod()
+
+        # Then
+        # test the spy
+        expect(sample.parameterlessMethod).toHaveBeenCalled() 
+        # test the callthrough
+        expect(sample.targetMethodCalled).toBeTrue()
