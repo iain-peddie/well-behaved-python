@@ -35,12 +35,17 @@ class ExpectationsFactory:
         createExpectations: callable object that is used to create
                             an expectations object in isolation."""
 
-        self.createPredicate = createPredicate
-        self.createExpectations = createExpectations
+        self._createPredicate = createPredicate
+        self._createExpectations = createExpectations
 
-    def shouldCreateFor(self, item):
+    def shouldUseFor(self, item):
+        return self._createPredicate(item)
 
-        return self.createPredicate(item)
+    def createExpectations(self, item, strategy, reverseStrategy):
+        reverseExpectations = self._createExpectations(item, reverseStrategy, None)
+        expectations = self._createExpectations(item, strategy, reverseExpectations)
+
+        return expectations
 
 class ExpectationsRegistry:
     pass
