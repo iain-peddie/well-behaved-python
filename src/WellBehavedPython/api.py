@@ -81,5 +81,7 @@ def spyOn(method):
 
     instance = method.__self__
     name = method.__name__
-    instance.__dict__[name] = MethodSpy(methodName = name)
+    spy = MethodSpy(methodName = name, methodObject = method)
+    instance.__dict__[name] = spy
+    return spy
 
