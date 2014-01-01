@@ -29,6 +29,53 @@ def expect(actual):
     based on the class type."""
 
     return _registry.expect(actual)
+
+def registerExpectationClass(usePredicate, constructor):
+    """Way of registereing new expectation classes.
+
+    Registration acts in a last registration wins scenario.
+
+    Inputs
+    ------
+    usePredicate: expected to be callable taking one argument.
+    
+                  Inputs
+                  ------
+                  actual: The value being considered for expectations
+                          
+                  Returns
+                  -------
+                  True, if the actual value is appropriate for use in
+                  with the registered Expectations object
+                  False otherwise
+
+                  Examples
+                  -------
+                  isNumeric
+                  lambda actual: isinstance(actual, timedelta)
+
+    constructor: Expected to construct an expectations object. 
+
+                 Inputs
+                 ------
+                 actual: the actual value to be expected against
+                 strategy: the strategy to use for passing and failing
+                           This should usually be either an instance of
+                           Expect or an instance of ExpectNot
+                 reverseExpecter: The reverse object. This should either
+                                  be another instance of what this constructor
+                                  returns, or None
+
+                 Returns
+                 -------
+                 A created expectation object
+
+                 Example
+                 -------
+                 NumericExpectations
+                 lambda actual, strategy, reverser: 
+                           NumericExpecations(float(actual), strategy, reverser)."""
+    _registry.register(usePredicate, constructor)
         
 def spyOn(method):
     """spies on a given method.
