@@ -80,10 +80,19 @@ class ExpectationsRegistryTests(TestCase):
         registry = self.createDefaultExpectationsRegistry()
 
         # When
-        expectations = registry.createExpectations(actual)
+        expectations = registry.expect(actual)
 
         # Then
         expect(expectations).toBeAnInstanceOf(DefaultExpectations)
+
+    def test_that_default_expectations_object_can_be_used(self):
+        # Where
+        registry = self.createDefaultExpectationsRegistry()
+        expect1 = registry.expect(1)
+        
+        # When
+        expect1.toEqual(1)
+        expect1.Not.toEqual(2)
 
     def createDefaultExpectationsRegistry(self):
         return ExpectationsRegistry();

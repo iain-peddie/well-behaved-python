@@ -18,6 +18,8 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .DefaultExpectations import DefaultExpectations
+from .Expect import *
+from .ExpectNot import *
 
 class ExpectationsFactory:
     """Class responsible for creating and configureing an Expectations object.
@@ -61,14 +63,17 @@ class ExpectationsRegistry:
         """Default constructor."""
         self._factories = [ self._createDefaultExpecationsFactory() ]
 
-    def createExpectations(self, actual):
+    def expect(self, actual):
         """Creates an appropriate expectations object for using on actual.
 
         This searches through the list of registered factories until one
         which matches actual is found, and then uses that to create the
         actual object."""
         factory = self._factories[0]
-        return factory.createExpectations(actual, None, None) 
+        strategy = Expect()
+        reverseStrategy = ExpectNot()
+        
+        return factory.createExpectations(actual, strategy, reverseStrategy) 
 
     def _createDefaultExpecationsFactory(self):
         return ExpectationsFactory(
