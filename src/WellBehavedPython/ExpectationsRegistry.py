@@ -75,6 +75,10 @@ class ExpectationsRegistry:
         
         return factory.createExpectations(actual, strategy, reverseStrategy) 
 
+    def register(self, creationPredicate, createExpectations):
+        self._factories[0] = ExpectationsFactory(creationPredicate, 
+                                                 createExpectations)
+
     def _createDefaultExpecationsFactory(self):
         return ExpectationsFactory(
             lambda actual: True, 

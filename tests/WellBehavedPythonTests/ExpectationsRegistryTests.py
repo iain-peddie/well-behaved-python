@@ -94,5 +94,17 @@ class ExpectationsRegistryTests(TestCase):
         expect1.toEqual(1)
         expect1.Not.toEqual(2)
 
+    def test_that_registered_expectations_beat_default(self):
+        # Where
+        registry = self.createDefaultExpectationsRegistry()
+
+        # When
+        registry.register(isNumeric, NumericExpectations)
+        expect1 = registry.expect(1)
+
+        # Then
+        expect(expect1).toBeAnInstanceOf(NumericExpectations)
+        
+
     def createDefaultExpectationsRegistry(self):
         return ExpectationsRegistry();
