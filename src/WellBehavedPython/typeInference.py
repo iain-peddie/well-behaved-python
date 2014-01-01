@@ -19,25 +19,14 @@
 
 from collections import Iterable
 from collections import Mapping
+from numbers import Number
 
 from datetime import *
 
-_numericTypes = [int, float, datetime, timedelta]
-
 def isNumeric(actual):
     """Determine whether actual is a numeric type."""
-
-    # we use existence of < <= > and >= as a proxy for
-    # numeric types
-
-    numericAttributes = ("__lt__", "__le__", "__gt__", "__ge__")
-    klass = type(actual)
-    data = klass.__dict__
-    for attribute in numericAttributes:
-        if attribute not in data:
-            return False
-
-    return True
+    
+    return isinstance(actual, Number)
 
 def isDictionary(actual):
     """Determine whether actual is a dictionary like type with keys and values."""

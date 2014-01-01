@@ -17,55 +17,65 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .Expect import *
-from .ExpectNot import *
+from .ExpectationsRegistry import *
 from .MethodSpy import *
 
-from .ContainerExpectations import *
-from .DictionaryExpectations import *
-from .NumericExpectations import *
-from .StringExpectations import *
-from .MethodSpyExpectations import *
-from .ExpectationsRegistry import *
+_registry = ExpectationsRegistry.createDefaultExpectationsRegistry()
 
-from .typeInference import *
-
-def expect(actual, normal = True):
+def expect(actual):
     """Facade for creating expectation objects.
 
     This will eventually create a specialised expectation object
     based on the class type."""
 
-    if normal:
-        strategy = Expect()
-        reverseStrategy = ExpectNot()
-    else:
-        strategy = ExpectNot()
-        reverseStrategy = Expect()
+    return _registry.expect(actual)
 
-    expectationsFactories = []
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isinstance(actual, str), 
-            StringExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isDictionary(actual), 
-            DictionaryExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isIterable(actual),
-            ContainerExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isNumeric(actual), 
-            NumericExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isinstance(actual, MethodSpy),
-            MethodSpyExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: True, 
-            DefaultExpectations))
+def registerExpectationClass(usePredicate, constructor):
+    """Way of registereing new expectation classes.
 
-    for factory in expectationsFactories:
-        if factory.shouldUseFor(actual):
-            return factory.createExpectations(actual, strategy, reverseStrategy)
+    Registration acts in a last registration wins scenario.
+
+    Inputs
+    ------
+    usePredicate: expected to be callable taking one argument.
+    
+                  Inputs
+                  ------
+                  actual: The value being considered for expectations
+                          
+                  Returns
+                  -------
+                  True, if the actual value is appropriate for use in
+                  with the registered Expectations object
+                  False otherwise
+
+                  Examples
+                  -------
+                  isNumeric
+                  lambda actual: isinstance(actual, timedelta)
+
+    constructor: Expected to construct an expectations object. 
+
+                 Inputs
+                 ------
+                 actual: the actual value to be expected against
+                 strategy: the strategy to use for passing and failing
+                           This should usually be either an instance of
+                           Expect or an instance of ExpectNot
+                 reverseExpecter: The reverse object. This should either
+                                  be another instance of what this constructor
+                                  returns, or None
+
+                 Returns
+                 -------
+                 A created expectation object
+
+                 Example
+                 -------
+                 NumericExpectations
+                 lambda actual, strategy, reverser: 
+                           NumericExpecations(float(actual), strategy, reverser)."""
+    _registry.register(usePredicate, constructor)
         
 def spyOn(method):
     """spies on a given method.
