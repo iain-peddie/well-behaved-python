@@ -22,7 +22,7 @@ from .MethodSpy import *
 
 _registry = ExpectationsRegistry.createDefaultExpectationsRegistry()
 
-def expect(actual, normal = True):
+def expect(actual):
     """Facade for creating expectation objects.
 
     This will eventually create a specialised expectation object
