@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2013 Iain Peddie inr314159@hotmail.com
+# Copyright 2013-4 Iain Peddie inr314159@hotmail.com
 # 
 #    This file is part of WellBehavedPython
 #
@@ -17,9 +17,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from WellBehavedPython.TestCase import *
 from WellBehavedPython.api import *
+from WellBehavedPython.DefaultExpectations import DefaultExpectations
 from WellBehavedPython.ExpectationsRegistry import *
+from WellBehavedPython.TestCase import *
 
 class ExpectationsFactoryTests(TestCase):
 
@@ -67,3 +68,31 @@ class ExpectationsFactoryTests(TestCase):
         # Then
         expect(self.createCallCount).toEqual(2)
         expect(self.reverser).toEqual('mockExpecter')
+
+class ExpectationsRegistryTests(TestCase):
+    
+    def __init__(self, name):
+        TestCase.__init__(self, name)
+
+    def test_that_creation_using_a_fresh_registry_creates_default_expectations(self):
+        # Where
+        actual = {'a': 'b'}
+        registry = self.createDefaultExpectationsRegistry()
+
+        # When
+        expectations = registry.expect(actual)
+
+        # Then
+        expect(expectations).toBeAnInstanceOf(DefaultExpectations)
+
+    def test_that_default_expectations_object_can_be_used(self):
+        # Where
+        registry = self.createDefaultExpectationsRegistry()
+        expect1 = registry.expect(1)
+        
+        # When
+        expect1.toEqual(1)
+        expect1.Not.toEqual(2)
+
+    def createDefaultExpectationsRegistry(self):
+        return ExpectationsRegistry();
