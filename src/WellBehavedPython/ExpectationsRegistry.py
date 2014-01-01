@@ -69,15 +69,22 @@ class ExpectationsRegistry:
         This searches through the list of registered factories until one
         which matches actual is found, and then uses that to create the
         actual object."""
-        factory = self._factories[0]
         strategy = Expect()
         reverseStrategy = ExpectNot()
-        
-        return factory.createExpectations(actual, strategy, reverseStrategy) 
+
+        log = "******\n"
+        for factory in self._factories:
+            if not factory.shouldUseFor(actual):
+                log = log + "should not use {} for {}\n".format(factory._createExpectations, actual)
+                continue
+            log = log + "using {} for {}\n".format(factory._createExpectations, actual)
+#            raise AssertionError(log)
+            return factory.createExpectations(actual, strategy, reverseStrategy) 
+
 
     def register(self, creationPredicate, createExpectations):
-        self._factories[0] = ExpectationsFactory(creationPredicate, 
-                                                 createExpectations)
+        self._factories.insert(0, ExpectationsFactory(creationPredicate, 
+                                                 createExpectations))
 
     def _createDefaultExpecationsFactory(self):
         return ExpectationsFactory(

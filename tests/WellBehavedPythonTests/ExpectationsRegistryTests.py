@@ -104,7 +104,27 @@ class ExpectationsRegistryTests(TestCase):
 
         # Then
         expect(expect1).toBeAnInstanceOf(NumericExpectations)
+
+    def test_that_registry_uses_creation_predicates(self):
+        # Where
+        registry = self.createRegistryWithNumericsRegistered()
+        expect(isNumeric('asdf')).toBeFalse()
+
+        # When
+        expectAsdf = registry.expect('asdf')
+
+        # Then
+        # NumericExpectations are derived from DefaultExpectations, 
+        # so we can't test is an instance of Default (class derivation
+        # is an isa relationship, so a NumericExpectations is a DefaultExpcetations,
+        # so instead we check that expectAsdf is not a NumericExpectations)
         
+        expect(expectAsdf).Not.toBeAnInstanceOf(NumericExpectations)
 
     def createDefaultExpectationsRegistry(self):
         return ExpectationsRegistry();
+
+    def createRegistryWithNumericsRegistered(self):
+        registry = self.createDefaultExpectationsRegistry()
+        registry.register(isNumeric, NumericExpectations)
+        return registry

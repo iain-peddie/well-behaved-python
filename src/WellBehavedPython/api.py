@@ -54,7 +54,13 @@ def expect(actual, normal = True):
             lambda actual: isIterable(actual),
             ContainerExpectations))
     expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isNumeric(actual), 
+            isNumeric, 
+            NumericExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isinstance(actual, datetime),
+            NumericExpectations))
+    expectationsFactories.append(ExpectationsFactory(
+            lambda actual: isinstance(actual, timedelta),
             NumericExpectations))
     expectationsFactories.append(ExpectationsFactory(
             lambda actual: isinstance(actual, MethodSpy),
