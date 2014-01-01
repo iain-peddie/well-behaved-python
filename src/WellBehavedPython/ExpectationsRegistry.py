@@ -17,9 +17,19 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .DefaultExpectations import DefaultExpectations
 from .Expect import *
 from .ExpectNot import *
+
+
+from .DefaultExpectations import DefaultExpectations
+from .ContainerExpectations import *
+from .DictionaryExpectations import *
+from .NumericExpectations import *
+from .StringExpectations import *
+from .MethodSpyExpectations import *
+
+from .typeInference import *
+
 
 class ExpectationsFactory:
     """Class responsible for creating and configureing an Expectations object.
@@ -63,6 +73,24 @@ class ExpectationsRegistry:
         """Default constructor."""
         self._factories = [ self._createDefaultExpecationsFactory() ]
 
+    @staticmethod
+    def createDefaultExpectationsRegistry():
+        registry = ExpectationsRegistry()
+        registry.register(lambda actual: isinstance(actual, MethodSpy),
+                           MethodSpyExpectations)
+        registry.register(lambda actual: isinstance(actual, timedelta), 
+                           NumericExpectations)
+        registry.register(lambda actual: isinstance(actual, datetime), 
+                           NumericExpectations)
+        registry.register(isNumeric,
+                           NumericExpectations)        
+        registry.register(isIterable, ContainerExpectations)
+        registry.register(isDictionary, DictionaryExpectations)
+        registry.register(lambda actual: isinstance(actual, str), 
+                          StringExpectations)
+        return registry
+
+
     def expect(self, actual):
         """Creates an appropriate expectations object for using on actual.
 
@@ -72,19 +100,15 @@ class ExpectationsRegistry:
         strategy = Expect()
         reverseStrategy = ExpectNot()
 
-        log = "******\n"
-        for factory in self._factories:
+        for factory in reversed(self._factories):
             if not factory.shouldUseFor(actual):
-                log = log + "should not use {} for {}\n".format(factory._createExpectations, actual)
                 continue
-            log = log + "using {} for {}\n".format(factory._createExpectations, actual)
-#            raise AssertionError(log)
             return factory.createExpectations(actual, strategy, reverseStrategy) 
 
 
     def register(self, creationPredicate, createExpectations):
-        self._factories.insert(0, ExpectationsFactory(creationPredicate, 
-                                                 createExpectations))
+        self._factories.append(ExpectationsFactory(creationPredicate, 
+                                                   createExpectations))
 
     def _createDefaultExpecationsFactory(self):
         return ExpectationsFactory(

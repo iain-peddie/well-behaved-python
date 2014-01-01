@@ -17,18 +17,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .Expect import *
-from .ExpectNot import *
+from .ExpectationsRegistry import *
 from .MethodSpy import *
 
-from .ContainerExpectations import *
-from .DictionaryExpectations import *
-from .NumericExpectations import *
-from .StringExpectations import *
-from .MethodSpyExpectations import *
-from .ExpectationsRegistry import *
-
-from .typeInference import *
+_registry = ExpectationsRegistry.createDefaultExpectationsRegistry()
 
 def expect(actual, normal = True):
     """Facade for creating expectation objects.
@@ -36,42 +28,7 @@ def expect(actual, normal = True):
     This will eventually create a specialised expectation object
     based on the class type."""
 
-    if normal:
-        strategy = Expect()
-        reverseStrategy = ExpectNot()
-    else:
-        strategy = ExpectNot()
-        reverseStrategy = Expect()
-
-    expectationsFactories = []
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isinstance(actual, str), 
-            StringExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isDictionary(actual), 
-            DictionaryExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isIterable(actual),
-            ContainerExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            isNumeric, 
-            NumericExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isinstance(actual, datetime),
-            NumericExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isinstance(actual, timedelta),
-            NumericExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: isinstance(actual, MethodSpy),
-            MethodSpyExpectations))
-    expectationsFactories.append(ExpectationsFactory(
-            lambda actual: True, 
-            DefaultExpectations))
-
-    for factory in expectationsFactories:
-        if factory.shouldUseFor(actual):
-            return factory.createExpectations(actual, strategy, reverseStrategy)
+    return _registry.expect(actual)
         
 def spyOn(method):
     """spies on a given method.
