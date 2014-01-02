@@ -1,5 +1,7 @@
 # TODO file
 TODO.txt
+dist
+
 
 *.py[cod]
 *~
@@ -36,3 +38,4 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+MANIFEST
