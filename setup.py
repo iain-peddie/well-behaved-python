@@ -9,15 +9,15 @@ try:
     setup(
         name = 'WellBehavedPython', 
         packages = ['WellBehavedPython'],
-        version = '0.5.0',
+        version = '0.5.1',
         description = 'Testing package with fluent API', 
         long_description = long_description,
         author = 'Iain Peddie', 
         author_email = 'inr314159@hotmail.com', 
         url = 'https://github.com/iain-peddie/well-behaved-python',
         classifiers = [
-            'Language :: Python', 
-            'Language :: Python :: 3.3',
+            'Programming Language :: Python', 
+            'Programming Language :: Python :: 3.3',
             'Licence :: OSI Approved :: GNU General Public Licence v3 or later (GPLv3+)',         
             'Development Status :: 4 - Beta', 
             'Environment :: Console ',
