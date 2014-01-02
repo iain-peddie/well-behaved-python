@@ -18,7 +18,7 @@ try:
         classifiers = [
             'Programming Language :: Python', 
             'Programming Language :: Python :: 3.3',
-            'Licence :: OSI Approved :: GNU General Public Licence v3 or later (GPLv3+)',         
+'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
             'Development Status :: 4 - Beta', 
             'Environment :: Console ',
             'Intended Audience :: Developers', 
