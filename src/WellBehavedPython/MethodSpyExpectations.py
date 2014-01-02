@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2013 Iain Peddie inr314159@hotmail.com
+# Copyright 2013-4 Iain Peddie inr314159@hotmail.com
 # 
 #    This file is part of WellBehavedPython
 #
