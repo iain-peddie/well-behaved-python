@@ -25,7 +25,7 @@ from .Expectations.DefaultExpectations import DefaultExpectations
 from .Expectations.ContainerExpectations import *
 from .Expectations.DictionaryExpectations import *
 from .Expectations.NumericExpectations import *
-from .StringExpectations import *
+from .Expectations.StringExpectations import *
 from .Expectations.MethodSpyExpectations import *
 
 from .typeInference import *
