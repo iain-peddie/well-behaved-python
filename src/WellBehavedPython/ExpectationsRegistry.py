@@ -21,10 +21,10 @@ from .Expect import *
 from .ExpectNot import *
 
 
-from .DefaultExpectations import DefaultExpectations
-from .ContainerExpectations import *
-from .DictionaryExpectations import *
-from .NumericExpectations import *
+from .Expectations.DefaultExpectations import DefaultExpectations
+from .Expectations.ContainerExpectations import *
+from .Expectations.DictionaryExpectations import *
+from .Expectations.NumericExpectations import *
 from .StringExpectations import *
 from .Expectations.MethodSpyExpectations import *
 
