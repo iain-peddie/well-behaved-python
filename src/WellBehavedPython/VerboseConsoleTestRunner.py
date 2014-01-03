@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .TestResults import TestResults
+from .Engine.TestResults import TestResults
 from .ConsoleTestRunner import ConsoleTestRunner
 
 import io

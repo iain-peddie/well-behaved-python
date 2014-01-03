@@ -18,7 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 # import the API
-from WellBehavedPython.TestCase import *
+from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.api import *
 from WellBehavedPython.VerboseConsoleTestRunner import VerboseConsoleTestRunner
 
