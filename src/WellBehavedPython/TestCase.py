@@ -20,8 +20,8 @@
 import re
 
 from .TestResults import TestResults
-from .TestSuite import TestSuite
-from .TestComponent import TestComponent
+from .Engine.TestSuite import TestSuite
+from .Engine.TestComponent import TestComponent
 
 class TestCase(TestComponent):
     """Base class for TestCases. 

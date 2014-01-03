@@ -18,7 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .TestResults import TestResults
-from .TestSuite import TestSuite
+from .Engine.TestSuite import TestSuite
 
 import io
 import traceback
