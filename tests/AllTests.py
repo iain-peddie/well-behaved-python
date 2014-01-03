@@ -21,13 +21,13 @@
 
 import sys
 
-from WellBehavedPythonTests.MethodSpyTests import *
 from WellBehavedPythonTests.Engine.TestCaseTests import *
 from WellBehavedPythonTests.Engine.TestSuiteTests import *
-from WellBehavedPythonTests.TestResultsTests import *
-from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
+from WellBehavedPythonTests.Engine.TestResultsTests import *
+from WellBehavedPythonTests.MethodSpyTests import *
 from WellBehavedPythonTests.SpyOnTests import *
 
+from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 
 from WellBehavedPythonTests.Expectations.StringExpectationsTests import *
@@ -44,22 +44,29 @@ from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
 
 if __name__ == "__main__":
     try:
-        suite = TestSuite("AllTests")
+        suite = TestSuite("WellBehavedPythonTests")
+        engineSuite = TestSuite("Engine")
+        expectationsSuite = TestSuite("Expectations")
 
-        suite.add(TestResultsTests.suite())
-        suite.add(TestCaseTests.suite())
-        suite.add(TestSuiteTests.suite())
-        suite.add(DefaultExpectationsTests.suite())
-        suite.add(DefaultNotExpectationsTests.suite())
-        suite.add(NumericExpectationsTests.suite())
-        suite.add(NumericNotExpectationsTests.suite())
-        suite.add(StringExpectationsTests.suite())
-        suite.add(StringNotExpectationsTests.suite())
-        suite.add(ContainerExpectationsTests.suite())
-        suite.add(ContainerNotExpectationsTests.suite())
-        suite.add(DictionaryExpectationsTests.suite())
-        suite.add(DictionaryNotExpectationsTests.suite())
-        suite.add(MethodSpyExpectationsTests.suite())
+        engineSuite.add(TestResultsTests.suite())
+        engineSuite.add(TestCaseTests.suite())
+        engineSuite.add(TestSuiteTests.suite())
+
+        expectationsSuite.add(DefaultExpectationsTests.suite())
+        expectationsSuite.add(DefaultNotExpectationsTests.suite())
+        expectationsSuite.add(NumericExpectationsTests.suite())
+        expectationsSuite.add(NumericNotExpectationsTests.suite())
+        expectationsSuite.add(StringExpectationsTests.suite())
+        expectationsSuite.add(StringNotExpectationsTests.suite())
+        expectationsSuite.add(ContainerExpectationsTests.suite())
+        expectationsSuite.add(ContainerNotExpectationsTests.suite())
+        expectationsSuite.add(DictionaryExpectationsTests.suite())
+        expectationsSuite.add(DictionaryNotExpectationsTests.suite())
+        expectationsSuite.add(MethodSpyExpectationsTests.suite())
+
+        suite.add(engineSuite)
+        suite.add(expectationsSuite)
+
         suite.add(MethodSpyNotExpectationsTests.suite())
         suite.add(ConsoleTestRunnerTests.suite())
         suite.add(VerboseConsoleTestRunnerTests.suite())
