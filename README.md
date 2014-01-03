@@ -11,7 +11,7 @@ This will all be available in the example file demo.py. The framework is still u
 First set up a test case file. We first need to import the WellBehavedPython api and TestCase classes:
 
 ~~~~~ python
-from WellBehavedPython.TestCase import *
+from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.api import *
 ~~~~~
 
@@ -26,7 +26,7 @@ class TutorialTests(TestCase):
 We now have an empty test case class which we can run. This is now a good time to setup the running of it using a suite that can discover test methods in the class. 
 
 ~~~~~ python
-from WellBehavedPython.TestSuite import *
+from WellBehavedPython.Engine.TestSuite import *
 from WellBehavedPython.VerboseConsoleTestRunner import *
 from TutorialTests import *
 
@@ -261,7 +261,7 @@ performed in the sense of having a tolerance rather than being absolute:
         expect(actual).toEqual(actual + 1e-10)
 ~~~~~
 
-The tolernace can be set in equality for numbers using an optional
+The tolerance can be set in equality for numbers using an optional
 parameter called tolerance. The tolerance type can be set using the
 toleranceType parameter, which can be 'absolute' or 'relative'.
 
