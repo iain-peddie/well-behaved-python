@@ -21,7 +21,7 @@ from WellBehavedPython.TestCase import *
 from WellBehavedPython.MethodSpy import MethodSpy
 from WellBehavedPython.api import *
 from WellBehavedPython.MethodSpyExpectations import MethodSpyExpectations
-from WellBehavedPython.BaseExpect import BaseExpect
+from WellBehavedPython.Expectations.BaseExpect import BaseExpect
 
 class MethodSpyExpectationsTestsBase(TestCase):
     def __init__(self, name):

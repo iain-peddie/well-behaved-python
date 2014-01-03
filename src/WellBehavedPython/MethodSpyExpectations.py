@@ -18,7 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .DefaultExpectations import DefaultExpectations
-from .BaseExpect import BaseExpect
+from .Expectations.BaseExpect import BaseExpect
 from .MethodSpy import MethodSpy
 
 class MethodSpyExpectations(DefaultExpectations):

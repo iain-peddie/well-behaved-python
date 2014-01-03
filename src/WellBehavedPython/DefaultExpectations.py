@@ -19,7 +19,7 @@
 
 import re
 
-from .BaseExpect import BaseExpect
+from .Expectations.BaseExpect import BaseExpect
 
 class DefaultExpectations(BaseExpect):
     
