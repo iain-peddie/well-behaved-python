@@ -23,7 +23,7 @@ import sys
 
 from WellBehavedPythonTests.MethodSpyTests import *
 from WellBehavedPythonTests.Engine.TestCaseTests import *
-from WellBehavedPythonTests.TestSuiteTests import *
+from WellBehavedPythonTests.Engine.TestSuiteTests import *
 from WellBehavedPythonTests.TestResultsTests import *
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.SpyOnTests import *

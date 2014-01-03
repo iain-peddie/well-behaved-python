@@ -21,7 +21,7 @@ from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.VerboseConsoleTestRunner import *
 
-from .SampleTestCases import *
+from .Engine.SampleTestCases import *
 
 import io
 
