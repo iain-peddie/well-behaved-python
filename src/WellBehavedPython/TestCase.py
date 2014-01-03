@@ -19,7 +19,7 @@
 
 import re
 
-from .TestResults import TestResults
+from .Engine.TestResults import TestResults
 from .Engine.TestSuite import TestSuite
 from .Engine.TestComponent import TestComponent
 
