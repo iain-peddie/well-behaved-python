@@ -18,7 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from WellBehavedPython.api import *
-from WellBehavedPython.TestCase import *
+from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.ConsoleTestRunner import *
 
 from .SampleTestCases import *

@@ -18,9 +18,9 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from WellBehavedPython.api import *
+from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.Expectations.DefaultExpectations import DefaultExpectations
 from WellBehavedPython.ExpectationsRegistry import *
-from WellBehavedPython.TestCase import *
 
 class ExpectationsFactoryTests(TestCase):
 

@@ -17,9 +17,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from WellBehavedPython.TestCase import *
-from WellBehavedPython.MethodSpy import MethodSpy
 from WellBehavedPython.api import *
+from WellBehavedPython.Engine.TestCase import *
+from WellBehavedPython.MethodSpy import MethodSpy
 from WellBehavedPython.Expectations.MethodSpyExpectations import MethodSpyExpectations
 
 class MethodSpyExpectationsTestsBase(TestCase):

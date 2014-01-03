@@ -22,7 +22,7 @@ import os
 import os.path
 import sys
 
-from WellBehavedPython.TestCase import *
+from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.api import *
 
 class TestCaseTests(TestCase):

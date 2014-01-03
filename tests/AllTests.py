@@ -39,7 +39,7 @@ from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
 
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
 
-from WellBehavedPython.TestSuite import TestSuite
+from WellBehavedPython.Engine.TestSuite import TestSuite
 from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
 
 if __name__ == "__main__":

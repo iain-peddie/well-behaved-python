@@ -19,9 +19,9 @@
 
 import re
 
-from .Engine.TestResults import TestResults
-from .Engine.TestSuite import TestSuite
-from .Engine.TestComponent import TestComponent
+from .TestResults import TestResults
+from .TestSuite import TestSuite
+from .TestComponent import TestComponent
 
 class TestCase(TestComponent):
     """Base class for TestCases. 

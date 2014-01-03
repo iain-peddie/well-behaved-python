@@ -17,8 +17,8 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from WellBehavedPython.TestCase import *
 from WellBehavedPython.api import *
+from WellBehavedPython.Engine.TestCase import *
 
 def raise_error():
     raise KeyError("The wrong key was presented")
@@ -122,8 +122,8 @@ class DefaultExpectationsTests(TestCase):
     def test_instance_of_wrong_userclass_fails(self):
         expect(lambda: expect(TestResults()).toBeAnInstanceOf(TestSuite)).toRaise(
             AssertionError,
-            expectedMessageMatches = " to be an instance of <class 'WellBehavedPython.TestSuite.TestSuite'>"
-            " but was an instance of <class 'WellBehavedPython.TestResults.TestResults'>")
+            expectedMessageMatches = " to be an instance of <class 'WellBehavedPython.Engine.TestSuite.TestSuite'>"
+            " but was an instance of <class 'WellBehavedPython.Engine.TestResults.TestResults'>")
 
     def test_instance_of_derived_class_matches_base_class(self):
         expect(self).toBeAnInstanceOf(TestCase)

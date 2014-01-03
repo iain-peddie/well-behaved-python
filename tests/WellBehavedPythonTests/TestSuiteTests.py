@@ -21,10 +21,10 @@ import os
 import os.path
 import sys
 
-from WellBehavedPython.TestCase import *
-from WellBehavedPython.TestSuite import *
 from WellBehavedPython.api import *
-from WellBehavedPython.TestRunningException import *
+from WellBehavedPython.Engine.TestCase import *
+from WellBehavedPython.Engine.TestRunningException import *
+from WellBehavedPython.Engine.TestSuite import *
 
 from .SampleTestCases import *
 
