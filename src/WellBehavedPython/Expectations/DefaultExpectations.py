@@ -145,7 +145,6 @@ class DefaultExpectations(BaseExpect):
             self.fail(message)
 
     def toRaise(self, exceptionClass, expectedMessage = None, expectedMessageMatches = None):
-        from .Expect import Expect
         ex = None
 
         try:
