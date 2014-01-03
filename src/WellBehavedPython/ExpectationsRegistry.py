@@ -21,12 +21,12 @@ from .Expect import *
 from .ExpectNot import *
 
 
-from .DefaultExpectations import DefaultExpectations
-from .ContainerExpectations import *
-from .DictionaryExpectations import *
-from .NumericExpectations import *
-from .StringExpectations import *
-from .MethodSpyExpectations import *
+from .Expectations.DefaultExpectations import DefaultExpectations
+from .Expectations.ContainerExpectations import *
+from .Expectations.DictionaryExpectations import *
+from .Expectations.NumericExpectations import *
+from .Expectations.StringExpectations import *
+from .Expectations.MethodSpyExpectations import *
 
 from .typeInference import *
 

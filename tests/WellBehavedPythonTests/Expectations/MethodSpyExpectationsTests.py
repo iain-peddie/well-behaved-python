@@ -20,8 +20,7 @@
 from WellBehavedPython.TestCase import *
 from WellBehavedPython.MethodSpy import MethodSpy
 from WellBehavedPython.api import *
-from WellBehavedPython.MethodSpyExpectations import MethodSpyExpectations
-from WellBehavedPython.BaseExpect import BaseExpect
+from WellBehavedPython.Expectations.MethodSpyExpectations import MethodSpyExpectations
 
 class MethodSpyExpectationsTestsBase(TestCase):
     def __init__(self, name):
@@ -53,6 +52,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(expecter).toBeAnInstanceOf(MethodSpyExpectations)
+        expect(expecter).toBeAnInstanceOf(DefaultExpectations)
         expect(expecter).toBeAnInstanceOf(BaseExpect)
 
     def test_expect_method_called_passes_when_method_has_been_called(self):

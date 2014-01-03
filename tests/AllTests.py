@@ -29,12 +29,13 @@ from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.SpyOnTests import *
 
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
-from WellBehavedPythonTests.StringExpectationsTests import *
-from WellBehavedPythonTests.DefaultExpectationsTests import *
-from WellBehavedPythonTests.ContainerExpectationsTests import *
-from WellBehavedPythonTests.DictionaryExpectationsTests import *
-from WellBehavedPythonTests.NumericExpectationsTests import *
-from WellBehavedPythonTests.MethodSpyExpectationsTests import *
+
+from WellBehavedPythonTests.Expectations.StringExpectationsTests import *
+from WellBehavedPythonTests.Expectations.DefaultExpectationsTests import *
+from WellBehavedPythonTests.Expectations.ContainerExpectationsTests import *
+from WellBehavedPythonTests.Expectations.DictionaryExpectationsTests import *
+from WellBehavedPythonTests.Expectations.NumericExpectationsTests import *
+from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
 
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
 

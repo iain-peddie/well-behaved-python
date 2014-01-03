@@ -19,7 +19,7 @@
 
 from .DefaultExpectations import DefaultExpectations
 from .BaseExpect import BaseExpect
-from .MethodSpy import MethodSpy
+from ..MethodSpy import MethodSpy
 
 class MethodSpyExpectations(DefaultExpectations):
 
