@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .ExpectationsRegistry import *
+from .Expectations.ExpectationsRegistry import *
 from .MethodSpy import *
 
 _registry = ExpectationsRegistry.createDefaultExpectationsRegistry()
