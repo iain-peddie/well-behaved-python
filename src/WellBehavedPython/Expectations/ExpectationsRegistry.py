@@ -17,16 +17,16 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
-from .Engine.Expect import *
-from .Engine.ExpectNot import *
+from ..Engine.Expect import *
+from ..Engine.ExpectNot import *
 
 
-from .Expectations.DefaultExpectations import DefaultExpectations
-from .Expectations.ContainerExpectations import *
-from .Expectations.DictionaryExpectations import *
-from .Expectations.NumericExpectations import *
-from .Expectations.StringExpectations import *
-from .Expectations.MethodSpyExpectations import *
+from .DefaultExpectations import DefaultExpectations
+from .ContainerExpectations import *
+from .DictionaryExpectations import *
+from .NumericExpectations import *
+from .StringExpectations import *
+from .MethodSpyExpectations import *
 
 from .typeInference import *
 

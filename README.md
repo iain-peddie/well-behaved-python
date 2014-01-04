@@ -27,7 +27,7 @@ We now have an empty test case class which we can run. This is now a good time t
 
 ~~~~~ python
 from WellBehavedPython.Engine.TestSuite import *
-from WellBehavedPython.VerboseConsoleTestRunner import *
+from WellBehavedPython.Runners.VerboseConsoleTestRunner import *
 from TutorialTests import *
 
 if __name__ == "__main__":

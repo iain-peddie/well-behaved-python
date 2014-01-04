@@ -10,7 +10,7 @@
 #    (at your option) any later version.
 #
 #    WellBehavedPython is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    but WITHOUT ANY WARRANTY; without even the impliedwarranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
@@ -19,7 +19,7 @@
 
 from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
-from WellBehavedPython.ConsoleTestRunner import *
+from WellBehavedPython.Runners.ConsoleTestRunner import *
 
 from .Engine.SampleTestCases import *
 

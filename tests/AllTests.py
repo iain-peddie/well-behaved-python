@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-#!/usr/bin/env python3
-
 # Copyright 2013-4 Iain Peddie inr314159@hotmail.com
 # 
 #    This file is part of WellBehavedPython
@@ -40,7 +38,7 @@ from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
 
 from WellBehavedPython.Engine.TestSuite import TestSuite
-from WellBehavedPython.ConsoleTestRunner import ConsoleTestRunner
+from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
 
 if __name__ == "__main__":
     try:

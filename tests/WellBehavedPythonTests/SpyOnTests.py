@@ -19,7 +19,7 @@
 
 from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
-from WellBehavedPython.MethodSpy import *
+from WellBehavedPython.Fakes.MethodSpy import *
 
 class SampleClass:
 

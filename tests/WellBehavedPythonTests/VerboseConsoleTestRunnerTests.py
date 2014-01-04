@@ -19,7 +19,7 @@
 
 from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
-from WellBehavedPython.VerboseConsoleTestRunner import *
+from WellBehavedPython.Runners.VerboseConsoleTestRunner import *
 
 from .Engine.SampleTestCases import *
 

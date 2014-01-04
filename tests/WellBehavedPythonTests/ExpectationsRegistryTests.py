@@ -20,7 +20,7 @@
 from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.Expectations.DefaultExpectations import DefaultExpectations
-from WellBehavedPython.ExpectationsRegistry import *
+from WellBehavedPython.Expectations.ExpectationsRegistry import *
 
 class ExpectationsFactoryTests(TestCase):
 
