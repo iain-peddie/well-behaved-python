@@ -18,7 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 from .Expectations.ExpectationsRegistry import *
-from .MethodSpy import *
+from .Fakes.MethodSpy import *
 
 _registry = ExpectationsRegistry.createDefaultExpectationsRegistry()
 
