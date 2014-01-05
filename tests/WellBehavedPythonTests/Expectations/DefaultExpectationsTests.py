@@ -85,13 +85,14 @@ class DefaultExpectationsTests(TestCase):
             expect(value).toBeFalse()
 
     def test_expect_true_prepends_usermessage_to_assertion(self):
-        expect(lambda: expect(False).withUserMessage(
-                "userMessage").toBeTrue()).toRaise(
+        expect(lambda: withUserMessage("userMessage"
+                                       ).expect(False).toBeTrue()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
     def test_expect_false_prepends_usermessage_to_assertion(self):
-        expect(lambda: expect(True).withUserMessage("userMessage").toBeFalse()).toRaise(
+        expect(lambda: withUserMessage("userMessage"
+                                       ).expect(True).toBeFalse()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -104,7 +105,7 @@ class DefaultExpectationsTests(TestCase):
             expectedMessage = "Expected False to be None")
 
     def test_expect_toBeNone_prepends_user_message(self):
-        expect(lambda: expect(False).withUserMessage("userMessage").toBeNone()).toRaise(
+        expect(lambda: withUserMessage("userMessage").expect(False).toBeNone()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -130,7 +131,7 @@ class DefaultExpectationsTests(TestCase):
 
     def test_instance_of_prepends_usermessage(self):
         expect(lambda: 
-               expect(1).withUserMessage("userMessage").toBeAnInstanceOf(float)).toRaise(
+               withUserMessage("userMessage").expect(1).toBeAnInstanceOf(float)).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -165,7 +166,7 @@ class DefaultExpectationsTests(TestCase):
     def test_expected_exception_prepends_usermessage_on_wrong_exception(self):
         message = ""
         try:
-            expect(raise_error).withUserMessage("userMessage").toRaise(FloatingPointError)
+            withUserMessage("userMessage").expect(raise_error).toRaise(FloatingPointError)
         except AssertionError as ex:
             message = ex.args[0]
         expect(message).toEqual("userMessage: "
@@ -178,7 +179,7 @@ class DefaultExpectationsTests(TestCase):
         userMessage = "userMessage"
         expectedUserMessage = userMessage + ": "
         try:
-            expect(lambda: None).withUserMessage(userMessage).toRaise(KeyError)
+            withUserMessage(userMessage).expect(lambda: None).toRaise(KeyError)
         except AssertionError as ex:
             message = ex.args[0]
         expect(len(message)).toBeGreaterThan(len(userMessage))
@@ -259,7 +260,7 @@ class DefaultNotExpectationsTests(TestCase):
                           "Expected (1) not to be True")
         for i in range(0, len(expectedMessages) - 1):
             userMessage = "Index {}".format(i)
-            expect(lambda: expect(values[i]).withUserMessage(userMessage).Not.toBeTrue()).toRaise(
+            expect(lambda: withUserMessage(userMessage).expect(values[i]).Not.toBeTrue()).toRaise(
                 AssertionError,
                 expectedMessage = userMessage + ": "+ expectedMessages[i])
 
@@ -280,18 +281,18 @@ class DefaultNotExpectationsTests(TestCase):
                           "Expected () not to be False")
         for i in range(1, len(values) - 1):
             userMessage = "Index {}".format(i)
-            expect(lambda: expect(values[i]).withUserMessage(
-                    userMessage).Not.toBeFalse()).toRaise(
+            expect(lambda: withUserMessage(
+                    userMessage).expect(values[i]).Not.toBeFalse()).toRaise(
                 AssertionError,
                 expectedMessageMatches = userMessage + ".*" + expectedMessages[i])
 
     def test_expect_not_true_prepends_usermessage_to_assertion(self):
-        expect(lambda: expect(True).withUserMessage("user message").Not.toBeTrue()).toRaise(
+        expect(lambda: withUserMessage("user message").expect(True).Not.toBeTrue()).toRaise(
             AssertionError,
             expectedMessageMatches = "^user message")
 
     def test_expect_not_false_prepends_usermessage_to_assertion(self):
-        expect(lambda: expect(False).withUserMessage("user message").Not.toBeFalse()).toRaise(
+        expect(lambda: withUserMessage("user message").expect(False).Not.toBeFalse()).toRaise(
             AssertionError,
             expectedMessageMatches = "^user message")
 
@@ -304,7 +305,7 @@ class DefaultNotExpectationsTests(TestCase):
             expectedMessage = "Expected None not to be None")
 
     def test_expect_not_toBeNone_prepends_userMessage(self):
-        expect(lambda: expect(None).withUserMessage("userMessage").Not.toBeNone()).toRaise(
+        expect(lambda: withUserMessage("userMessage").expect(None).Not.toBeNone()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -335,7 +336,7 @@ class DefaultNotExpectationsTests(TestCase):
             " but was an instance of <class '.*DefaultNotExpectationsTests'>")        
 
     def test_instance_of_prepends_usermessage(self):
-        expect(lambda: expect(1).withUserMessage("userMessage").Not.toBeAnInstanceOf(int)).toRaise(
+        expect(lambda: withUserMessage("userMessage").expect(1).Not.toBeAnInstanceOf(int)).toRaise(
                 AssertionError,
                 expectedMessageMatches = "^userMessage")
 
@@ -356,7 +357,7 @@ class DefaultNotExpectationsTests(TestCase):
     def test_expect_not_exception_prepends_usermessage_when_exact_exception_raised(self):
         message = ""
         try:
-            expect(raise_error).withUserMessage("userMessage").Not.toRaise(KeyError)
+            withUserMessage("userMessage").expect(raise_error).Not.toRaise(KeyError)
         except AssertionError as ex:
             message = ex.args[0]
 
