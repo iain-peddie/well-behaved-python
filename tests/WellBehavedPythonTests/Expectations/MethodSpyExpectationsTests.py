@@ -108,7 +108,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(lambda:
-                   expect(uncalledSpy).withUserMessage("userMessage").toHaveBeenCalled()).toRaise(
+                   withUserMessage("userMessage").expect(uncalledSpy).toHaveBeenCalled()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage:")
 
@@ -272,7 +272,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(
-            lambda: expect(spy).withUserMessage("userMessage").toHaveBeenCalledWith(1, a=2)).toRaise(
+            lambda: withUserMessage("userMessage").expect(spy).toHaveBeenCalledWith(1, a=2)).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
 
@@ -365,7 +365,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(
-            lambda: expect(spy).withUserMessage("userMessage").toHaveBeenCalledAtLeast(2).times()).toRaise(
+            lambda: withUserMessage("userMessage").expect(spy).toHaveBeenCalledAtLeast(2).times()).toRaise(
         AssertionError,
         expectedMessageMatches = "^userMessage")
 
@@ -401,7 +401,7 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # When
         expect(
-            lambda: expect(spy).withUserMessage("userMessage").toHaveBeenCalledAtMost(1).time()).toRaise(
+            lambda: withUserMessage("userMessage").expect(spy).toHaveBeenCalledAtMost(1).time()).toRaise(
             AssertionError, 
             expectedMessageMatches = "^userMessage")
         
@@ -562,7 +562,7 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(
-            lambda: expect(spy).withUserMessage("userMessage").Not.toHaveBeenCalledWith(1, a=2)).toRaise(
+            lambda: withUserMessage("userMessage").expect(spy).Not.toHaveBeenCalledWith(1, a=2)).toRaise(
             AssertionError,
             expectedMessageMatches="^userMessage")
         
@@ -651,7 +651,7 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(
-            lambda: expect(spy).withUserMessage("userMessage").Not.toHaveBeenCalledAtLeast(1).time()).toRaise(
+            lambda: withUserMessage("userMessage").expect(spy).Not.toHaveBeenCalledAtLeast(1).time()).toRaise(
             AssertionError,
             expectedMessageMatches = "^userMessage")
         
@@ -689,7 +689,7 @@ class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
 
         # Then
         expect(
-            lambda: expect(spy).withUserMessage("userMessage").Not.toHaveBeenCalledAtMost(1).time()).toRaise(
+            lambda: withUserMessage("userMessage").expect(spy).Not.toHaveBeenCalledAtMost(1).time()).toRaise(
             AssertionError, 
             expectedMessageMatches = "^userMessage")
 

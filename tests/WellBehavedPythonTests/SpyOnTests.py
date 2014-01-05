@@ -69,8 +69,8 @@ class SpyOnTests(TestCase):
         after = sample.targetMethodCalled
 
         # Then
-        expect(before).withUserMessage('called should be false initially').toBeFalse()
-        expect(after).withUserMessage('called should be true after call').toBeTrue()                
+        withUserMessage('called should be false initially').expect(before).toBeFalse()
+        withUserMessage('called should be true after call').expect(after).toBeTrue()                
 
     def test_can_spy_on_and_call_through(self):
         # Where

@@ -22,6 +22,8 @@ import sys
 from WellBehavedPythonTests.Engine.TestCaseTests import *
 from WellBehavedPythonTests.Engine.TestSuiteTests import *
 from WellBehavedPythonTests.Engine.TestResultsTests import *
+from WellBehavedPythonTests.Engine.TestContextTests import *
+
 from WellBehavedPythonTests.MethodSpyTests import *
 from WellBehavedPythonTests.SpyOnTests import *
 
@@ -49,6 +51,7 @@ if __name__ == "__main__":
         engineSuite.add(TestResultsTests.suite())
         engineSuite.add(TestCaseTests.suite())
         engineSuite.add(TestSuiteTests.suite())
+        engineSuite.add(TestContextTests.suite())
 
         expectationsSuite.add(DefaultExpectationsTests.suite())
         expectationsSuite.add(DefaultNotExpectationsTests.suite())

@@ -42,9 +42,6 @@ class TestSuiteTests(TestCase):
     def after(self):
         TestCaseWithBeforeAndAfterClass.reset()
 
-    def spyMethod(self, methodName, *args):
-        self.methodCalls[methodName] = args
-
     def selfShuntIncrementMethod(self):
         self.testMethodCount += 1
 
@@ -148,8 +145,8 @@ class TestSuiteTests(TestCase):
             # we use naked asserts while waiting for isInstanceOf and
             # toBeIn
             message = "Test index {}".format(i)
-            expect(suite.tests[i]).withUserMessage(message).toBeAnInstanceOf(TestCaseWithTwoPassingTests)
-            expect(suite.tests[i].testMethodName).withUserMessage(message).toBeIn(expectedTestMethodNames)
+            withUserMessage(message).expect(suite.tests[i]).toBeAnInstanceOf(TestCaseWithTwoPassingTests)
+            withUserMessage(message).expect(suite.tests[i].testMethodName).toBeIn(expectedTestMethodNames)
 
     def test_autosuite_ingores_xtests(self):
         suite = TestCaseWithIgnoredTest.suite()
@@ -185,12 +182,12 @@ class TestSuiteTests(TestCase):
         afterAtEnd = TestCaseWithBeforeAndAfterClass.afterClassCalled
 
         # Then
-        expect(beforeAtStart).withUserMessage("beforeCalled should be false initially").toBeFalse()
-        expect(afterAtStart).withUserMessage("afterCalled should be false initially").toBeFalse()
-        expect(beforeAfterCallingBeforeClass).withUserMessage("beforeCalled should be true after calling beforeClass").toBeTrue()
-        expect(afterAfterCallingAfterClass).withUserMessage("afterCalled should be false after calling afterClass").toBeTrue()
-        expect(beforeAtEnd).withUserMessage("beforeCalled should be false after calling reset()").toBeFalse()
-        expect(afterAtEnd).withUserMessage("beforeCalled should be false after calling reset()").toBeFalse()
+        withUserMessage("beforeCalled should be false initially").expect(beforeAtStart).toBeFalse()
+        withUserMessage("afterCalled should be false initially").expect(afterAtStart).toBeFalse()
+        withUserMessage("beforeCalled should be true after calling beforeClass").expect(beforeAfterCallingBeforeClass).toBeTrue()
+        withUserMessage("afterCalled should be false after calling afterClass").expect(afterAfterCallingAfterClass).toBeTrue()
+        withUserMessage("beforeCalled should be false after calling reset()").expect(beforeAtEnd).toBeFalse()
+        withUserMessage("beforeCalled should be false after calling reset()").expect(afterAtEnd).toBeFalse()
 
     def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
         # Where
@@ -213,7 +210,7 @@ class TestSuiteTests(TestCase):
         # Then
         results = TestResults()
         test.run(results)
-        expect(results.countFailures()).withUserMessage("afterClass was called").toEqual(1)
+        withUserMessage("afterClass was called").expect(results.countFailures()).toEqual(1)
 
     def test_beforeAndAFterCase_test_passes_if_just_before_called(self):
         # Where
@@ -227,7 +224,7 @@ class TestSuiteTests(TestCase):
         TestCaseWithBeforeAndAfterClass.afterClass()
 
         # Then
-        expect(results.countFailures()).withUserMessage("Test should pass").toEqual(0)
+        withUserMessage("Test should pass").expect(results.countFailures()).toEqual(0)
         
     def test_suite_run_calls_beforeClass_before_any_tests_run(self):
         # Where
@@ -239,8 +236,8 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).withUserMessage(
-                        "beforeClass should have been called").toBeTrue()
+        withUserMessage("beforeClass should have been called"
+                        ).expect(TestCaseWithBeforeAndAfterClass.beforeClassCalled).toBeTrue()
 
 
     def test_suite_run_calls_afterClass_after_tests_run(self):
@@ -259,10 +256,12 @@ class TestSuiteTests(TestCase):
 
         # Then
         expect(results.countErrors()).toEqual(0)
-        expect(results.countFailures()).withUserMessage(
-            "failure would indicate afterClaass called too early").toEqual(0)
-        expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).withUserMessage(
-            "afterClass should have been called").toBeTrue()
+        withUserMessage(
+            "failure would indicate afterClaass called too early"
+            ).expect(results.countFailures()).toEqual(0)
+        withUserMessage(
+            "afterClass should have been called"
+            ).expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).toBeTrue()
             
 
     def test_error_in_beforeClass_marks_all_children_as_error(self):
@@ -276,7 +275,7 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(results.countErrors()).withUserMessage("both tests should count as failed").toEqual(2)
+        withUserMessage("both tests should count as failed").expect(results.countErrors()).toEqual(2)
 
     def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
         # Where
@@ -289,37 +288,24 @@ class TestSuiteTests(TestCase):
         suite.run(results)
 
         # Then
-        expect(results.countPasses()).withUserMessage("both tests should count as passed").toEqual(2)
-        expect(results.countErrors()).withUserMessage("but with an extra error anyway").toEqual(1)
-        expect(results.countFailures()).withUserMessage("exception in afterClass is an error not a failure").toEqual(0)
-
-    def test_spyMethod(self):
-        # TODO : this will be redundant once test spies are written
-        self.spyMethod("test_spyMethod", 1, "2", 3.0, "four")
-        expect(self.methodCalls["test_spyMethod"]).toEqual([1, "2", 3.0, "four"])
-
-    def test_Spying(self):
-        # TODO : this will be redundant once test spies are written
-        results = TestResults();
-        results.registerSuiteStarted = lambda *args: self.spyMethod("registerSuiteStarted", *args)
-        results.registerSuiteStarted("some suite")
-        expect(self.methodCalls["registerSuiteStarted"]).toContain("some suite")
+        withUserMessage("both tests should count as passed").expect(results.countPasses()).toEqual(2)
+        withUserMessage("but with an extra error anyway").expect(results.countErrors()).toEqual(1)
+        withUserMessage("exception in afterClass is an error not a failure").expect(results.countFailures()).toEqual(0)
 
     def test_suite_run_calls_suite_started_suite_ended_on_initial_suite(self):
         # Where
         results = TestResults()
-        results.registerSuiteStarted = lambda *args: self.spyMethod("registerSuiteStarted", *args)
-        results.registerSuiteCompleted = lambda *args: self.spyMethod("registerSuiteCompleted", *args)
+        spyOn(results.registerSuiteStarted)
+        spyOn(results.registerSuiteCompleted)
         suite = TestCaseWithPassingTest.suite()
+        testName = 'TestCaseWithPassingTest'
 
         # When
         suite.run(results)
 
         # Then
-        expect(self.methodCalls).toContainKey("registerSuiteStarted")
-        expect(self.methodCalls["registerSuiteStarted"]).toContain("TestCaseWithPassingTest")
-        expect(self.methodCalls).toContainKey("registerSuiteCompleted")
-        expect(self.methodCalls["registerSuiteCompleted"]).toContain("TestCaseWithPassingTest")
+        expect(results.registerSuiteStarted).toHaveBeenCalledWith(testName)
+        expect(results.registerSuiteCompleted).toHaveBeenCalledWith(testName)
 
     def test_suite_run_calls_run_using_subsuite(self):
         # Where
@@ -374,15 +360,17 @@ class TestSuiteTests(TestCase):
 
 
         # Then 
-        expect(len(wholeResults.suiteResults)).withUserMessage("Should have two child results").toEqual(2)
+        withUserMessage("Should have two child results"
+                        ).expect(len(wholeResults.suiteResults)).toEqual(2)
         failingResults = wholeResults.suiteResults[0]
         passingResults = wholeResults.suiteResults[1]
 
-        expect(failingResults.countTests()).withUserMessage("Failing results should contain one test").toEqual(1)
-        expect(failingResults.countFailures()).withUserMessage("Failing results should contain one failure").toEqual(1)
-        expect(passingResults.countTests()).withUserMessage("Passing results should contain one test").toEqual(1)
-        expect(passingResults.countPasses()).withUserMessage("Passing results should contain one failure").toEqual(1)
-        expect(passingResults.countFailures()).withUserMessage("Passing results should contain no failures").toEqual(0)
+        withUserMessage("Failing results should contain one test").expect(failingResults.countTests()).toEqual(1)
+        withUserMessage("Failing results should contain one failure").expect(failingResults.countFailures()).toEqual(1)
+        withUserMessage("Passing results should contain one test").expect(passingResults.countTests()).toEqual(1)
+        withUserMessage("Passing results should contain one failure").expect(passingResults.countPasses()).toEqual(1)
+        withUserMessage("Passing results should contain no failures").expect(passingResults.countFailures()).toEqual(0)
+
 
        
 

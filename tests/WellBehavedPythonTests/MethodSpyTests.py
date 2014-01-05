@@ -77,8 +77,8 @@ class MethodSpyTests(TestCase):
         spy()
 
         # Then
-        expect(spy.hasBeenCalled()).withUserMessage(
-            "Called spy should claim to have been called").toBeTrue()
+        withUserMessage("Called spy should claim to have been called"
+                        ).expect(spy.hasBeenCalled()).toBeTrue()
 
     def test_that_spy_called_once_getNumberOfCalls_returns_1(self):
         # Where
@@ -88,7 +88,8 @@ class MethodSpyTests(TestCase):
         spy()
 
         # Then
-        expect(spy.getNumberOfCalls()).withUserMessage("Number of calls").toEqual(1)
+        withUserMessage("Number of calls"
+                        ).expect(spy.getNumberOfCalls()).toEqual(1)
         
     def test_that_spy_called_twice_getNumberOfCalls_returns_2(self):
         # Where
@@ -99,7 +100,8 @@ class MethodSpyTests(TestCase):
         spy()
 
         # Then
-        expect(spy.getNumberOfCalls()).withUserMessage("Number of calls").toEqual(2)
+        withUserMessage("Number of calls"
+                        ).expect(spy.getNumberOfCalls()).toEqual(2)
 
     def test_that_spy_description_is_based_on_methodName(self):
         # Where
@@ -285,8 +287,9 @@ class MethodSpyTests(TestCase):
         value = spy()
 
         # Then
-        expect(value).withUserMessage("Spy should return the configured return value of {}".format(
-                returnValue)).Not.toBeNone()
+        withUserMessage("Spy should return the configured return value of {}".format(
+                returnValue)
+                        ).expect(value).Not.toBeNone()
         expect(value).toEqual(returnValue)
 
     def test_that_spy_can_be_configured_to_raise_a_given_exception(self):
@@ -295,7 +298,8 @@ class MethodSpyTests(TestCase):
         spy.andRaise(KeyError)
 
         #
-        expect(lambda: spy()).withUserMessage('spy configured as saboteur should raise the given exception class').toRaise(KeyError)
+        withUserMessage('spy configured as saboteur should raise the given exception class'
+                        ).expect(lambda: spy()).toRaise(KeyError)
 
     def test_that_when_exceptions_and_return_values_combined_exceptions_win(self):
         # Where
@@ -318,8 +322,10 @@ class MethodSpyTests(TestCase):
         valueAfter = self.targetMethodCalled
 
         # Then
-        expect(valueBefore).withUserMessage('called flag should be false by default').toBeFalse()
-        expect(valueAfter).withUserMessage('called flag should be true after call').toBeTrue()
+        withUserMessage('called flag should be false by default'
+                        ).expect(valueBefore).toBeFalse()
+        withUserMessage('called flag should be true after call'
+                        ).expect(valueAfter).toBeTrue()
 
     def test_that_targetMethodWithPoisitionalArgs_sets_called_flag(self):
         # Where
@@ -330,8 +336,10 @@ class MethodSpyTests(TestCase):
         valueAfter = self.targetMethodCalled
 
         # Then
-        expect(valueBefore).withUserMessage('called flag should be false by default').toBeFalse()
-        expect(valueAfter).withUserMessage('called flag should be true after call').toBeTrue()
+        withUserMessage('called flag should be false by default'
+                        ).expect(valueBefore).toBeFalse()
+        withUserMessage('called flag should be true after call'
+                        ).expect(valueAfter).toBeTrue()
         expect(self.targetArgs).toEqual(1)
 
     def test_that_targetMethodWithKeywordArgs_sets_called_flag(self):
@@ -343,8 +351,8 @@ class MethodSpyTests(TestCase):
         valueAfter = self.targetMethodCalled
 
         # Then
-        expect(valueBefore).withUserMessage('called flag should be false by default').toBeFalse()
-        expect(valueAfter).withUserMessage('called flag should be true after call').toBeTrue()
+        withUserMessage('called flag should be false by default').expect(valueBefore).toBeFalse()
+        withUserMessage('called flag should be true after call').expect(valueAfter).toBeTrue()
         expect(self.targetArgs).toEqual('the worst')
         
 

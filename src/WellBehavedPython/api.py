@@ -17,6 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+from .Engine.TestContext import *
 from .Expectations.ExpectationsRegistry import *
 from .Fakes.MethodSpy import *
 
@@ -29,6 +30,11 @@ def expect(actual):
     based on the class type."""
 
     return _registry.expect(actual)
+
+def withUserMessage(message):
+    """Facade for creating test contexts."""
+
+    return TestContext(_registry, message)
 
 def registerExpectationClass(usePredicate, constructor):
     """Way of registereing new expectation classes.
