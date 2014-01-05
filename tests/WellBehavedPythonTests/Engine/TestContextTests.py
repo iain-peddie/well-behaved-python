@@ -54,7 +54,13 @@ class TestContextTests(TestCase):
         expect(registry.expect).toHaveBeenCalledWith(5)
         expect(expectations.withUserMessage).toHaveBeenCalledWith(userMessage)
         expect(result).toEqual(expectations)
-        
+
+    def test_that_withUserMessage_api_function_returns_a_TestContext_instance(self):
+        # When
+        context = withUserMessage('asdf')
+
+        # Then
+        expect(context).toBeAnInstanceOf(TestContext)
 
     def createSpyRegistry(self):
         methods = {
