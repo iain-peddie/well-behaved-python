@@ -96,8 +96,8 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
         testCase.afterClassCalled = False
 
     def test_statics(self):
-        expect(self.beforeClassCalled).withUserMessage("beforeClass was not called").toBeTrue()
-        expect(self.afterClassCalled).withUserMessage("afterClass was called before test").toBeFalse()
+        withUserMessage("beforeClass was not called").expect(self.beforeClassCalled).toBeTrue()
+        withUserMessage("afterClass was called before test").expect(self.afterClassCalled).toBeFalse()
 
 class TestCaseWithBeforeClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
