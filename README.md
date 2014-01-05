@@ -104,17 +104,19 @@ The simplest asserts expect things to be true or false:
 These assertions lead to messages of 'Expected False to be True', or
 'Expected True to be False'.
 
-Each assertion object has an optional method withUserMessage, which returns
-self. This allows an optional  user specified message to be specified, and
-chained in. This is particularly useful for improving output messages when more than
-one physical expectation is in the test:
+Sometimes a little extra custom context is useful. This can be set by
+starting a line with withUserMessage, rather than expect. This can be
+used no matter what value is being expected against. It is
+particularly useful for improving output messages when more than one
+physical expectation is in the test:
 
 ~~~~~ python 
 
     def test_add_user_message(self):
         # We can add user messages to expect calls, to identify
         # what has gone wrong more clearly
-        expect(True).withUserMessage("A literal True value should be true...").toBeTrue()
+        withUserMessage("A literal True value should be true..."
+                       ).expect(True).toBeTrue()
         # Failure message would be:
         # "A literal True values should be true: Expected True to be True"
 ~~~~~
