@@ -62,6 +62,15 @@ class TestContextTests(TestCase):
         # Then
         expect(context).toBeAnInstanceOf(TestContext)
 
+    def test_that_withUserMessage_api_function_constructs_messages_correctly(self):
+        # When
+        context = withUserMessage('asdf')
+
+        # Then
+        expect(lambda: context.expect(True).toBeFalse()).toRaise(
+            AssertionError,
+            expectedMessageMatches = '^asdf')
+
     def createSpyRegistry(self):
         methods = {
             'expect': MethodSpy().andCall(lambda actual: registry),

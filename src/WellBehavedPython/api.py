@@ -34,7 +34,7 @@ def expect(actual):
 def withUserMessage(message):
     """Facade for creating test contexts."""
 
-    return TestContext(None, None)
+    return TestContext(_registry, message)
 
 def registerExpectationClass(usePredicate, constructor):
     """Way of registereing new expectation classes.
