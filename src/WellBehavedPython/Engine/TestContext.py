@@ -19,10 +19,14 @@
 
 class TestContext:
     
-    def __init__(self, registry):
+    def __init__(self, registry, userMessage = None):
         self._registry = registry
+        self._userMessage = userMessage
 
     def expect(self, actual):
-        return self._registry.expect(actual)
+        expectation =  self._registry.expect(actual)
+        if self._userMessage is not None:
+            expectation.withUserMessage(self._userMessage)
+        return expectation
 
 

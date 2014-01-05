@@ -40,6 +40,22 @@ class TestContextTests(TestCase):
         expect(expectations.withUserMessage).Not.toHaveBeenCalled()
         expect(result).toEqual(expectations)
 
+    def test_that_context_with_user_message_calls_expect_then_withUserMessage(self):
+        # Where
+        userMessage = 'I am the user message contents'
+        registry = self.createSpyRegistry()
+        expectations = registry
+        context = TestContext(registry, userMessage = userMessage)
+
+        # When
+        result = context.expect(5)
+
+        # Then
+        expect(registry.expect).toHaveBeenCalledWith(5)
+        expect(expectations.withUserMessage).toHaveBeenCalledWith(userMessage)
+        expect(result).toEqual(expectations)
+        
+
     def createSpyRegistry(self):
         methods = {
             'expect': MethodSpy().andCall(lambda actual: registry),
