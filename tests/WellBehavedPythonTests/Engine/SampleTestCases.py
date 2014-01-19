@@ -25,38 +25,24 @@ from WellBehavedPython.Engine.TestCase import *
 # tests themselves.
 
 class TestCaseWithNoTests(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
+    pass
 
 class TestCaseWithPassingTest(TestCase):
     
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
     def test_pass(self):
         pass
 
 class TestCaseWithFailingTest(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_fail(self):
         expect(None).fail('Failing test')
 
 class TestCaseWithErrorTest(TestCase):
 
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
     def test_error(self):
         raise KeyError('You are locked out')
 
 class TestCaseWithIgnoredTest(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def xtest_ignore(self):
         pass
@@ -65,8 +51,6 @@ class TestCaseWithTwoPassingTests(TestCase):
     """This class should never be run directly.
 
     It is used to test the auto-detection of test cases."""
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
 
     def test_example1(self):
         print("test_example1")
@@ -78,9 +62,6 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
 
     beforeClassCalled = False
     afterClassCalled = False
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
 
     @classmethod
     def beforeClass(testCase):
@@ -101,9 +82,6 @@ class TestCaseWithBeforeAndAfterClass(TestCase):
 
 class TestCaseWithBeforeClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
-    def __init__(self, testFunctionName):
-        TestCaseWithBeforeAndAfterClass.__init__(self, testFunctionName)        
-
     @classmethod
     def beforeClass(type):
         raise KeyError("Saboteur sabotages beforeClass")
@@ -113,9 +91,6 @@ class TestCaseWithBeforeClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
 class TestCaseWithAfterClassSaboteur(TestCaseWithBeforeAndAfterClass):
 
-    def __init__(self, testFunctionName):
-        TestCaseWithBeforeAndAfterClass.__init__(self, testFunctionName)        
-
     @classmethod
     def afterClass(type):
         raise KeyError("Saboteur sabotages afterClass")
@@ -124,9 +99,6 @@ class TestCaseWithAfterClassSaboteur(TestCaseWithBeforeAndAfterClass):
         pass
 
 class TestCaseWithLongTestName(TestCase):
-
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)        
 
     def test_case_with_test_name_longer_than_test_case_name(self):
         pass

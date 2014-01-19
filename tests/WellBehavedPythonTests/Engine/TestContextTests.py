@@ -23,9 +23,6 @@ from WellBehavedPython.Engine.TestContext import TestContext
 
 class TestContextTests(TestCase):
 
-    def __init__(self, name):
-        TestCase.__init__(self, name)
-
     def test_that_context_with_no_user_message_calls_expect_on_registry(self):
         # Where
         registry = self.createSpyRegistry()

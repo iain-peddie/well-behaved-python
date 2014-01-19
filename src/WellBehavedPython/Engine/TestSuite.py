@@ -60,8 +60,6 @@ class TestSuite(TestComponent):
                 length = newLength
         return length
 
-
-
     def run(self, results):
         """Runs all the tests in the suite."""
         if self.testClass is None:

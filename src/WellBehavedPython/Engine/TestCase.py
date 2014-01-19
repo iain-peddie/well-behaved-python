@@ -30,7 +30,7 @@ class TestCase(TestComponent):
     TestCase. There may be a more convenient method based on decorators
     implemented in the future."""
     
-    def __init__(self, testMethodName):
+    def __init__(self):
         """Creates an instance of this test class configured
         to run the method testMethodName in the actual test object.
 
@@ -39,9 +39,15 @@ class TestCase(TestComponent):
         testMethodName: the name of the method within the class to
             run when run is called.
 """
+        self.testMethod = lambda results: None
+        self.testMethodName = '<TestUnset>'
+        self.ignore = True
+
+    def configureTest(self, testMethodName):
         self.testMethod = getattr(self, testMethodName)
         self.testMethodName = testMethodName
         self.ignore = False
+        
 
     def before(self):
         """Override this to create the setup logic which should run
@@ -140,8 +146,7 @@ class TestCase(TestComponent):
         -------
         A test suite configured with every method which start with 'test'."""
         testMethods = [
-            ];
-    
+            ];    
 
         for key in klass.__dict__.keys():
             if key.startswith("test") or key.startswith("xtest"):
@@ -150,7 +155,8 @@ class TestCase(TestComponent):
         onlyClassName = TestCase.getUnqualifiedClassName(klass)
         suite = TestSuite(onlyClassName);
         for testMethod in testMethods:
-            testCase = klass(testMethod)
+            testCase = klass()
+            testCase.configureTest(testMethod)
             testCase.ignore = testMethod.startswith("x")
                 
             suite.add(testCase)

@@ -24,9 +24,6 @@ from WellBehavedPython.Expectations.ExpectationsRegistry import *
 
 class ExpectationsFactoryTests(TestCase):
 
-    def __init__(self, name):
-        TestCase.__init__(self, name)
-
     def test_that_factory_says_should_not_create_when_predicate_is_False(self):
         # Where
         factory = ExpectationsFactory(lambda klass: False, None)
@@ -71,9 +68,6 @@ class ExpectationsFactoryTests(TestCase):
 
 class ExpectationsRegistryTests(TestCase):
     
-    def __init__(self, name):
-        TestCase.__init__(self, name)
-
     def test_that_creation_using_a_fresh_registry_creates_default_expectations(self):
         # Where
         actual = {'a': 'b'}

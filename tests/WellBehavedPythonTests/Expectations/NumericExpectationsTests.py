@@ -21,8 +21,6 @@ from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
 
 class NumericExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_equals_doesnt_raise_if_numeric_items_are_equal(self):
         expect(1).toEqual(1)
@@ -163,8 +161,6 @@ class NumericExpectationsTests(TestCase):
         expect(0).toEqual(0)
 
 class NumericNotExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_equals_doesnt_raise_if_numbers_unequal(self):
         expect(1).Not.toEqual(2)

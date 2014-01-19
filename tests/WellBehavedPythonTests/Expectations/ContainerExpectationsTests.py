@@ -21,8 +21,7 @@ from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import *
 
 class ContainerExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
+
     def test_expect_x_to_be_in_y_passes_when_x_is_in_y(self):
         x = 602
         y = [601, x, 603]
@@ -154,8 +153,6 @@ First difference at index 0: 0 != 1""")
         expect((1, 2)).toEqual([1, 2])
 
 class ContainerNotExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_expect_not_x_to_be_in_y_passes_when_x_is_not_in_y(self):
         x = 602

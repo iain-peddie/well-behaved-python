@@ -23,8 +23,6 @@ from WellBehavedPython.Fakes.MethodSpy import MethodSpy
 from WellBehavedPython.Expectations.MethodSpyExpectations import MethodSpyExpectations
 
 class MethodSpyExpectationsTestsBase(TestCase):
-    def __init__(self, name):
-        TestCase.__init__(self, name)
 
     def createMethodSpyWhichHasNotBeenCalled(self):
         spy = MethodSpy()
@@ -40,8 +38,6 @@ class MethodSpyExpectationsTestsBase(TestCase):
 
 
 class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
-    def __init__(self, name):
-        MethodSpyExpectationsTestsBase.__init__(self, name)
 
     def test_spy_expectations_registered_for_spies_by_default(self):
         # Where
@@ -408,9 +404,6 @@ class MethodSpyExpectationsTests(MethodSpyExpectationsTestsBase):
             
 
 class MethodSpyNotExpectationsTests(MethodSpyExpectationsTestsBase):
-
-    def __init__(self, name):
-        MethodSpyExpectationsTestsBase.__init__(self, name)
 
     def test_expect_method_not_called_fails_when_method_has_been_called(self):
         # Where

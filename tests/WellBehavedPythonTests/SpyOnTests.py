@@ -31,9 +31,6 @@ class SampleClass:
 
 class SpyOnTests(TestCase):
 
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
     def before(self):
         self.SubjectObject = SampleClass()
         spyOn(self.SubjectObject.parameterlessMethod)

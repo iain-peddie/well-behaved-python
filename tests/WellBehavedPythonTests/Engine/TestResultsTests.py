@@ -23,9 +23,6 @@ from WellBehavedPython.Engine.TestResults import *
 
 class TestResultsTests(TestCase):
 
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
     def before(self):
         self.results = TestResults()
 

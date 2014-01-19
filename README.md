@@ -15,13 +15,14 @@ from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.api import *
 ~~~~~
 
-Next, set up a the test case class and constructor.
+Next, set up a the test case class, using a default constructor:
 
 ~~~~~ python
 class TutorialTests(TestCase):
-    def __init__(self, testName):
-        TestCase.__init__(self, testName)
+    pass
 ~~~~~
+
+If you need to do some setup before your classes run write a method called before, and perform the setup there. If your test case class really needs a non-default constructor argument, make sure that you call back down to the TestCase constructor; but note that this means that the auto-suite detection will not work for your test case class. Try and avoid adding any parameters to the test case constructors if at all possible.
 
 We now have an empty test case class which we can run. This is now a good time to setup the running of it using a suite that can discover test methods in the class. 
 
