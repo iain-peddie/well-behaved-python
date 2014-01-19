@@ -24,8 +24,6 @@ def raise_error():
     raise KeyError("The wrong key was presented")
 
 class DefaultExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_expects_fail_throws_AssertionError(self):
         # DON'T USE EXPECTED EXCEPTION
@@ -241,8 +239,6 @@ class DefaultExpectationsTests(TestCase):
 
 
 class DefaultNotExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_fail_doesnt_raise_anything(self):
         expect(True).Not.fail()

@@ -23,8 +23,6 @@ from WellBehavedPython.Engine.TestCase import *
 import re
 
 class StringExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_string_starts_with_passes_on_identical_short_strings(self):
         data = 'asdf'
@@ -170,12 +168,7 @@ Difference is:
             AssertionError,
             expectedMessageMatches = '^userMessage')                    
 
-
-
-
 class StringNotExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_string_not_to_start_with_passes_if_strings_start_differently(self):
         data = 'asdf'

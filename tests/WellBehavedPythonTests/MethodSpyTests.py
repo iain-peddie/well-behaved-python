@@ -26,9 +26,6 @@ import io
 
 class MethodSpyTests(TestCase):
 
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
     def targetMethod(self):
         """Method with a manual spy.
 

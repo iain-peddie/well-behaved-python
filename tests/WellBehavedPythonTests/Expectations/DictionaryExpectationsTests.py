@@ -23,8 +23,6 @@ from WellBehavedPython.Engine.TestCase import *
 from collections import *
 
 class DictionaryExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_dictionary_contains_key_passes_when_key_in_dictionary(self):
         data = { 'a' : 1 }
@@ -104,8 +102,6 @@ class DictionaryExpectationsTests(TestCase):
             expectedMessageMatches= "^userMessage")
 
 class DictionaryNotExpectationsTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def test_dictionary_not_contains_key_fails_when_key_in_dictionary(self):
         data = { 'a' : 1 }

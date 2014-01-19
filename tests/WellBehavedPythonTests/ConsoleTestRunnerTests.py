@@ -24,11 +24,8 @@ from WellBehavedPython.Runners.ConsoleTestRunner import *
 from .Engine.SampleTestCases import *
 
 import io
-
     
 class ConsoleTestRunnerTests(TestCase):
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
 
     def before(self):
         self.output = io.StringIO()

@@ -30,7 +30,7 @@ class TestCase(TestComponent):
     TestCase. There may be a more convenient method based on decorators
     implemented in the future."""
     
-    def __init__(self, testMethodName):
+    def __init__(self):
         """Creates an instance of this test class configured
         to run the method testMethodName in the actual test object.
 
@@ -42,7 +42,6 @@ class TestCase(TestComponent):
         self.testMethod = lambda results: None
         self.testMethodName = '<TestUnset>'
         self.ignore = True
-#        self.configureTest(testMethodName)
 
     def configureTest(self, testMethodName):
         self.testMethod = getattr(self, testMethodName)
@@ -156,7 +155,7 @@ class TestCase(TestComponent):
         onlyClassName = TestCase.getUnqualifiedClassName(klass)
         suite = TestSuite(onlyClassName);
         for testMethod in testMethods:
-            testCase = klass(testMethod)
+            testCase = klass()
             testCase.configureTest(testMethod)
             testCase.ignore = testMethod.startswith("x")
                 

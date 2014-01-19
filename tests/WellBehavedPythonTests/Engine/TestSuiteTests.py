@@ -30,11 +30,8 @@ from .SampleTestCases import *
 
 class TestSuiteTests(TestCase):
 
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-        self.methodCalls = {}
-
     def before(self):
+        self.methodCalls = {}
         self.testMethodCount = 0
         self.suite = TestSuite("self.suite")
         self.results = TestResults()
@@ -50,7 +47,7 @@ class TestSuiteTests(TestCase):
         
     def test_running_suite_with_one_test_runs_one_test(self):
         # Where
-        test = TestSuiteTests("selfShuntIncrementMethod")
+        test = self.createTestSuiteTests("selfShuntIncrementMethod")
         test.configureTest('selfShuntIncrementMethod')
         self.suite.add(test)
         
@@ -63,19 +60,18 @@ class TestSuiteTests(TestCase):
 
     def test_that_suite_with_one_test_counts_one_test(self):
         # Where
-        test = TestSuiteTests("selfShuntIncrementMethod")
+        test = self.createTestSuiteTests("selfShuntIncrementMethod")
         self.suite.add(test)
 
         # When
 
         # Then
         expect(self.suite.countTests()).toEqual(1)
-        
 
     def test_running_suite_with_two_tests_runs_both(self):
-        test1 = TestSuiteTests("selfShuntIncrementMethod")
+        test1 = self.createTestSuiteTests("selfShuntIncrementMethod")
         test1.configureTest('selfShuntIncrementMethod');
-        test2 = TestSuiteTests("selfShuntMethod")
+        test2 = self.createTestSuiteTests("selfShuntMethod")
         test2.configureTest('selfShuntMethod')
 
         self.suite.add(test1)
@@ -91,8 +87,8 @@ class TestSuiteTests(TestCase):
 
     def test_that_suite_with_two_tests_from_one_class_counts_both(self):
         # Where
-        test1 = TestSuiteTests("selfShuntIncrementMethod")
-        test2 = TestSuiteTests("selfShuntIncrementMethod")
+        test1 = self.createTestSuiteTests("selfShuntIncrementMethod")
+        test2 = self.createTestSuiteTests("selfShuntIncrementMethod")
 
         self.suite.add(test1)
         self.suite.add(test2)
@@ -108,8 +104,8 @@ class TestSuiteTests(TestCase):
         # if additions to different classes are added to the same suite directly
         
         # Where 
-        test1 = TestCaseWithPassingTest("test_pass")
-        test2 = TestCaseWithTwoPassingTests("test_example1")
+        test1 = self.createTest(TestCaseWithPassingTest, "test_pass")
+        test2 = self.createTest(TestCaseWithTwoPassingTests, "test_example1")
         suite = self.suite
 
         # When
@@ -123,8 +119,8 @@ class TestSuiteTests(TestCase):
 
     def test_that_suite_with_inner_suite_counts_all_subtests(self):
         # Where
-        test1 = TestSuiteTests("selfShuntIncrementMethod")
-        test2 = TestSuiteTests("selfShuntIncrementMethod")
+        test1 = self.createTestSuiteTests("selfShuntIncrementMethod")
+        test2 = self.createTestSuiteTests("selfShuntIncrementMethod")
 
         innerSuite = TestSuite("inner")
         innerSuite.add(test1)
@@ -206,8 +202,7 @@ class TestSuiteTests(TestCase):
     def test_BeforeAndAfterCase_test_fails_if_before_not_called(self):
         # Where
         TestCaseWithBeforeAndAfterClass.reset()
-        test = TestCaseWithBeforeAndAfterClass("test_statics")
-        test.configureTest('test_statics')
+        test = self.createTest(TestCaseWithBeforeAndAfterClass, "test_statics")
         TestCaseWithBeforeAndAfterClass.beforeClass()
         TestCaseWithBeforeAndAfterClass.afterClass()
         
@@ -219,7 +214,7 @@ class TestSuiteTests(TestCase):
     def test_beforeAndAFterCase_test_passes_if_just_before_called(self):
         # Where
         TestCaseWithBeforeAndAfterClass.reset()
-        test = TestCaseWithBeforeAndAfterClass("test_statics")
+        test = self.createTest(TestCaseWithBeforeAndAfterClass, "test_statics")
         results = TestResults()
 
         # When
@@ -266,13 +261,18 @@ class TestSuiteTests(TestCase):
         withUserMessage(
             "afterClass should have been called"
             ).expect(TestCaseWithBeforeAndAfterClass.afterClassCalled).toBeTrue()
+
+    def createTest(self, klass, testMethod):
+        test = klass()
+        test.configureTest(testMethod)
+        return test
             
 
     def test_error_in_beforeClass_marks_all_children_as_error(self):
         # Where
         suite = self.suite
-        suite.add(TestCaseWithBeforeClassSaboteur("test_statics"))
-        suite.add(TestCaseWithBeforeClassSaboteur("test_two"))
+        suite.add(self.createTest(TestCaseWithBeforeClassSaboteur, "test_statics"))
+        suite.add(self.createTest(TestCaseWithBeforeClassSaboteur, "test_two"))
 
         # When
         results = TestResults()
@@ -284,11 +284,9 @@ class TestSuiteTests(TestCase):
     def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
         # Where
         suite = self.suite
-        staticsSubsuite = TestCaseWithAfterClassSaboteur("test_statics")
-        staticsSubsuite.configureTest('test_statics')
+        staticsSubsuite = self.createTest(TestCaseWithAfterClassSaboteur, "test_statics")
 
-        otherSubsuite = TestCaseWithAfterClassSaboteur("test_two")
-        otherSubsuite.configureTest('test_two')
+        otherSubsuite = self.createTest(TestCaseWithAfterClassSaboteur, "test_two")
         suite.add(staticsSubsuite)
         suite.add(otherSubsuite)
 
@@ -379,6 +377,12 @@ class TestSuiteTests(TestCase):
         withUserMessage("Passing results should contain one test").expect(passingResults.countTests()).toEqual(1)
         withUserMessage("Passing results should contain one failure").expect(passingResults.countPasses()).toEqual(1)
         withUserMessage("Passing results should contain no failures").expect(passingResults.countFailures()).toEqual(0)
+
+    def createTestSuiteTests(self, testMethod):
+        test = TestSuiteTests()
+        test.configureTest(testMethod)
+        return test
+        
 
 
        

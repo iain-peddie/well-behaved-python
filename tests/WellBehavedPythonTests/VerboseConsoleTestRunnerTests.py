@@ -27,9 +27,6 @@ import io
 
 class VerboseConsoleTestRunnerTests(TestCase):
 
-    def __init__(self, testFunctionName):
-        TestCase.__init__(self, testFunctionName)
-
     def before(self):
         self.output = io.StringIO()
         self.runner = VerboseConsoleTestRunner(self.output)
