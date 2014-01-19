@@ -56,6 +56,7 @@ class TestCaseTests(TestCase):
         # then after would be called after this test, which
         # would mean we couldn't test for it...
         test = TestCaseTests("targetGoodMethod")
+        test.configureTest('targetGoodMethod')
         test.run(TestResults())
         
         expect(test.log).toEqual("before targetMethod after ")
@@ -64,6 +65,7 @@ class TestCaseTests(TestCase):
         # bypass usual error handling, because we want to
         # ingore it for this test
         test = TestCaseTests("targetErrorMethod")
+        test.configureTest('targetErrorMethod')
         test.handleError = test.ignoreError
         results = TestResults()
         test.run(results)
@@ -95,6 +97,7 @@ class TestCaseTests(TestCase):
 
     def test_that_registerTestPassed_called_if_test_passed(self):
         test = TestCaseTests("targetGoodMethod")
+        test.configureTest('targetGoodMethod')
         results = TestResults()
         test.run(results)
 
@@ -107,6 +110,7 @@ class TestCaseTests(TestCase):
     def test_that_registerTestFailed_called_if_test_failed(self):
         # Where
         test = TestCaseTests("targetFailedMethod")
+        test.configureTest('targetFailedMethod')
         results = TestResults()
         test.handleError = self.ignoreError
 
@@ -123,6 +127,7 @@ class TestCaseTests(TestCase):
     def test_that_registerTestError_called_if_test_failed(self):
         # Where
         test = TestCaseTests("targetErrorMethod")
+        test.configureTest('targetErrorMethod')
         results = TestResults()
         test.handleError = self.ignoreError
 
@@ -148,6 +153,7 @@ class TestCaseTests(TestCase):
     def test_that_get_maximum_description_returns_3_plus_test_name_length_for_0_indentation(self):
         # Where
         test = TestCaseTests("targetGoodMethod")
+        test.configureTest('targetGoodMethod')
         count = 0
         indentationPerCount = 3
 
@@ -160,6 +166,7 @@ class TestCaseTests(TestCase):
     def test_that_get_maximum_description_adds_indentation_to_result(self):
         # Where
         test = TestCaseTests("targetGoodMethod")
+        test.configureTest('targetGoodMethod')
         count = 1
         indentationPerCount = 3
 

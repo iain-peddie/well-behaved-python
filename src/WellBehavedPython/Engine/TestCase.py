@@ -39,9 +39,16 @@ class TestCase(TestComponent):
         testMethodName: the name of the method within the class to
             run when run is called.
 """
+        self.testMethod = lambda results: None
+        self.testMethodName = '<TestUnset>'
+        self.ignore = True
+#        self.configureTest(testMethodName)
+
+    def configureTest(self, testMethodName):
         self.testMethod = getattr(self, testMethodName)
         self.testMethodName = testMethodName
         self.ignore = False
+        
 
     def before(self):
         """Override this to create the setup logic which should run
@@ -140,8 +147,7 @@ class TestCase(TestComponent):
         -------
         A test suite configured with every method which start with 'test'."""
         testMethods = [
-            ];
-    
+            ];    
 
         for key in klass.__dict__.keys():
             if key.startswith("test") or key.startswith("xtest"):
@@ -151,6 +157,7 @@ class TestCase(TestComponent):
         suite = TestSuite(onlyClassName);
         for testMethod in testMethods:
             testCase = klass(testMethod)
+            testCase.configureTest(testMethod)
             testCase.ignore = testMethod.startswith("x")
                 
             suite.add(testCase)

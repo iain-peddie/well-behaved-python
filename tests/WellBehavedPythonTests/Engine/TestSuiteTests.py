@@ -51,6 +51,7 @@ class TestSuiteTests(TestCase):
     def test_running_suite_with_one_test_runs_one_test(self):
         # Where
         test = TestSuiteTests("selfShuntIncrementMethod")
+        test.configureTest('selfShuntIncrementMethod')
         self.suite.add(test)
         
         # When
@@ -73,7 +74,9 @@ class TestSuiteTests(TestCase):
 
     def test_running_suite_with_two_tests_runs_both(self):
         test1 = TestSuiteTests("selfShuntIncrementMethod")
+        test1.configureTest('selfShuntIncrementMethod');
         test2 = TestSuiteTests("selfShuntMethod")
+        test2.configureTest('selfShuntMethod')
 
         self.suite.add(test1)
         self.suite.add(test2)
@@ -204,6 +207,7 @@ class TestSuiteTests(TestCase):
         # Where
         TestCaseWithBeforeAndAfterClass.reset()
         test = TestCaseWithBeforeAndAfterClass("test_statics")
+        test.configureTest('test_statics')
         TestCaseWithBeforeAndAfterClass.beforeClass()
         TestCaseWithBeforeAndAfterClass.afterClass()
         
@@ -280,8 +284,13 @@ class TestSuiteTests(TestCase):
     def test_error_in_afterClass_doesnt_mark_any_extra_errors(self):
         # Where
         suite = self.suite
-        suite.add(TestCaseWithAfterClassSaboteur("test_statics"))
-        suite.add(TestCaseWithAfterClassSaboteur("test_two"))
+        staticsSubsuite = TestCaseWithAfterClassSaboteur("test_statics")
+        staticsSubsuite.configureTest('test_statics')
+
+        otherSubsuite = TestCaseWithAfterClassSaboteur("test_two")
+        otherSubsuite.configureTest('test_two')
+        suite.add(staticsSubsuite)
+        suite.add(otherSubsuite)
 
         # When
         results = TestResults()
