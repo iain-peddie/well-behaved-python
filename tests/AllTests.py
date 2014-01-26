@@ -38,6 +38,7 @@ from WellBehavedPythonTests.Expectations.NumericExpectationsTests import *
 from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
 
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
+from WellBehavedPythonTests.BackwardsCompatibilityTests import *
 
 from WellBehavedPython.Engine.TestSuite import TestSuite
 from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
@@ -75,6 +76,7 @@ if __name__ == "__main__":
         suite.add(SpyOnTests.suite())
         suite.add(ExpectationsFactoryTests.suite())
         suite.add(ExpectationsRegistryTests.suite())
+        suite.add(BackwardsCompatibilityTests.suite())
         
         buffer = True
 
