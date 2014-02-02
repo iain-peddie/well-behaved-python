@@ -1,0 +1,26 @@
+*** compile-orig.el	2014-02-02 16:07:45.272791643 +0000
+--- compile.el	2014-02-02 16:22:34.808331283 +0000
+***************
+*** 545,551 ****
+       ("^Compilation \\(exited abnormally\\|interrupt\\|killed\\|terminated\\|segmentation fault\\)\\(?:.*with code \\([0-9]+\\)\\)?.*"
+        (0 '(face nil compilation-message nil help-echo nil mouse-face nil) t)
+        (1 compilation-error-face)
+!       (2 compilation-error-face nil t)))
+     "Additional things to highlight in Compilation mode.
+  This gets tacked on the end of the generated expressions.")
+  
+--- 545,558 ----
+       ("^Compilation \\(exited abnormally\\|interrupt\\|killed\\|terminated\\|segmentation fault\\)\\(?:.*with code \\([0-9]+\\)\\)?.*"
+        (0 '(face nil compilation-message nil help-echo nil mouse-face nil) t)
+        (1 compilation-error-face)
+!       (2 compilation-error-face nil t))
+!      ("^.*\\(passed in [0-9\\.]+s\\)"
+!       1 compilation-info-face)
+!      ("^.*\\(\\(?:\\(?:failed\\)\\|\\(?:error\\)\\) in [0-9\\.]+s\\)"
+!       1 compilation-error-face)
+!      ("^.*\\(ignored in [0-9\\.]+s\\)"
+!       1 compilation-warning-face)
+! )
+     "Additional things to highlight in Compilation mode.
+  This gets tacked on the end of the generated expressions.")
+  
