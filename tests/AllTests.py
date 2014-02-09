@@ -24,8 +24,8 @@ from WellBehavedPythonTests.Engine.TestSuiteTests import *
 from WellBehavedPythonTests.Engine.TestResultsTests import *
 from WellBehavedPythonTests.Engine.TestContextTests import *
 
-from WellBehavedPythonTests.MethodSpyTests import *
-from WellBehavedPythonTests.SpyOnTests import *
+from WellBehavedPythonTests.Fakes.MethodSpyTests import *
+from WellBehavedPythonTests.Fakes.SpyOnTests import *
 
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
