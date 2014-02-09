@@ -24,8 +24,8 @@ from WellBehavedPythonTests.Engine.TestSuiteTests import *
 from WellBehavedPythonTests.Engine.TestResultsTests import *
 from WellBehavedPythonTests.Engine.TestContextTests import *
 
-from WellBehavedPythonTests.MethodSpyTests import *
-from WellBehavedPythonTests.SpyOnTests import *
+from WellBehavedPythonTests.Fakes.MethodSpyTests import *
+from WellBehavedPythonTests.Fakes.SpyOnTests import *
 
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
@@ -43,40 +43,9 @@ from WellBehavedPythonTests.BackwardsCompatibilityTests import *
 from WellBehavedPython.Engine.TestSuite import TestSuite
 from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
 
-if __name__ == "__main__":
+def main(suite):
     try:
-        suite = TestSuite("WellBehavedPythonTests")
-        engineSuite = TestSuite("Engine")
-        expectationsSuite = TestSuite("Expectations")
-
-        engineSuite.add(TestResultsTests.suite())
-        engineSuite.add(TestCaseTests.suite())
-        engineSuite.add(TestSuiteTests.suite())
-        engineSuite.add(TestContextTests.suite())
-
-        expectationsSuite.add(DefaultExpectationsTests.suite())
-        expectationsSuite.add(DefaultNotExpectationsTests.suite())
-        expectationsSuite.add(NumericExpectationsTests.suite())
-        expectationsSuite.add(NumericNotExpectationsTests.suite())
-        expectationsSuite.add(StringExpectationsTests.suite())
-        expectationsSuite.add(StringNotExpectationsTests.suite())
-        expectationsSuite.add(ContainerExpectationsTests.suite())
-        expectationsSuite.add(ContainerNotExpectationsTests.suite())
-        expectationsSuite.add(DictionaryExpectationsTests.suite())
-        expectationsSuite.add(DictionaryNotExpectationsTests.suite())
-        expectationsSuite.add(MethodSpyExpectationsTests.suite())
-
-        suite.add(engineSuite)
-        suite.add(expectationsSuite)
-
-        suite.add(MethodSpyNotExpectationsTests.suite())
-        suite.add(ConsoleTestRunnerTests.suite())
-        suite.add(VerboseConsoleTestRunnerTests.suite())
-        suite.add(MethodSpyTests.suite())
-        suite.add(SpyOnTests.suite())
-        suite.add(ExpectationsFactoryTests.suite())
-        suite.add(ExpectationsRegistryTests.suite())
-        suite.add(BackwardsCompatibilityTests.suite())
+        suite = createSuite()
         
         buffer = True
 
@@ -97,3 +66,45 @@ if __name__ == "__main__":
         traceback.print_exc(file = sys.stdout)
         
     
+def createSuite():
+    suite = TestSuite("WellBehavedPythonTests")
+    engineSuite = TestSuite("Engine")
+    expectationsSuite = TestSuite("Expectations")
+    fakesSuite = TestSuite("Fakes")
+
+    engineSuite.add(TestResultsTests.suite())
+    engineSuite.add(TestCaseTests.suite())
+    engineSuite.add(TestSuiteTests.suite())
+    engineSuite.add(TestContextTests.suite())
+
+    expectationsSuite.add(DefaultExpectationsTests.suite())
+    expectationsSuite.add(DefaultNotExpectationsTests.suite())
+    expectationsSuite.add(NumericExpectationsTests.suite())
+    expectationsSuite.add(NumericNotExpectationsTests.suite())
+    expectationsSuite.add(StringExpectationsTests.suite())
+    expectationsSuite.add(StringNotExpectationsTests.suite())
+    expectationsSuite.add(ContainerExpectationsTests.suite())
+    expectationsSuite.add(ContainerNotExpectationsTests.suite())
+    expectationsSuite.add(DictionaryExpectationsTests.suite())
+    expectationsSuite.add(DictionaryNotExpectationsTests.suite())
+    expectationsSuite.add(MethodSpyExpectationsTests.suite())
+    
+    fakesSuite.add(MethodSpyNotExpectationsTests.suite())
+    fakesSuite.add(MethodSpyTests.suite())
+    fakesSuite.add(SpyOnTests.suite())
+    
+    suite.add(engineSuite)
+    suite.add(expectationsSuite)
+    suite.add(fakesSuite)
+    
+    suite.add(ConsoleTestRunnerTests.suite())
+    suite.add(VerboseConsoleTestRunnerTests.suite())
+    suite.add(ExpectationsFactoryTests.suite())
+    suite.add(ExpectationsRegistryTests.suite())
+    suite.add(BackwardsCompatibilityTests.suite())
+    
+    return suite
+
+if __name__ == "__main__":
+    main(createSuite())
+
