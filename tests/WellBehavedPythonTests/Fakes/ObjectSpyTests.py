@@ -65,4 +65,4 @@ class ObjectSpyTests(TestCase):
         instance = ObjectSpy(properties = ['testProperty'])
         
         # Then
-        expect(instance.testProperty).toBeNone()e
+        expect(instance.testProperty).toBeNone()
