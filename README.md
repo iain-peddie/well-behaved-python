@@ -543,8 +543,17 @@ object = SomeClass()
 spyOn(object.method)
 ~~~~~
 
+
 This replaces object.method with a method which accepts the same calling signature,
-and records the arguments each time the method was called.
+and records the arguments each time the method was called. 
+
+Alternatively, if there are a lot of methods in the instance, we might spy on the
+entire instance:
+
+~~~~~ python
+object = SomeClass()
+spyOn(object) # equivalent to calling spyOn(objectd.method) for each public method
+~~~~~
 
 We can then expect object.method to have been called. First, we set up some
 sample methods:
@@ -666,5 +675,22 @@ through to any callable object:
         # Then
         expect(self.targetMethod).toHaveBeenCalled()
         expect(self.manualWasCalled).toBeTrue()
+~~~~~
+
+Manually configurig a spy
+-------------------------
+Sometimes, we want to create an object for a system under test to use, without directly creating
+its collabortors. This can happen for a variety of reasons:
+
+* The collaborator hasn't been created yet
+* The collaborator is time consuming to construct
+* The collaborator is complex to construct
+
+In these cases, we can create an instance of the ObjectSpy class:
+
+~~~~~ python
+import WellBehavedPython.Fakes.ObjectSpy
+
+spy = ObjectSpy(methods = ['aMethod', 'anotherMethod'}, properties = ['something'])
 ~~~~~
 
