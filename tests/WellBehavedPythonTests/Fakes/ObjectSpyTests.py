@@ -19,6 +19,7 @@
 
 from WellBehavedPython.api import *
 from WellBehavedPython.Engine.TestCase import TestCase
+from WellBehavedPython.Fakes.ObjectSpy import ObjectSpy#!/usr/bin/env python3
 
 class SampleObject:
     def __init__(self):
@@ -51,3 +52,17 @@ class ObjectSpyTests(TestCase):
         expect(spy.method).toBeAnInstanceOf(MethodSpy)
         expect(spy.otherMethod).toBeAnInstanceOf(MethodSpy)
         expect(spy._privateMethod).Not.toBeAnInstanceOf(MethodSpy)
+
+    def test_creating_object_spy_with_methods_only(self):
+        # When
+        instance = ObjectSpy(['testMethod'])
+        
+        # Then
+        expect(instance.testMethod).toBeAnInstanceOf(MethodSpy)
+
+    def test_creating_object_spy_with_properties_only(self):
+        # When
+        instance = ObjectSpy(properties = ['testProperty'])
+        
+        # Then
+        expect(instance.testProperty).toBeNone()e

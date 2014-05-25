@@ -112,7 +112,6 @@ def spyOn(methodOrObject):
         for methodName in methods:
             if methodName.startswith('_'):
                 continue
-            print(methodName)
             method = getattr(methodOrObject, methodName)
             spyOnMethod(method)
         return methodOrObject
