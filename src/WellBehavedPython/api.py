@@ -83,7 +83,7 @@ def registerExpectationClass(usePredicate, constructor):
                            NumericExpecations(float(actual), strategy, reverser)."""
     _registry.register(usePredicate, constructor)
         
-def spyOn(method):
+def spyOn(methodOrObject):
     """spies on a given method.
 
     Takes the given object method, creates a test spy and replaces the 
@@ -98,7 +98,26 @@ def spyOn(method):
 
     Inputs
     ------
-    method : a object method object. Can be specified as object.method. """
+    methodOrObject : a object method object. Can be specified as object.method. """
+
+    import types
+
+    argType = type(methodOrObject)
+    
+    if argType == types.MethodType:
+        return spyOnMethod(methodOrObject)
+    else:
+        
+        methods = [method for method in dir(methodOrObject) if callable(getattr(methodOrObject, method))]
+        for methodName in methods:
+            if methodName.startswith('_'):
+                continue
+            print(methodName)
+            method = getattr(methodOrObject, methodName)
+            spyOnMethod(method)
+        return methodOrObject
+
+def spyOnMethod(method):
 
     instance = method.__self__
     name = method.__name__

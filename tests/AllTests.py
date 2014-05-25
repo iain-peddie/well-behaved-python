@@ -25,8 +25,8 @@ from WellBehavedPythonTests.Engine.TestResultsTests import *
 from WellBehavedPythonTests.Engine.TestContextTests import *
 
 from WellBehavedPythonTests.Fakes.MethodSpyTests import *
+from WellBehavedPythonTests.Fakes.ObjectSpyTests import *
 from WellBehavedPythonTests.Fakes.SpyOnTests import *
-
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 
@@ -91,6 +91,7 @@ def createSuite():
     
     fakesSuite.add(MethodSpyNotExpectationsTests.suite())
     fakesSuite.add(MethodSpyTests.suite())
+    fakesSuite.add(ObjectSpyTests.suite())
     fakesSuite.add(SpyOnTests.suite())
     
     suite.add(engineSuite)
