@@ -19,16 +19,12 @@
 
 import sys
 
+from WellBehavedPythonTests.Discovery.ModuleExaminerTests import *
+
 from WellBehavedPythonTests.Engine.TestCaseTests import *
 from WellBehavedPythonTests.Engine.TestSuiteTests import *
 from WellBehavedPythonTests.Engine.TestResultsTests import *
 from WellBehavedPythonTests.Engine.TestContextTests import *
-
-from WellBehavedPythonTests.Fakes.MethodSpyTests import *
-from WellBehavedPythonTests.Fakes.ObjectSpyTests import *
-from WellBehavedPythonTests.Fakes.SpyOnTests import *
-from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
-from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 
 from WellBehavedPythonTests.Expectations.StringExpectationsTests import *
 from WellBehavedPythonTests.Expectations.DefaultExpectationsTests import *
@@ -37,11 +33,20 @@ from WellBehavedPythonTests.Expectations.DictionaryExpectationsTests import *
 from WellBehavedPythonTests.Expectations.NumericExpectationsTests import *
 from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
 
+from WellBehavedPythonTests.Fakes.MethodSpyTests import *
+from WellBehavedPythonTests.Fakes.ObjectSpyTests import *
+from WellBehavedPythonTests.Fakes.SpyOnTests import *
+
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
 from WellBehavedPythonTests.BackwardsCompatibilityTests import *
 
+from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
+from WellBehavedPythonTests.ConsoleTestRunnerTests import *
+
+
 from WellBehavedPython.Engine.TestSuite import TestSuite
 from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
+
 
 def main(suite):
     try:
@@ -71,6 +76,9 @@ def createSuite():
     engineSuite = TestSuite("Engine")
     expectationsSuite = TestSuite("Expectations")
     fakesSuite = TestSuite("Fakes")
+    discoverySuite = TestSuite("Discovery")
+
+    discoverySuite.add(ModuleExaminerTests.suite())
 
     engineSuite.add(TestResultsTests.suite())
     engineSuite.add(TestCaseTests.suite())
@@ -94,15 +102,18 @@ def createSuite():
     fakesSuite.add(ObjectSpyTests.suite())
     fakesSuite.add(SpyOnTests.suite())
     
-    suite.add(engineSuite)
-    suite.add(expectationsSuite)
-    suite.add(fakesSuite)
     
     suite.add(ConsoleTestRunnerTests.suite())
     suite.add(VerboseConsoleTestRunnerTests.suite())
     suite.add(ExpectationsFactoryTests.suite())
     suite.add(ExpectationsRegistryTests.suite())
     suite.add(BackwardsCompatibilityTests.suite())
+
+    suite.add(engineSuite)
+    suite.add(expectationsSuite)
+    suite.add(fakesSuite)
+    suite.add(discoverySuite)
+    
     
     return suite
 
