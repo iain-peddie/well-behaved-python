@@ -19,6 +19,8 @@
 
 import importlib
 import builtins
+from types import ModuleType
+import pkgutil
 
 class ModuleExaminer:
     """Used to examine modules in the context of a module or package."""
@@ -57,4 +59,25 @@ class ModuleExaminer:
         localClasses = [klass for klass in classes if klass.__module__ == self.moduleName]
         
         return localClasses
-            
+
+    def listAllModules(self):
+        package = self.module.__package__ + ".";
+        return [(package + stuff[1])
+                for stuff in pkgutil.iter_modules(self.module.__path__)]
+        # itemNames= [item for item in dir(self.module) if not item.startswith('__')]
+        # print(itemNames)
+        
+        # # Now get the list of classes. First convert the item names to metadata types
+        # things = [self.module.__dict__[itemName] for itemName in itemNames]
+
+        # # class objects get a type of type. Everying else will be something different.
+        # print([str(type(thing)) for thing in things])
+        # modules = [thing for thing in things if isinstance(thing, ModuleType)]
+
+        # # Finally find the classes which are locally defined, that is their __module__
+        # # attribute has the same name as this module...
+
+        # localModules = [module for module in modules if module.__package__ == self.moduleName]            
+        # print(localModules)
+    
+        # return localModules

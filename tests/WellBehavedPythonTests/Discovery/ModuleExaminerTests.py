@@ -48,3 +48,30 @@ class ModuleExaminerTests(TestCase):
         expect(classes).toContain(SampleComplexModule.SampleFirstTests)
         expect(classes).toContain(SampleComplexModule.SampleSecondTests)
         expect(classes).toContain(SampleComplexModule.StandaloneClass)
+
+    def test_examiner_can_find_all_submodules(self):
+        # Where
+        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery');
+
+        # When
+        modules = examiner.listAllModules();
+        
+        # Then
+        from . import SampleModule
+        from . import SampleComplexModule
+        expect(modules).toContain('WellBehavedPythonTests.Discovery.SampleModule');
+        expect(modules).toContain('WellBehavedPythonTests.Discovery.SampleComplexModule');
+        expect(modules).toContain('WellBehavedPythonTests.Discovery.ModuleExaminerTests');
+
+    def test_examiner_is_not_recursive(self):
+        # Where
+        examiner = ModuleExaminer('WellBehavedPythonTests');
+
+        # When
+        modules = examiner.listAllModules();
+        
+        # Then
+        from . import SampleModule
+        from . import SampleComplexModule
+        expect(modules).toContain('WellBehavedPythonTests.BackwardsCompatibilityTests');
+        expect(modules).Not.toContain('WellBehavedPythonTests.Discovery.SampleModule');
