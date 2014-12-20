@@ -23,7 +23,7 @@ from WellBehavedPython.Discovery.ModuleExaminer import ModuleExaminer
 
 class ModuleExaminerTests(TestCase):
 
-    def test_examiner_can_find_classes(self):
+    def test_examiner_can_find__only_class_in_simple_module(self):
         # Where
         examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.SampleModule');
 
@@ -34,3 +34,17 @@ class ModuleExaminerTests(TestCase):
         # Then
         from . import SampleModule
         expect(classes).toEqual([SampleModule.SampleTests])
+
+    def test_examiner_can_find_all_classes_in_complex_module(self):
+        # Where
+        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.SampleComplexModule');
+
+        # When
+        classes = examiner.listAllClasses()
+        # The classes have been imported
+
+        # Then
+        from . import SampleComplexModule
+        expect(classes).toContain(SampleComplexModule.SampleFirstTests)
+        expect(classes).toContain(SampleComplexModule.SampleSecondTests)
+        expect(classes).toContain(SampleComplexModule.StandaloneClass)
