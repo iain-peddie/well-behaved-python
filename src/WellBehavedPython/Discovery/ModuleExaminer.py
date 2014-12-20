@@ -19,6 +19,8 @@
 
 import importlib
 import builtins
+from types import ModuleType
+import pkgutil
 
 class ModuleExaminer:
     """Used to examine modules in the context of a module or package."""
@@ -57,4 +59,45 @@ class ModuleExaminer:
         localClasses = [klass for klass in classes if klass.__module__ == self.moduleName]
         
         return localClasses
-            
+
+    def listAllModules(self):
+        """lists all the modules defined directly in the package. 
+        When constructed from a pakcage name find all the module children only.
+        Pacakges are found separetly, in listAllPackages.
+
+        Returns
+        -------
+        A list of the classes local to this module (i.e. not imported as dependencies
+        from other modules."""
+
+        package = self.module.__package__ + ".";
+        return [(package + stuff[1])
+                for stuff in pkgutil.iter_modules(self.module.__path__)]
+
+    def listAllPackages(self):
+        """lists all the subpackages defined directly in the package. 
+        When constructed from a package name find all the module children only.
+        Pacakges are found separetly, in listAllPackages.
+
+        Returns
+        -------
+        A list of the classes local to this module (i.e. not imported as dependencies
+        from other modules."""
+
+        from pathlib import Path
+
+        subpackages = []
+        baseModule = self.module.__package__ + "."
+
+
+        paths = self.module.__path__
+        for path in paths._path:
+            nextSubdirs = [x for x in Path(path).iterdir() if x.is_dir()]
+            packages = [baseModule + nextSubdir.parts[-1] for nextSubdir in nextSubdirs]
+            subpackages.extend(packages)
+
+        # and now what?
+
+        return subpackages
+
+        

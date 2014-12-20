@@ -39,3 +39,5 @@ nosetests.xml
 .project
 .pydevproject
 MANIFEST
+tests/Untitled0.ipynb
+tests/.ipynb_checkpoints/Untitled0-checkpoint.ipynb
