@@ -19,23 +19,10 @@
 
 import sys
 
-from WellBehavedPythonTests.Expectations.StringExpectationsTests import *
-from WellBehavedPythonTests.Expectations.DefaultExpectationsTests import *
-from WellBehavedPythonTests.Expectations.ContainerExpectationsTests import *
-from WellBehavedPythonTests.Expectations.DictionaryExpectationsTests import *
-from WellBehavedPythonTests.Expectations.NumericExpectationsTests import *
-from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
-
-from WellBehavedPythonTests.Fakes.MethodSpyTests import *
-from WellBehavedPythonTests.Fakes.ObjectSpyTests import *
-from WellBehavedPythonTests.Fakes.SpyOnTests import *
-
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
 from WellBehavedPythonTests.BackwardsCompatibilityTests import *
-
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
-
 
 from WellBehavedPython.Engine.TestSuite import TestSuite
 from WellBehavedPython.Discovery.TestDiscoverer import TestDiscoverer
