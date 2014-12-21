@@ -19,14 +19,6 @@
 
 import sys
 
-from WellBehavedPythonTests.Discovery.ModuleExaminerTests import *
-from WellBehavedPythonTests.Discovery.TestDiscovererTests import *
-
-from WellBehavedPythonTests.Engine.TestCaseTests import *
-from WellBehavedPythonTests.Engine.TestSuiteTests import *
-from WellBehavedPythonTests.Engine.TestResultsTests import *
-from WellBehavedPythonTests.Engine.TestContextTests import *
-
 from WellBehavedPythonTests.Expectations.StringExpectationsTests import *
 from WellBehavedPythonTests.Expectations.DefaultExpectationsTests import *
 from WellBehavedPythonTests.Expectations.ContainerExpectationsTests import *
@@ -46,6 +38,7 @@ from WellBehavedPythonTests.ConsoleTestRunnerTests import *
 
 
 from WellBehavedPython.Engine.TestSuite import TestSuite
+from WellBehavedPython.Discovery.TestDiscoverer import TestDiscoverer
 from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
 
 
@@ -73,19 +66,20 @@ def main(suite):
         
     
 def createSuite():
+    discoverer = TestDiscoverer()
     suite = TestSuite("WellBehavedPythonTests")
     engineSuite = TestSuite("Engine")
     expectationsSuite = TestSuite("Expectations")
     fakesSuite = TestSuite("Fakes")
     discoverySuite = TestSuite("Discovery")
 
-    discoverySuite.add(ModuleExaminerTests.suite())
-    discoverySuite.add(TestDiscovererTests.suite())
+    discoverySuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery.ModuleExaminerTests'))
+    discoverySuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery.TestDiscovererTests'))
 
-    engineSuite.add(TestResultsTests.suite())
-    engineSuite.add(TestCaseTests.suite())
-    engineSuite.add(TestSuiteTests.suite())
-    engineSuite.add(TestContextTests.suite())
+    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestResultsTests'))
+    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestCaseTests'))
+    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestSuiteTests'))
+    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestContextTests'))
 
     expectationsSuite.add(DefaultExpectationsTests.suite())
     expectationsSuite.add(DefaultNotExpectationsTests.suite())
