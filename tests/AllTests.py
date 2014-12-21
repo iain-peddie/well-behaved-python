@@ -20,6 +20,7 @@
 import sys
 
 from WellBehavedPythonTests.Discovery.ModuleExaminerTests import *
+from WellBehavedPythonTests.Discovery.TestDiscovererTests import *
 
 from WellBehavedPythonTests.Engine.TestCaseTests import *
 from WellBehavedPythonTests.Engine.TestSuiteTests import *
@@ -79,6 +80,7 @@ def createSuite():
     discoverySuite = TestSuite("Discovery")
 
     discoverySuite.add(ModuleExaminerTests.suite())
+    discoverySuite.add(TestDiscovererTests.suite())
 
     engineSuite.add(TestResultsTests.suite())
     engineSuite.add(TestCaseTests.suite())
@@ -101,8 +103,7 @@ def createSuite():
     fakesSuite.add(MethodSpyTests.suite())
     fakesSuite.add(ObjectSpyTests.suite())
     fakesSuite.add(SpyOnTests.suite())
-    
-    
+        
     suite.add(ConsoleTestRunnerTests.suite())
     suite.add(VerboseConsoleTestRunnerTests.suite())
     suite.add(ExpectationsFactoryTests.suite())
