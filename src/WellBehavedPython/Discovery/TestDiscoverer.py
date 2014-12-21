@@ -30,9 +30,17 @@ class TestDiscoverer:
 
         suite = TestSuite(moduleName)
         examiner = ModuleExaminer(moduleName)
+        subSuite = []
 
         for item in examiner.listAllClasses():
-            if isinstance(item, TestCase):
-                suite.add(item.suite())
+            if issubclass(item, TestCase):
+                subSuite = item.suite()
+                suite.add(subSuite)
+
+        moduleParts = moduleName.split(".")
+        uniqueModuleName = moduleParts[-1]
+
+        if len(suite.tests) == 1 and subSuite.suiteName == uniqueModuleName:
+            return subSuite
         
         return suite

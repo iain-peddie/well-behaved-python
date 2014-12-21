@@ -55,9 +55,26 @@ class TestDiscovererTests(TestCase):
 
         expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
         firstChildSuite = suite.tests[0]
-        expect(childSuite.suiteName).toEqual('FirstTests')
+        expect(firstChildSuite.suiteName).toEqual('SampleFirstTests')
 
         expect(suite.tests[1]).toBeAnInstanceOf(TestSuite)
-        firstChildSuite = suite.tests[1]
-        expect(childSuite.suiteName).toEqual('SecondTests')
+        secondChildSuite = suite.tests[1]
+        expect(secondChildSuite.suiteName).toEqual('SampleSecondTests')
+
+    def test_class_suite_returned_when_only_one_class_and_class_name_matches_module_name(self):
+        # Where
+        discoverer = TestDiscoverer();
+        moduleName = 'WellBehavedPythonTests.Discovery.Samples.SampleClass'
+
+        # When
+        suite = discoverer.buildSuiteFromModuleName(moduleName)
+        
+        # Then
+        expect(suite).toBeAnInstanceOf(TestSuite)
+        expect(suite.countTests()).toEqual(1)
+        expect(suite.suiteName).toEqual('SampleClass')
+        expect(suite.tests[0]).toBeAnInstanceOf(TestCase)
+        childCase = suite.tests[0]
+        expect(childCase.testMethodName).toEqual("test_sample")
+        
 
