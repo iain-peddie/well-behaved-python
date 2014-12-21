@@ -23,10 +23,7 @@
 
 from WellBehavedPython.Engine.TestCase import TestCase
 
-def sampleFunction():
-    pass
-
-class SampleTests(TestCase):
+class SampleClass(TestCase):
         
     def test_sample(self):
         pass
