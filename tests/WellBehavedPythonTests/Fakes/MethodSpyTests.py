@@ -20,7 +20,7 @@
 from WellBehavedPython.api import *
 from WellBehavedPython.Fakes.MethodSpy import *
 
-from ..Engine.SampleTestCases import *
+from ..Engine.Samples.SampleTestCases import *
 
 import io
 

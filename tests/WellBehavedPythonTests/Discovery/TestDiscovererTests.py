@@ -76,5 +76,37 @@ class TestDiscovererTests(TestCase):
         expect(suite.tests[0]).toBeAnInstanceOf(TestCase)
         childCase = suite.tests[0]
         expect(childCase.testMethodName).toEqual("test_sample")
+
+    def test_all_modules_returned_when_discovering_on_a_package(self):
+        # Where
+        discoverer = TestDiscoverer();
+        moduleName = 'WellBehavedPythonTests.Discovery.Samples'
+
+        # When
+        suite = discoverer.buildSuiteFromModuleName(moduleName)
+        
+        # Then
+        testsInExtendedModule = 2
+        testsInSimpleModule = 1
+        testsInSimpleClass = 1
+        numExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass
+        expect(suite).toBeAnInstanceOf(TestSuite)
+        expect(suite.countTests()).toEqual(numExpectedTests)
+        expect(suite.suiteName).toEqual(moduleName)
+        expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
+        
+        expectedChildren = { 'SampleModule': 1, 
+                             'SampleComplexModule': 2,
+                             'SampleClass' : 1}
+
+
+        self.assertIsSuiteWith(suite.tests[0], expectedChildren)
+        self.assertIsSuiteWith(suite.tests[1], expectedChildren)
+        self.assertIsSuiteWith(suite.tests[2], expectedChildren)
+
+    def assertIsSuiteWith(self, suite, childrenDict):
+        expect(suite).toBeAnInstanceOf(TestSuite)
+        expect(childrenDict).toContainKey(suite.suiteName)
+        expect(len(suite.tests)).toEqual(childrenDict[suite.suiteName]);
         
 

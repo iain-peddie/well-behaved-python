@@ -19,23 +19,10 @@
 
 import sys
 
-from WellBehavedPythonTests.Expectations.StringExpectationsTests import *
-from WellBehavedPythonTests.Expectations.DefaultExpectationsTests import *
-from WellBehavedPythonTests.Expectations.ContainerExpectationsTests import *
-from WellBehavedPythonTests.Expectations.DictionaryExpectationsTests import *
-from WellBehavedPythonTests.Expectations.NumericExpectationsTests import *
-from WellBehavedPythonTests.Expectations.MethodSpyExpectationsTests import *
-
-from WellBehavedPythonTests.Fakes.MethodSpyTests import *
-from WellBehavedPythonTests.Fakes.ObjectSpyTests import *
-from WellBehavedPythonTests.Fakes.SpyOnTests import *
-
 from WellBehavedPythonTests.ExpectationsRegistryTests import *
 from WellBehavedPythonTests.BackwardsCompatibilityTests import *
-
 from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
 from WellBehavedPythonTests.ConsoleTestRunnerTests import *
-
 
 from WellBehavedPython.Engine.TestSuite import TestSuite
 from WellBehavedPython.Discovery.TestDiscoverer import TestDiscoverer
@@ -68,36 +55,12 @@ def main(suite):
 def createSuite():
     discoverer = TestDiscoverer()
     suite = TestSuite("WellBehavedPythonTests")
-    engineSuite = TestSuite("Engine")
-    expectationsSuite = TestSuite("Expectations")
-    fakesSuite = TestSuite("Fakes")
-    discoverySuite = TestSuite("Discovery")
 
-    discoverySuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery.ModuleExaminerTests'))
-    discoverySuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery.TestDiscovererTests'))
-
-    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestResultsTests'))
-    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestCaseTests'))
-    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestSuiteTests'))
-    engineSuite.add(discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine.TestContextTests'))
-
-    expectationsSuite.add(DefaultExpectationsTests.suite())
-    expectationsSuite.add(DefaultNotExpectationsTests.suite())
-    expectationsSuite.add(NumericExpectationsTests.suite())
-    expectationsSuite.add(NumericNotExpectationsTests.suite())
-    expectationsSuite.add(StringExpectationsTests.suite())
-    expectationsSuite.add(StringNotExpectationsTests.suite())
-    expectationsSuite.add(ContainerExpectationsTests.suite())
-    expectationsSuite.add(ContainerNotExpectationsTests.suite())
-    expectationsSuite.add(DictionaryExpectationsTests.suite())
-    expectationsSuite.add(DictionaryNotExpectationsTests.suite())
-    expectationsSuite.add(MethodSpyExpectationsTests.suite())
-    
-    fakesSuite.add(MethodSpyNotExpectationsTests.suite())
-    fakesSuite.add(MethodSpyTests.suite())
-    fakesSuite.add(ObjectSpyTests.suite())
-    fakesSuite.add(SpyOnTests.suite())
-        
+    discoverySuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery', 'Discoery')
+    engineSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine',  'Engine')
+    expectationsSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Expectations', 'Expectations')
+    fakesSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Fakes', 'Fakes')
+            
     suite.add(ConsoleTestRunnerTests.suite())
     suite.add(VerboseConsoleTestRunnerTests.suite())
     suite.add(ExpectationsFactoryTests.suite())
