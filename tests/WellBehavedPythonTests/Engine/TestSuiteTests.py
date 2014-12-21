@@ -26,7 +26,7 @@ from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.Engine.TestRunningException import *
 from WellBehavedPython.Engine.TestSuite import *
 
-from .SampleTestCases import *
+from .Samples.SampleTestCases import *
 
 class TestSuiteTests(TestCase):
 

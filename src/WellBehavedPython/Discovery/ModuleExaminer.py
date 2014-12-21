@@ -71,8 +71,11 @@ class ModuleExaminer:
         from other modules."""
 
         package = self.module.__package__ + ".";
-        return [(package + stuff[1])
-                for stuff in pkgutil.iter_modules(self.module.__path__)]
+        try:
+            return [(package + stuff[1])
+                    for stuff in pkgutil.iter_modules(self.module.__path__)]
+        except Exception:
+            return []
 
     def listAllPackages(self):
         """lists all the subpackages defined directly in the package. 
