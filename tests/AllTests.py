@@ -56,7 +56,7 @@ def createSuite():
     discoverer = TestDiscoverer()
     suite = TestSuite("WellBehavedPythonTests")
 
-    discoverySuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery', 'Discoery')
+    discoverySuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery', 'Discovery')
     engineSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine',  'Engine')
     expectationsSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Expectations', 'Expectations')
     fakesSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Fakes', 'Fakes')
