@@ -39,3 +39,25 @@ class TestDiscovererTests(TestCase):
         expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
         childSuite = suite.tests[0]
         expect(childSuite.suiteName).toEqual('SampleTests')
+
+    def test_can_find_multiple_TestCases_in_a_module(self):
+        # Where
+        discoverer = TestDiscoverer();
+        moduleName = 'WellBehavedPythonTests.Discovery.Samples.SampleComplexModule'
+
+        # When
+        suite = discoverer.buildSuiteFromModuleName(moduleName)
+        
+        # Then
+        expect(suite).toBeAnInstanceOf(TestSuite)
+        expect(suite.countTests()).toEqual(2)
+        expect(suite.suiteName).toEqual(moduleName)
+
+        expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
+        firstChildSuite = suite.tests[0]
+        expect(childSuite.suiteName).toEqual('FirstTests')
+
+        expect(suite.tests[1]).toBeAnInstanceOf(TestSuite)
+        firstChildSuite = suite.tests[1]
+        expect(childSuite.suiteName).toEqual('SecondTests')
+

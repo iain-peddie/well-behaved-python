@@ -25,12 +25,14 @@ class TestDiscoverer:
 
     def buildSuiteFromModuleName(self, moduleName):
         from ..Engine.TestSuite import TestSuite
+        from ..Engine.TestCase import TestCase
         from .ModuleExaminer import ModuleExaminer
 
         suite = TestSuite(moduleName)
         examiner = ModuleExaminer(moduleName)
 
         for item in examiner.listAllClasses():
-            suite.add(item.suite())
+            if isinstance(item, TestCase):
+                suite.add(item.suite())
         
         return suite
