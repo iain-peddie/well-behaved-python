@@ -25,43 +25,42 @@ class ModuleExaminerTests(TestCase):
 
     def test_examiner_can_find__only_class_in_simple_module(self):
         # Where
-        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.SampleModule');
+        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.Samples.SampleModule');
 
         # When
         classes = examiner.listAllClasses()
         # The classes have been imported
 
         # Then
-        from . import SampleModule
+        from .Samples import SampleModule
         expect(classes).toEqual([SampleModule.SampleTests])
 
     def test_examiner_can_find_all_classes_in_complex_module(self):
         # Where
-        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.SampleComplexModule');
+        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.Samples.SampleComplexModule');
 
         # When
         classes = examiner.listAllClasses()
         # The classes have been imported
 
         # Then
-        from . import SampleComplexModule
+        from .Samples import SampleComplexModule
         expect(classes).toContain(SampleComplexModule.SampleFirstTests)
         expect(classes).toContain(SampleComplexModule.SampleSecondTests)
         expect(classes).toContain(SampleComplexModule.StandaloneClass)
 
     def test_examiner_can_find_all_modules(self):
         # Where
-        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery');
+        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.Samples');
 
         # When
         modules = examiner.listAllModules();
         
         # Then
-        from . import SampleModule
-        from . import SampleComplexModule
-        expect(modules).toContain('WellBehavedPythonTests.Discovery.SampleModule');
-        expect(modules).toContain('WellBehavedPythonTests.Discovery.SampleComplexModule');
-        expect(modules).toContain('WellBehavedPythonTests.Discovery.ModuleExaminerTests');
+        from .Samples import SampleModule
+        from .Samples import SampleComplexModule
+        expect(modules).toContain('WellBehavedPythonTests.Discovery.Samples.SampleModule');
+        expect(modules).toContain('WellBehavedPythonTests.Discovery.Samples.SampleComplexModule');
 
     def test_examiner_is_not_recursive_for_modules(self):
         # Where
@@ -72,7 +71,7 @@ class ModuleExaminerTests(TestCase):
         
         # Then
         expect(modules).toContain('WellBehavedPythonTests.BackwardsCompatibilityTests');
-        expect(modules).Not.toContain('WellBehavedPythonTests.Discovery.SampleModule');
+        expect(modules).Not.toContain('WellBehavedPythonTests.Discovery.Samples.SampleModule');
 
     def test_examining_can_find_subpackages(self):
         # Where
