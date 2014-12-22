@@ -25,42 +25,42 @@ class ModuleExaminerTests(TestCase):
 
     def test_examiner_can_find__only_class_in_simple_module(self):
         # Where
-        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.Samples.SampleModule');
+        examiner = ModuleExaminer('WellBehavedPythonTests.Samples.SampleModule');
 
         # When
         classes = examiner.listAllClasses()
         # The classes have been imported
 
         # Then
-        from .Samples import SampleModule
+        from ..Samples import SampleModule
         expect(classes).toEqual([SampleModule.SampleTests])
 
     def test_examiner_can_find_all_classes_in_complex_module(self):
         # Where
-        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.Samples.SampleComplexModule');
+        examiner = ModuleExaminer('WellBehavedPythonTests.Samples.SampleComplexModule');
 
         # When
         classes = examiner.listAllClasses()
         # The classes have been imported
 
         # Then
-        from .Samples import SampleComplexModule
+        from ..Samples import SampleComplexModule
         expect(classes).toContain(SampleComplexModule.SampleFirstTests)
         expect(classes).toContain(SampleComplexModule.SampleSecondTests)
         expect(classes).toContain(SampleComplexModule.StandaloneClass)
 
     def test_examiner_can_find_all_modules(self):
         # Where
-        examiner = ModuleExaminer('WellBehavedPythonTests.Discovery.Samples');
+        examiner = ModuleExaminer('WellBehavedPythonTests.Samples');
 
         # When
         modules = examiner.listAllModules();
         
         # Then
-        from .Samples import SampleModule
-        from .Samples import SampleComplexModule
-        expect(modules).toContain('WellBehavedPythonTests.Discovery.Samples.SampleModule');
-        expect(modules).toContain('WellBehavedPythonTests.Discovery.Samples.SampleComplexModule');
+        from ..Samples import SampleModule
+        from ..Samples import SampleComplexModule
+        expect(modules).toContain('WellBehavedPythonTests.Samples.SampleModule');
+        expect(modules).toContain('WellBehavedPythonTests.Samples.SampleComplexModule');
 
     def test_examiner_is_not_recursive_for_modules(self):
         # Where

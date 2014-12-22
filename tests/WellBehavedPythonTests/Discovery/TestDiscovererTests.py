@@ -27,7 +27,7 @@ class TestDiscovererTests(TestCase):
     def test_can_find_only_TestCase_in_a_module(self):
         # Where
         discoverer = TestDiscoverer();
-        moduleName = 'WellBehavedPythonTests.Discovery.Samples.SampleModule'
+        moduleName = 'WellBehavedPythonTests.Samples.SampleModule'
 
         # When
         suite = discoverer.buildSuiteFromModuleName(moduleName)
@@ -43,7 +43,7 @@ class TestDiscovererTests(TestCase):
     def test_can_find_multiple_TestCases_in_a_module(self):
         # Where
         discoverer = TestDiscoverer();
-        moduleName = 'WellBehavedPythonTests.Discovery.Samples.SampleComplexModule'
+        moduleName = 'WellBehavedPythonTests.Samples.SampleComplexModule'
 
         # When
         suite = discoverer.buildSuiteFromModuleName(moduleName)
@@ -64,7 +64,7 @@ class TestDiscovererTests(TestCase):
     def test_class_suite_returned_when_only_one_class_and_class_name_matches_module_name(self):
         # Where
         discoverer = TestDiscoverer();
-        moduleName = 'WellBehavedPythonTests.Discovery.Samples.SampleClass'
+        moduleName = 'WellBehavedPythonTests.Samples.SampleClass'
 
         # When
         suite = discoverer.buildSuiteFromModuleName(moduleName)
@@ -80,7 +80,7 @@ class TestDiscovererTests(TestCase):
     def test_all_modules_returned_when_discovering_on_a_package(self):
         # Where
         discoverer = TestDiscoverer();
-        moduleName = 'WellBehavedPythonTests.Discovery.Samples'
+        moduleName = 'WellBehavedPythonTests.Samples'
 
         # When
         suite = discoverer.buildSuiteFromModuleName(moduleName)
@@ -89,7 +89,8 @@ class TestDiscovererTests(TestCase):
         testsInExtendedModule = 2
         testsInSimpleModule = 1
         testsInSimpleClass = 1
-        numExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass
+        testsInSampleTestCases = 10
+        numExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass + testsInSampleTestCases
         expect(suite).toBeAnInstanceOf(TestSuite)
         expect(suite.countTests()).toEqual(numExpectedTests)
         expect(suite.suiteName).toEqual(moduleName)
