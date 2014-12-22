@@ -20,6 +20,7 @@
 from ..Engine.TestSuite import TestSuite
 from ..Engine.TestCase import TestCase
 from .ModuleExaminer import ModuleExaminer
+import re
 
 class TestDiscoverer:
     """Class used to find tests given a package.
@@ -27,7 +28,16 @@ class TestDiscoverer:
     Uses ModuleExaminer to determine classes in modules, modules and subpackages in packages,
     and traverses them to find classes derived from TestCase."""
 
-    def buildSuiteFromModuleName(self, moduleName, suiteName = None):
+    def buildSuiteFromModuleName(self, moduleName, suiteName = None, ignoreFilters=[]):
+        """Builds a test suite given a module or package name.
+        
+        Parameters
+        ----------
+        moduleName : [str] The name of the module to examine
+        suiteName : [str] The name of the suite. If None, the moduleName will be used as
+             the suite name
+        filter:  [iterable of str] Ignore filter. Modules matching these filters will be ignored."""
+        
 
         if suiteName is None:
             suiteName = moduleName
@@ -36,9 +46,13 @@ class TestDiscoverer:
 
         suite = TestSuite(suiteName)    
 
+        for nextFilter in ignoreFilters:
+            if re.search(nextFilter, moduleName):                
+                return suite
+
         self.addTestCasesToSuite(suite, examiner, moduleName)
         suite = self.simplifySuite(suite, moduleName)
-        self.addModulesToSuite(suite, examiner)
+        self.addModulesToSuite(suite, examiner, ignoreFilters)
         
         return suite
 
@@ -52,11 +66,11 @@ class TestDiscoverer:
                 subSuite = item.suite()
                 suite.add(subSuite)
 
-    def addModulesToSuite(self, suite, examiner):
+    def addModulesToSuite(self, suite, examiner, ignoreFilters):
         modules = examiner.listAllModules()
         for module in modules:
             subsuiteName = self._getLastPartOfModuleName(module)
-            suite.add(self.buildSuiteFromModuleName(module, subsuiteName))
+            suite.add(self.buildSuiteFromModuleName(module, subsuiteName, ignoreFilters = ignoreFilters))
 
 
     def simplifySuite(self, suite, moduleName):
