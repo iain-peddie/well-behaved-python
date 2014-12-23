@@ -92,14 +92,14 @@ class ModuleExaminer:
         subpackages = []
         baseModule = self.module.__package__ + "."
 
+        if not '__path__' in self.module.__dict__.keys():
+            return subpackages
 
         paths = self.module.__path__
         for path in paths._path:
             nextSubdirs = [x for x in Path(path).iterdir() if x.is_dir()]
             packages = [baseModule + nextSubdir.parts[-1] for nextSubdir in nextSubdirs]
             subpackages.extend(packages)
-
-        # and now what?
 
         return subpackages
 
