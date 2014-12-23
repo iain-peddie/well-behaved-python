@@ -129,6 +129,31 @@ class TestDiscovererTests(TestCase):
                 break
 
         withUserMessage('Expected a subsuite with a name of "Samples"').expect(found).toBeTrue()
+
+    
+    def test_discovery_recurses_into_subpackages(self):
+        # Where
+        discoverer = TestDiscoverer();
+        moduleName = 'WellBehavedPythonTests'
+
+        # When
+        suite = discoverer.buildSuiteFromModuleName(moduleName, ignoreFilters=['Samples'])
+        
+        # Then
+        expectedLowerLimitOnTests = 400
+        expect(suite).toBeAnInstanceOf(TestSuite)
+        expect(suite.countTests()).toBeGreaterThanOrEqualTo(expectedLowerLimitOnTests)
+        expect(suite.suiteName).toEqual(moduleName)
+        expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
+        
+        found = False
+        for test in suite.tests:
+            if test.suiteName == 'Samples':
+                self.assertIsSuiteWith(test, expectedChildren)
+                found = True
+                break
+
+        withUserMessage('Expected samples subsuite to be filtered').expect(found).toBeFalse()
         
 
     def test_can_filter_out_single_module(self):
