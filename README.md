@@ -27,15 +27,14 @@ If you need to do some setup before your classes run write a method called befor
 We now have an empty test case class which we can run. This is now a good time to setup the running of it using a suite that can discover test methods in the class. 
 
 ~~~~~ python
-from WellBehavedPython.Engine.TestSuite import *
+from WellBehavedPython.Engine.api import *
 from WellBehavedPython.Runners.VerboseConsoleTestRunner import *
-from TutorialTests import *
 
 if __name__ == "__main__":
-    suite = TestSuite("all tests")
-    suite.add(TutorialTests.suite())
-    # add other suites using TestCaseClass.suite()
-
+    # discover tests in the local module 'TutorialTests.py'. This will recurse into modules
+    # and subpackages
+    suite = discoverTests('TutorialTests', suiteName='all tests')
+ 
     runner = VerboseConsoleTestRunner(bufferOutput = True)
     results = runner.run(suite)    
 ~~~~~

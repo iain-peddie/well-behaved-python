@@ -17,9 +17,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
+from .Discovery.TestDiscoverer import *
 from .Engine.TestContext import *
 from .Expectations.ExpectationsRegistry import *
 from .Fakes.MethodSpy import *
+
 
 _registry = ExpectationsRegistry.createDefaultExpectationsRegistry()
 
@@ -35,6 +37,11 @@ def withUserMessage(message):
     """Facade for creating test contexts."""
 
     return TestContext(_registry, message)
+
+
+def discoverTests(name, suiteName=None, ignoreFilters=[]):
+    discoverer = TestDiscoverer()
+    return discoverer.buildSuiteFromModuleName(name, suiteName = suiteName, ignoreFilters = ignoreFilters)
 
 def registerExpectationClass(usePredicate, constructor):
     """Way of registereing new expectation classes.

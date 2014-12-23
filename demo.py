@@ -20,7 +20,7 @@
 # import the API
 from WellBehavedPython.Engine.TestCase import *
 from WellBehavedPython.api import *
-from WellBehavedPython.VerboseConsoleTestRunner import VerboseConsoleTestRunner
+from WellBehavedPython.Runners.VerboseConsoleTestRunner import VerboseConsoleTestRunner
 
 def outer():
     raise KeyError("you are locked out")
@@ -28,8 +28,6 @@ def outer():
 
 # derive a class from TestCase and call the base class constructor
 class DemoTests(TestCase):
-    def __init__(self, testName):
-        TestCase.__init__(self, testName)
 
     # any method starting with test is a test
     def test_something(self):
