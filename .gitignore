@@ -41,3 +41,4 @@ nosetests.xml
 MANIFEST
 tests/Untitled0.ipynb
 tests/.ipynb_checkpoints/Untitled0-checkpoint.ipynb
+src/WellBehavedPython/Discovery/ModuleExaminer.py

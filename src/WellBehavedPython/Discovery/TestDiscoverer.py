@@ -54,6 +54,7 @@ class TestDiscoverer:
         self.addTestCasesToSuite(suite, examiner, ignoreFilters)
         suite = self.simplifySuite(suite, moduleName)
         self.addModulesToSuite(suite, examiner, ignoreFilters)
+        self.addPackagesToSuite(suite, examiner, ignoreFilters)
         
         return suite
 
@@ -102,6 +103,27 @@ class TestDiscoverer:
             subsuite = self.buildSuiteFromModuleName(module, subsuiteName, ignoreFilters = ignoreFilters) 
             if subsuite.countTests() > 0:
                 suite.add(subsuite)
+
+    def addPackagesToSuite(self, suite, examiner, ignoreFilters):
+        """Given a test suite and a module examiner add direct child subpackages to the suite.
+
+        Inputs
+        -------
+
+        suite : The [TestSuite] suite to add subsuite to
+        examiner : The [MoudleExaminer] examiner to find modules for. If this is not examining a 
+            package, no modules will be found
+        ignoreFilters The [iterable of str] list of regular expression filters to apply to module
+            names. Any module name which is matched will be filtered out of the final suite."""
+
+        packages = examiner.listAllPackages()
+
+        for package in packages:
+            subsuiteName = self._getLastPartOfModuleName(package)
+            subsuite = self.buildSuiteFromModuleName(package, subsuiteName, ignoreFilters = ignoreFilters) 
+            if subsuite.countTests() > 0:
+                suite.add(subsuite)
+        
 
 
     def simplifySuite(self, suite, moduleName):
