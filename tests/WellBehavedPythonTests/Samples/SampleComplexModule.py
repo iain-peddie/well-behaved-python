@@ -37,5 +37,10 @@ class SampleSecondTests(TestCase):
     def test_something_else(self):
         pass
 
+class SampleDerivedTests(SampleFirstTests):
+    
+    def test_another_thing(self):
+        pass
+
 class StandaloneClass:
     pass

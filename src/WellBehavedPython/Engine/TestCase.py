@@ -146,11 +146,15 @@ class TestCase(TestComponent):
         -------
         A test suite configured with every method which start with 'test'."""
         testMethods = [
-            ];    
+            ];
 
-        for key in klass.__dict__.keys():
-            if key.startswith("test") or key.startswith("xtest"):
-                testMethods.append(key)
+        superclasses = getTestCaseSuperclasses(klass)
+        
+
+        for superclass in superclasses:
+            for key in superclass.__dict__.keys():
+                if key.startswith("test") or key.startswith("xtest"):
+                    testMethods.append(key)
 
         onlyClassName = TestCase.getUnqualifiedClassName(klass)
         suite = TestSuite(onlyClassName);
@@ -173,5 +177,13 @@ class TestCase(TestComponent):
             unqualifiedClassName = ""
         return unqualifiedClassName
 
+
+def getTestCaseSuperclasses(klass):
+    if not issubclass(klass, TestCase):
+        return []
+    results = [klass]
+    for superclass in klass.__bases__:
+        results.extend(getTestCaseSuperclasses(superclass))
+    return results
 
 

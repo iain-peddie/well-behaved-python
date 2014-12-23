@@ -50,16 +50,17 @@ class TestDiscovererTests(TestCase):
         
         # Then
         expect(suite).toBeAnInstanceOf(TestSuite)
-        expect(suite.countTests()).toEqual(2)
+        expect(suite.countTests()).toEqual(4)
         expect(suite.suiteName).toEqual(moduleName)
 
-        expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
-        firstChildSuite = suite.tests[0]
-        expect(firstChildSuite.suiteName).toEqual('SampleFirstTests')
+        expectedChildren = { 'SampleFirstTests': 1, 
+                             'SampleSecondTests': 1,
+                             'SampleDerivedTests' : 2}
 
-        expect(suite.tests[1]).toBeAnInstanceOf(TestSuite)
-        secondChildSuite = suite.tests[1]
-        expect(secondChildSuite.suiteName).toEqual('SampleSecondTests')
+
+        self.assertIsSuiteWith(suite.tests[0], expectedChildren)
+        self.assertIsSuiteWith(suite.tests[1], expectedChildren)
+        self.assertIsSuiteWith(suite.tests[2], expectedChildren)
 
     def test_class_suite_returned_when_only_one_class_and_class_name_matches_module_name(self):
         # Where
@@ -90,14 +91,14 @@ class TestDiscovererTests(TestCase):
         testsInSimpleModule = 1
         testsInSimpleClass = 1
         testsInSampleTestCases = 10
-        numExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass + testsInSampleTestCases
+        leastNumExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass + testsInSampleTestCases
         expect(suite).toBeAnInstanceOf(TestSuite)
-        expect(suite.countTests()).toEqual(numExpectedTests)
+        expect(suite.countTests()).toBeGreaterThanOrEqualTo(leastNumExpectedTests)
         expect(suite.suiteName).toEqual(moduleName)
         expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
         
         expectedChildren = { 'SampleModule': 1, 
-                             'SampleComplexModule': 2,
+                             'SampleComplexModule': 3,
                              'SampleClass' : 1}
 
 
@@ -168,15 +169,15 @@ class TestDiscovererTests(TestCase):
         testsInExtendedModule = 2
         testsInSimpleModule = 1
         testsInSimpleClass = 1
-        numExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass
+        leastNumExpectedTests = testsInExtendedModule + testsInSimpleModule + testsInSimpleClass
 
         expect(suite).toBeAnInstanceOf(TestSuite)
-        expect(suite.countTests()).toEqual(numExpectedTests)
+        expect(suite.countTests()).toBeGreaterThanOrEqualTo(leastNumExpectedTests)
         expect(suite.suiteName).toEqual(moduleName)
         expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
         
         expectedChildren = { 'SampleModule': 1, 
-                             'SampleComplexModule': 2,
+                             'SampleComplexModule': 3,
                              'SampleClass' : 1}
 
 
@@ -269,7 +270,7 @@ class TestDiscovererTests(TestCase):
         suite = discoverer.buildSuiteFromModuleName(moduleName, ignoreFilters=['Samples.*First'])
         
         # Then
-        testsInModule = 2
+        testsInModule = 4
         testsMatchingFilter = 1
         numExpectedTests = testsInModule - testsMatchingFilter
 
@@ -278,9 +279,11 @@ class TestDiscovererTests(TestCase):
         expect(suite.suiteName).toEqual(moduleName)
         expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
         
-        expectedChildren = { 'SampleSecondTests': 1}
+        expectedChildren = { 'SampleSecondTests': 1,
+                             'SampleDerivedTests' : 2}
 
         self.assertIsSuiteWith(suite.tests[0], expectedChildren)                
+        self.assertIsSuiteWith(suite.tests[1], expectedChildren)                
 
         
 

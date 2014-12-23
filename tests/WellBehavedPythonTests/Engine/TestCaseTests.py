@@ -171,8 +171,21 @@ class TestCaseTests(TestCase):
         # Then
         expect(longest).toEqual(len("targetGoodMethod") + indentationPerCount * count)
 
+    def test_autosuite_adds_superclass_tests(self):    
+        from ..Samples.SampleComplexModule import SampleDerivedTests
+
+        # When
+        suite = SampleDerivedTests.suite()
+        # 1 test in SDT, on in SampleFirstTests, which SampleDerivedTests derives from
+
+        # Then
+        expect(suite.countTests()).toEqual(2)
+
+
+
     def createTestCaseTests(self, methodName):
         test = TestCaseTests()
         test.configureTest(methodName)
         return test
+
 
