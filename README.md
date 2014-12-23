@@ -31,8 +31,8 @@ from WellBehavedPython.Engine.api import *
 from WellBehavedPython.Runners.VerboseConsoleTestRunner import *
 
 if __name__ == "__main__":
-    # discover tests in the local module 'TutorialTests.py'. This will recurse into modules
-    # and subpackages
+    # discover tests in the local module 'TutorialTests.py'. 
+    # This will recurse into modules and subpackages
     suite = discoverTests('TutorialTests', suiteName='all tests')
  
     runner = VerboseConsoleTestRunner(bufferOutput = True)
