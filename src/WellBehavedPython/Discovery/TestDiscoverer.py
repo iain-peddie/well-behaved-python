@@ -51,14 +51,14 @@ class TestDiscoverer:
             if re.search(nextFilter, moduleName):                
                 return suite
 
-        self.addTestCasesToSuite(suite, examiner)
+        self.addTestCasesToSuite(suite, examiner, ignoreFilters)
         suite = self.simplifySuite(suite, moduleName)
         self.addModulesToSuite(suite, examiner, ignoreFilters)
         
         return suite
 
 
-    def addTestCasesToSuite(self, suite, examiner):
+    def addTestCasesToSuite(self, suite, examiner, ignoreFilters):
         """Given a test suite and a module name add the test class subsuites.
 
         Iterate over a module, find all the classes derived from TestCase, and
@@ -71,6 +71,15 @@ class TestDiscoverer:
         subSuite = []
 
         for item in examiner.listAllClasses():
+            isFiltered = False
+            for nextFilter in ignoreFilters:
+                if re.search(nextFilter, item.__name__):                
+                    isFiltered = True
+                    break
+
+            if isFiltered:
+                continue
+            
             if issubclass(item, TestCase):
                 subSuite = item.suite()
                 suite.add(subSuite)
