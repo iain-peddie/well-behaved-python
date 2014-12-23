@@ -72,8 +72,9 @@ class TestDiscoverer:
 
         for item in examiner.listAllClasses():
             isFiltered = False
-            for nextFilter in ignoreFilters:
-                if re.search(nextFilter, item.__name__):                
+            fullName = "{}.{}".format(item.__module__, item.__name__)
+            for nextFilter in ignoreFilters:                
+                if re.search(nextFilter, fullName):                
                     isFiltered = True
                     break
 
