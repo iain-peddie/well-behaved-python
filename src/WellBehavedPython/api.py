@@ -39,9 +39,9 @@ def withUserMessage(message):
     return TestContext(_registry, message)
 
 
-def discoverTests(name, ignoreFilters=[]):
+def discoverTests(name, suiteName=None, ignoreFilters=[]):
     discoverer = TestDiscoverer()
-    return discoverer.buildSuiteFromModuleName(name, ignoreFilters = ignoreFilters)
+    return discoverer.buildSuiteFromModuleName(name, suiteName = suiteName, ignoreFilters = ignoreFilters)
 
 def registerExpectationClass(usePredicate, constructor):
     """Way of registereing new expectation classes.

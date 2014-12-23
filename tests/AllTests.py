@@ -27,7 +27,7 @@ from WellBehavedPython.Runners.VerboseConsoleTestRunner import VerboseConsoleTes
 
 def main():
     try:
-        suite = discoverTests('WellBehavedPythonTests', ['Samples'])
+        suite = discoverTests('WellBehavedPythonTests', ignoreFilters = ['Samples'])
         
         buffer = True
 
