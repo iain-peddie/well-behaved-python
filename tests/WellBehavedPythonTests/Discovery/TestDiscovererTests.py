@@ -105,7 +105,7 @@ class TestDiscovererTests(TestCase):
         self.assertIsSuiteWith(suite.tests[1], expectedChildren)
         self.assertIsSuiteWith(suite.tests[2], expectedChildren)
 
-    def test_can_filter_out_modules(self):
+    def test_can_filter_out_single_module(self):
         # Where
         discoverer = TestDiscoverer();
         moduleName = 'WellBehavedPythonTests.Samples'
@@ -132,6 +132,32 @@ class TestDiscovererTests(TestCase):
         self.assertIsSuiteWith(suite.tests[0], expectedChildren)
         self.assertIsSuiteWith(suite.tests[1], expectedChildren)
         self.assertIsSuiteWith(suite.tests[2], expectedChildren)
+
+    def test_modules_filtered_with_multiple_filters(self):
+        # Where
+        discoverer = TestDiscoverer();
+        moduleName = 'WellBehavedPythonTests.Samples'
+
+        # When
+        suite = discoverer.buildSuiteFromModuleName(moduleName, ignoreFilters=['Complex', 'TestCases'])
+        
+        # Then
+        testsInSimpleModule = 1
+        testsInSimpleClass = 1
+        numExpectedTests = testsInSimpleModule + testsInSimpleClass
+
+        expect(suite).toBeAnInstanceOf(TestSuite)
+        expect(suite.countTests()).toEqual(numExpectedTests)
+        expect(suite.suiteName).toEqual(moduleName)
+        expect(suite.tests[0]).toBeAnInstanceOf(TestSuite)
+        
+        expectedChildren = { 'SampleModule': 1, 
+                             'SampleClass' : 1}
+
+
+        self.assertIsSuiteWith(suite.tests[0], expectedChildren)
+        self.assertIsSuiteWith(suite.tests[1], expectedChildren)
+        
         
 
     def assertIsSuiteWith(self, suite, childrenDict):

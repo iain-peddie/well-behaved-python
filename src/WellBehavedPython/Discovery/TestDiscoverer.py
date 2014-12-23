@@ -70,7 +70,9 @@ class TestDiscoverer:
         modules = examiner.listAllModules()
         for module in modules:
             subsuiteName = self._getLastPartOfModuleName(module)
-            suite.add(self.buildSuiteFromModuleName(module, subsuiteName, ignoreFilters = ignoreFilters))
+            subsuite = self.buildSuiteFromModuleName(module, subsuiteName, ignoreFilters = ignoreFilters) 
+            if subsuite.countTests() > 0:
+                suite.add(subsuite)
 
 
     def simplifySuite(self, suite, moduleName):
