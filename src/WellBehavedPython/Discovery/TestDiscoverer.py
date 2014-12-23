@@ -31,8 +31,9 @@ class TestDiscoverer:
     def buildSuiteFromModuleName(self, moduleName, suiteName = None, ignoreFilters=[]):
         """Builds a test suite given a module or package name.
         
-        Parameters
-        ----------
+        Inputs
+        ------
+
         moduleName : [str] The name of the module to examine
         suiteName : [str] The name of the suite. If None, the moduleName will be used as
              the suite name
@@ -50,15 +51,23 @@ class TestDiscoverer:
             if re.search(nextFilter, moduleName):                
                 return suite
 
-        self.addTestCasesToSuite(suite, examiner, moduleName)
+        self.addTestCasesToSuite(suite, examiner)
         suite = self.simplifySuite(suite, moduleName)
         self.addModulesToSuite(suite, examiner, ignoreFilters)
         
         return suite
 
 
-    def addTestCasesToSuite(self, suite, examiner, moduleName):
+    def addTestCasesToSuite(self, suite, examiner):
+        """Given a test suite and a module name add the test class subsuites.
 
+        Iterate over a module, find all the classes derived from TestCase, and
+        use their autosuite generation to create new subsites, which get added to suite. 
+
+        Inputs
+        ------
+        suite : The [TestSuite] to add child suites to
+        examiner : The [ModuleExaminer] to use to find children."""
         subSuite = []
 
         for item in examiner.listAllClasses():
@@ -67,6 +76,16 @@ class TestDiscoverer:
                 suite.add(subSuite)
 
     def addModulesToSuite(self, suite, examiner, ignoreFilters):
+        """Given a test suite and a module examiner add direct child modules to the suite.
+
+        Inputs
+        ------
+        suite : The [TestSuite] suite to add subsuite to
+        examiner : The [MoudleExaminer] examiner to find modules for. If this is not examining a 
+            package, no modules will be found
+        ignoreFilters The [iterable of str] list of regular expression filters to apply to module
+            names. Any module name which is matched will be filtered out of the final suite."""
+
         modules = examiner.listAllModules()
         for module in modules:
             subsuiteName = self._getLastPartOfModuleName(module)
@@ -76,6 +95,16 @@ class TestDiscoverer:
 
 
     def simplifySuite(self, suite, moduleName):
+        """Simplifies the suite
+
+        Post-processes suites so that modules with a single test case class where the test case
+        class has the same name as the module get converted so that the tests are put in the top
+        level suite, rather than a subsuite.
+
+        Inputs
+        ------
+        suite : The [TestSuite]  to simplify
+        moduleName : The [str] name of the module corresponding to the suite."""
 
         uniqueModuleName = self._getLastPartOfModuleName(moduleName)
 
