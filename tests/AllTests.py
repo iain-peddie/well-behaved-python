@@ -19,19 +19,15 @@
 
 import sys
 
-from WellBehavedPythonTests.ExpectationsRegistryTests import *
-from WellBehavedPythonTests.BackwardsCompatibilityTests import *
-from WellBehavedPythonTests.VerboseConsoleTestRunnerTests import *
-from WellBehavedPythonTests.ConsoleTestRunnerTests import *
-
-from WellBehavedPython.Engine.TestSuite import TestSuite
-from WellBehavedPython.Discovery.TestDiscoverer import TestDiscoverer
+from WellBehavedPython.api import discoverTests
 from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
+from WellBehavedPython.Runners.VerboseConsoleTestRunner import VerboseConsoleTestRunner
 
 
-def main(suite):
+
+def main():
     try:
-        suite = createSuite()
+        suite = discoverTests('WellBehavedPythonTests', ['Samples'])
         
         buffer = True
 
@@ -50,31 +46,7 @@ def main(suite):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         traceback.print_exc(file = sys.stdout)
-        
-    
-def createSuite():
-    discoverer = TestDiscoverer()
-    suite = TestSuite("WellBehavedPythonTests")
-
-    discoverySuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Discovery', 'Discovery')
-    engineSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Engine',  'Engine')
-    expectationsSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Expectations', 'Expectations')
-    fakesSuite = discoverer.buildSuiteFromModuleName('WellBehavedPythonTests.Fakes', 'Fakes')
             
-    suite.add(ConsoleTestRunnerTests.suite())
-    suite.add(VerboseConsoleTestRunnerTests.suite())
-    suite.add(ExpectationsFactoryTests.suite())
-    suite.add(ExpectationsRegistryTests.suite())
-    suite.add(BackwardsCompatibilityTests.suite())
-
-    suite.add(engineSuite)
-    suite.add(expectationsSuite)
-    suite.add(fakesSuite)
-    suite.add(discoverySuite)
-    
-    
-    return suite
-
 if __name__ == "__main__":
-    main(createSuite())
+    main()
 
