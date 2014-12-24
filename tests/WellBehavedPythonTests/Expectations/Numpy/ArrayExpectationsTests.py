@@ -60,7 +60,7 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) not to exactly equal \\1")
 
-    def test_vectors_differing_at_1e_minus_16_considered_unequal(self):
+    def test_matrices_differing_at_1e_minus_16_considered_unequal(self):
         # Where
         m1 = self._createMatrix(3, 2)
         m2 = m1.copy()
