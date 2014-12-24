@@ -32,7 +32,7 @@ class ArrayExpectationsTests(TestCase):
     def test_identical_vectors_considered_equal(self):
         # Where
         v1 = self._createVector(3)
-        v2 = v1
+        v2 = v1.copy()
 
         # Then
         expect(lambda: self.expecter.expect(v1).Not.toEqual(v2)).toRaise(
@@ -49,7 +49,32 @@ class ArrayExpectationsTests(TestCase):
         expect(lambda: self.expecter.expect(v1).toEqual(v2)).toRaise(
             AssertionError,
             expectedMessageMatches = "Expected \[\s*0\.\s+0\.\s+0\.\] to exactly equal \[\s*0\.0+e\+0+\s+0\.0+e\+0+\s+1\.0+e-16\]")
+
+    def test_identical_matrices_considered_equal(self):
+        # Where
+        m1 = self._createMatrix(3,2)
+        m2 = m1.copy()
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).Not.toEqual(m2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) not to exactly equal \\1")
+
+    def test_vectors_differing_at_1e_minus_16_considered_unequal(self):
+        # Where
+        m1 = self._createMatrix(3, 2)
+        m2 = m1.copy()
+        m2[2,1] = 1e-16
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).toEqual(m2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) to exactly equal \[(\[\s*0\.0+e\+00\s+.0\.0+e\+00*\]\s*){2}\[\s*0\.0+e\+00\s+.1\.0+e-16*\]\]")
+
         
 
     def _createVector(self, numCols):
         return zeros(numCols)
+
+    def _createMatrix(self, numRows, numCols):
+        return zeros([numRows, numCols])
