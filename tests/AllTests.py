@@ -18,6 +18,7 @@
 #    along with WellBehavedPython. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import importlib
 
 from WellBehavedPython.api import discoverTests
 from WellBehavedPython.Runners.ConsoleTestRunner import ConsoleTestRunner
@@ -27,6 +28,15 @@ from WellBehavedPython.Runners.VerboseConsoleTestRunner import VerboseConsoleTes
 
 def main():
     try:
+
+        ignoreFilters = ['Samples']
+
+        # don't run numpy specific tets ( in expectations) if numpy is not installed
+        # as this will cause many irrelevant errors
+        if not moduleExists('numpy'):
+            ignoreFilters.append('Numpy')
+            
+
         suite = discoverTests('WellBehavedPythonTests', ignoreFilters = ['Samples'])
         
         buffer = True
@@ -47,6 +57,10 @@ def main():
         sys.stderr = sys.__stderr__
         traceback.print_exc(file = sys.stdout)
             
+def moduleExists(name):
+    loader = importlib.find_loader(name)
+    return loader is not None
+
 if __name__ == "__main__":
     main()
 
