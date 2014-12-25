@@ -71,6 +71,19 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) to exactly equal \[(\[\s*0\.0+e\+00\s+.0\.0+e\+00*\]\s*){2}\[\s*0\.0+e\+00\s+.1\.0+e-16*\]\]")
 
+    def test_vector_considered_unequal_to_matrix(self):
+        # Where
+        m = self._createMatrix(3, 2)
+        v = self._createVector(3)
+
+        # Then
+        expect(lambda: self.expecter.expect(v).toEqual(m)).toRaise(
+            AssertionError,
+            expectedMessage = "Dimensionality mismatch when comparing ndarrays: 1 != 2")
+        expect(lambda: self.expecter.expect(m).toEqual(v)).toRaise(
+            AssertionError,
+            expectedMessage = "Dimensionality mismatch when comparing ndarrays: 2 != 1")
+
         
 
     def _createVector(self, numCols):
