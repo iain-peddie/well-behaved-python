@@ -39,6 +39,7 @@ class ArrayExpectations(DefaultExpectations):
 
     def toEqual(self, expected):
         self._compareTypes(expected)
+        self._compareSizes(expected)
 
         message = self.buildMessage("to exactly equal ", expected, 
                                     extra = ("For equality with tolerance, use toEqualWithinRelativeTolerance"
@@ -47,3 +48,9 @@ class ArrayExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def _compareSizes(self, expected):
+        if self.actual.ndim != expected.ndim:
+            raise AssertionError("Dimensionality mismatch when comparing ndarrays: {} != {}".format(
+                self.actual.ndim, expected.ndim))
+        pass
