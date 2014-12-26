@@ -46,12 +46,14 @@ class ArrayExpectations(DefaultExpectations):
 
 
         comparison = equal(self.actual, expected)
-        extraMessageParts = ["\nFor equality with tolerance, use toEqualWithinRelativeTolerance" 
-        + " or toEqualWithinAbsoluteTolerance"]
+        extraMessageParts = []
+        extraMessageParts.append(self._createDifferenceCountMessage(comparison))
         extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
 
+        extraMessage = "\n" + "\n".join(extraMessageParts)
+
         message = self.buildMessage("to exactly equal ", expected, 
-                                    extra = "\n".join(extraMessageParts))
+                                    extra = extraMessage)
 
 
         if all(comparison):
@@ -73,21 +75,22 @@ class ArrayExpectations(DefaultExpectations):
 
         return None
 
+    def _createDifferenceCountMessage(self, comparisonResults):
+        numDifferences = count_nonzero(~comparisonResults)
+        numElements = comparisonResults.size
+        if numDifferences < numElements:
+            return "{} out of {} elements differ".format(
+            numDifferences, numElements)
+        else:
+            return "all elements differ"
+
     def _createDifferenceLocationMessage(self, comparisonResults):
         flippedResults = ~comparisonResults
-        if comparisonResults.ndim == 1:
-            locations = flatnonzero(flippedResults)            
-            if len(locations) == 0:
-                return "no differences"
-            firstLocation = locations[0]
-            return "First difference is at [{}]".format(firstLocation)
-
-        else:
-            locations = transpose(flippedResults.nonzero())
-            if len(locations) == 0:
-                return "no differences"
-            firstLocation = locations[0]
-            return "First difference is at {}".format(firstLocation)
+        locations = transpose(flippedResults.nonzero())
+        if len(locations) == 0:
+            return "no differences"
+        firstLocation = locations[0]
+        return "First difference is at {}".format(firstLocation)
 
 
         
