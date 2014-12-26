@@ -46,8 +46,8 @@ class ArrayExpectations(DefaultExpectations):
 
 
         comparison = equal(self.actual, expected)
-        extraMessageParts = ["\nFor equality with tolerance, use toEqualWithinRelativeTolerance" 
-        + " or toEqualWithinAbsoluteTolerance"]
+        extraMessageParts = []
+        extraMessageParts.append(self._createDifferenceCountMessage(comparison))
         extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
 
         message = self.buildMessage("to exactly equal ", expected, 
@@ -72,6 +72,11 @@ class ArrayExpectations(DefaultExpectations):
                 return "Size mismatch: {} != {}".format(self.actual.size, expected.size)
 
         return None
+
+    def _createDifferenceCountMessage(self, comparisonResults):
+        return "{} out of {} elements differ".format(
+            count_nonzero(~comparisonResults), 
+            comparisonResults.size)
 
     def _createDifferenceLocationMessage(self, comparisonResults):
         flippedResults = ~comparisonResults

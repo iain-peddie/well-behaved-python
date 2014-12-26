@@ -206,6 +206,19 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessageMatches = "First difference is at \[0 1 2\]")
 
+    def test_that_toEqual_indicates_number_of_differences_for_vectors(self):
+        # Where
+        v1 = self._createVector(3)
+        v2 = v1.copy()
+        v2[1] = 1e-16
+        v2[2] = 2e-16
+
+        # When
+        expect(lambda: self.expecter.expect(v1).toEqual(v2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "2 out of 3 elements differ")
+        
+
         
     def _createVector(self, numCols):
         return zeros(numCols)
