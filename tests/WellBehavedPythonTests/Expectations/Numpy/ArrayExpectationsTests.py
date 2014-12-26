@@ -71,7 +71,7 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) to exactly equal \[(\[\s*0\.0+e\+00\s+.0\.0+e\+00*\]\s*){2}\[\s*0\.0+e\+00\s+.1\.0+e-16*\]\]")
 
-    def test_vector_considered_unequal_to_matrix(self):
+    def test_vector_equal_to_matrix_fails(self):
         # Where
         m = self._createMatrix(3, 2)
         v = self._createVector(3)
@@ -84,8 +84,43 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessage = "Dimensionality mismatch when comparing ndarrays: 2 != 1")
 
-        
+    def test_vector_not_equal_to_matrix_passes(self):
+        # Where
+        m = self._createMatrix(3, 2)
+        v = self._createVector(3)
 
+        # When
+        self.expecter.expect(v).Not.toEqual(m)
+        self.expecter.expect(m).Not.toEqual(v)
+
+        # Then
+        # (no assertions were raised)
+
+    def test_vectors_of_different_sizes_equals_fails(self):
+        # Where
+        v1 = self._createVector(2)
+        v2 = self._createVector(3)
+
+        # Then
+        expect(lambda: self.expecter.expect(v1).toEqual(v2)).toRaise(
+            AssertionError,
+            expectedMessage = "Size mismatch: 2 != 3")
+        expect(lambda: self.expecter.expect(v2).toEqual(v1)).toRaise(
+            AssertionError,
+            expectedMessage = "Size mismatch: 3 != 2")
+
+    def test_vectors_of_different_sizes_not_equals_passes(self):
+        # Where
+        v1 = self._createVector(2)
+        v2 = self._createVector(3)
+
+        # When
+        self.expecter.expect(v1).Not.toEqual(v2)
+        self.expecter.expect(v2).Not.toEqual(v1)
+
+        # Then
+        # (no assertions were raised)
+        
     def _createVector(self, numCols):
         return zeros(numCols)
 
