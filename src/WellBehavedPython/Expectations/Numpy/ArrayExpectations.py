@@ -50,8 +50,10 @@ class ArrayExpectations(DefaultExpectations):
         extraMessageParts.append(self._createDifferenceCountMessage(comparison))
         extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
 
+        extraMessage = "\n" + "\n".join(extraMessageParts)
+
         message = self.buildMessage("to exactly equal ", expected, 
-                                    extra = "\n".join(extraMessageParts))
+                                    extra = extraMessage)
 
 
         if all(comparison):
@@ -74,9 +76,13 @@ class ArrayExpectations(DefaultExpectations):
         return None
 
     def _createDifferenceCountMessage(self, comparisonResults):
-        return "{} out of {} elements differ".format(
-            count_nonzero(~comparisonResults), 
-            comparisonResults.size)
+        numDifferences = count_nonzero(~comparisonResults)
+        numElements = comparisonResults.size
+        if numDifferences < numElements:
+            return "{} out of {} elements differ".format(
+            numDifferences, numElements)
+        else:
+            return "all elements differ"
 
     def _createDifferenceLocationMessage(self, comparisonResults):
         flippedResults = ~comparisonResults

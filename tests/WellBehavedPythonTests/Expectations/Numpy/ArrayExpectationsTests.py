@@ -230,6 +230,17 @@ class ArrayExpectationsTests(TestCase):
         expect(lambda: self.expecter.expect(m1).toEqual(m2)).toRaise(
             AssertionError,
             expectedMessageMatches = "3 out of 9 elements differ")
+
+    def test_that_toEqual_indicates_when_all_elements_differ(self):
+        # Where
+        v1 = zeros(3)
+        v2 = ones(3)
+
+        # When
+        expect(lambda: self.expecter.expect(v1).toEqual(v2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "all elements differ")
+        
         
 
         
