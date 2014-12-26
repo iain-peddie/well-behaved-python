@@ -80,19 +80,11 @@ class ArrayExpectations(DefaultExpectations):
 
     def _createDifferenceLocationMessage(self, comparisonResults):
         flippedResults = ~comparisonResults
-        if comparisonResults.ndim == 1:
-            locations = flatnonzero(flippedResults)            
-            if len(locations) == 0:
-                return "no differences"
-            firstLocation = locations[0]
-            return "First difference is at [{}]".format(firstLocation)
-
-        else:
-            locations = transpose(flippedResults.nonzero())
-            if len(locations) == 0:
-                return "no differences"
-            firstLocation = locations[0]
-            return "First difference is at {}".format(firstLocation)
+        locations = transpose(flippedResults.nonzero())
+        if len(locations) == 0:
+            return "no differences"
+        firstLocation = locations[0]
+        return "First difference is at {}".format(firstLocation)
 
 
         
