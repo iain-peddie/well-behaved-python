@@ -171,6 +171,17 @@ class ArrayExpectationsTests(TestCase):
         # Then
         # (no expections are raised)
 
+    def test_index_of_difference_in_vector_given(self):
+        # Where
+        v1 = self._createVector(3)
+        v2 = v1.copy()
+        v2[2] = 1e-16
+
+        # When
+        expect(lambda: self.expecter.expect(v1).toEqual(v2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "First difference is at \[2\]")
+
         
     def _createVector(self, numCols):
         return zeros(numCols)

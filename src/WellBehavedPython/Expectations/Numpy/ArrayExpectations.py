@@ -19,7 +19,7 @@
 
 from ..DefaultExpectations import *
 
-from numpy import all, equal
+from numpy import *
 
 class ArrayExpectations(DefaultExpectations):
 
@@ -44,10 +44,17 @@ class ArrayExpectations(DefaultExpectations):
             self.fail(failMessage)
             return # don't carry forward if we're in a not contenxt            
 
+
+        comparison = equal(self.actual, expected)
+        extraMessageParts = ["\nFor equality with tolerance, use toEqualWithinRelativeTolerance" 
+        + " or toEqualWithinAbsoluteTolerance"]
+        extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
+
         message = self.buildMessage("to exactly equal ", expected, 
-                                    extra = ("For equality with tolerance, use toEqualWithinRelativeTolerance"
-                                             + " or toEqualWithinAbsoluteTolerance"))
-        if all(equal(self.actual, expected)):
+                                    extra = "\n".join(extraMessageParts))
+
+
+        if all(comparison):
             self.success(message)
         else:
             self.fail(message)
@@ -65,3 +72,16 @@ class ArrayExpectations(DefaultExpectations):
                 return "Size mismatch: {} != {}".format(self.actual.size, expected.size)
 
         return None
+
+    def _createDifferenceLocationMessage(self, comparisonResults):
+        if comparisonResults.ndim == 1:
+            locations = flatnonzero(~comparisonResults)            
+        else:
+            locations = []
+
+        if len(locations) == 0:
+            return "no differences"
+        firstLocation = locations[0]
+        return "First difference is at [{}]".format(firstLocation)
+
+        
