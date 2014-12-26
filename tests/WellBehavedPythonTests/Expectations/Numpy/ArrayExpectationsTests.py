@@ -84,8 +84,19 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessage = "Dimensionality mismatch when comparing ndarrays: 2 != 1")
 
-        
+    def test_vectors_of_different_sizes_considered_unequal(self):
+        # Where
+        v1 = self._createVector(2)
+        v2 = self._createVector(3)
 
+        # Then
+        expect(lambda: self.expecter.expect(v1).toEqual(v2)).toRaise(
+            AssertionError,
+            expectedMessage = "Size mismatch: 2 != 3")
+        expect(lambda: self.expecter.expect(v2).toEqual(v1)).toRaise(
+            AssertionError,
+            expectedMessage = "Size mismatch: 3 != 2")
+        
     def _createVector(self, numCols):
         return zeros(numCols)
 
