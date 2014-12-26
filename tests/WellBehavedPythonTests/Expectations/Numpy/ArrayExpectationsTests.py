@@ -194,9 +194,24 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessageMatches = "First difference is at \[0 2\]")
 
+    def test_index_of_difference_in_tensor_given(self):
+        # Where
+        t1 = self._createTensor(3, 3, 3)
+        t2 = t1.copy()
+        t2[0,1,2] = 1e-16
+        t2[1,1,1] = 1
+
+        # When
+        expect(lambda: self.expecter.expect(t1).toEqual(t2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "First difference is at \[0 1 2\]")
+
         
     def _createVector(self, numCols):
         return zeros(numCols)
 
     def _createMatrix(self, numRows, numCols):
         return zeros([numRows, numCols])
+
+    def _createTensor(self, numRows, numCols, numLayers):
+        return zeros([numRows, numCols, numLayers])
