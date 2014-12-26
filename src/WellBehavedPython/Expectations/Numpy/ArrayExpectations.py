@@ -58,7 +58,10 @@ class ArrayExpectations(DefaultExpectations):
                 self.actual.ndim, expected.ndim)
             
 
-        if self.actual.size != expected.size:
-            return "Size mismatch: {} != {}".format(self.actual.size, expected.size)
+        if self.actual.shape != expected.shape:
+            if self.actual.ndim > 1:
+                return "Shape mismatch: {} != {}".format(self.actual.shape, expected.shape)
+            else:
+                return "Size mismatch: {} != {}".format(self.actual.size, expected.size)
 
         return None
