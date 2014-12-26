@@ -145,6 +145,32 @@ class ArrayExpectationsTests(TestCase):
 
         # Then
         # (no expections are raised)
+
+    def test_matrices_of_different_num_cols_equals_fails(self):
+        # Where
+        m1 = self._createMatrix(3, 2)
+        m2 = self._createMatrix(3, 3)
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).toEqual(m2)).toRaise(
+            AssertionError,
+            expectedMessage = "Shape mismatch: (3, 2) != (3, 3)")
+        expect(lambda: self.expecter.expect(m2).toEqual(m1)).toRaise(
+            AssertionError,
+            expectedMessage = "Shape mismatch: (3, 3) != (3, 2)")
+
+    def test_matrices_of_different_num_cols_not_equals_passes(self):
+        # Where
+        m1 = self._createMatrix(3, 2)
+        m2 = self._createMatrix(3, 3)
+
+        # When
+        self.expecter.expect(m1).Not.toEqual(m2)
+        self.expecter.expect(m2).Not.toEqual(m1)
+
+        # Then
+        # (no expections are raised)
+
         
     def _createVector(self, numCols):
         return zeros(numCols)
