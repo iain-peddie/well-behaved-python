@@ -182,6 +182,18 @@ class ArrayExpectationsTests(TestCase):
             AssertionError,
             expectedMessageMatches = "First difference is at \[2\]")
 
+    def test_index_of_difference_in_matrix_given(self):
+        # Where
+        m1 = self._createMatrix(3, 3)
+        m2 = m1.copy()
+        m2[0,2] = 1e-16
+        m2[1,1] = 1
+
+        # When
+        expect(lambda: self.expecter.expect(m1).toEqual(m2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "First difference is at \[0 2\]")
+
         
     def _createVector(self, numCols):
         return zeros(numCols)
