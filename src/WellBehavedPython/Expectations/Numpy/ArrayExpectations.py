@@ -61,10 +61,10 @@ class ArrayExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
-    def toBeCloseTo(self, expected):
+    def toBeCloseTo(self, expected, absoluteTolerance=0):
         self._compareTypes(expected)
         
-        comparison = isclose(self.actual, expected)
+        comparison = isclose(self.actual, expected, atol = absoluteTolerance, rtol=0)
 
         message = self.buildMessage("to be close to ", expected)
 

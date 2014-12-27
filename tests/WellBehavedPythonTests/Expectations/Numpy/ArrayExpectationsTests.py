@@ -279,3 +279,39 @@ class ToBeCloseToTests(ArrayExpectationsTests):
         expect(lambda: self.expecter.expect(m1).Not.toBeCloseTo(m2)).toRaise(
             AssertionError,
             expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) not to be close to \\1")
+
+    def test_that_elements_just_inside_absolute_tolerance_considered_close(self):
+        # Where
+        tolerance = 1e-8
+        tiny = 1e-16
+        v1 = self._createVector(3)
+        
+        v2 = v1 + (tolerance - tiny)
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, absoluteTolerance=tolerance)
+        shouldPass = lambda: self.expecter.expect(v1).toBeCloseTo(v2, absoluteTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
+
+    def test_that_elements_just_inside_outside_tolerance_considered_not_close(self):
+        # Where
+        tolerance = 1e-8
+        tiny = 1e-16
+        v1 = self._createVector(3)
+        
+        v2 = v1 + (tolerance + tiny)
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, absoluteTolerance=tolerance)
+        shouldFail = lambda: self.expecter.expect(v1).toBeCloseTo(v2, absoluteTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] to be close to \[.*\]")
