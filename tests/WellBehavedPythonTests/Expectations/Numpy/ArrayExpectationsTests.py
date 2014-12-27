@@ -28,6 +28,18 @@ class ArrayExpectationsTests(TestCase):
     def before(self):
         self.expecter = ExpectationsRegistry.createDefaultExpectationsRegistry()
         self.expecter.register(lambda x: isinstance(x, ndarray), ArrayExpectations)
+        
+    def _createVector(self, numCols):
+        return zeros(numCols)
+
+    def _createMatrix(self, numRows, numCols):
+        return zeros([numRows, numCols])
+
+    def _createTensor(self, numRows, numCols, numLayers):
+        return zeros([numRows, numCols, numLayers])
+
+
+class ToEqualTests(ArrayExpectationsTests):
     
     def test_identical_vectors_considered_equal(self):
         # Where
@@ -242,13 +254,28 @@ class ArrayExpectationsTests(TestCase):
             expectedMessageMatches = "all elements differ")
         
         
+class ToBeCloseToTests(ArrayExpectationsTests):
 
-        
-    def _createVector(self, numCols):
-        return zeros(numCols)
+    def test_that_identical_vectors_considered_close(self):
+        # Where
+        v1 = self._createVector(3)
+        v2 = v1.copy()
 
-    def _createMatrix(self, numRows, numCols):
-        return zeros([numRows, numCols])
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2)
 
-    def _createTensor(self, numRows, numCols, numLayers):
-        return zeros([numRows, numCols, numLayers])
+        # Then
+        self.expecter.expect(v1).toBeCloseTo(v2)
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected (\[\s*0\.\s+0\.\s+0\.\]) not to be close to \\1")
+
+    def test_that_identical_matrices_considered_close(self):
+        # Where
+        m1 = self._createMatrix(3,2)
+        m2 = m1.copy()
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).Not.toBeCloseTo(m2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) not to be close to \\1")

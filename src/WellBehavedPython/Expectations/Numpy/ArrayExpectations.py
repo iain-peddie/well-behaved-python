@@ -61,6 +61,18 @@ class ArrayExpectations(DefaultExpectations):
         else:
             self.fail(message)
 
+    def toBeCloseTo(self, expected):
+        self._compareTypes(expected)
+        
+        comparison = isclose(self.actual, expected)
+
+        message = self.buildMessage("to be close to ", expected)
+
+        if all(comparison):
+            self.success(message)
+        else:
+            self.fail(message)
+
     def _compareSizes(self, expected):
         if self.actual.ndim != expected.ndim:
             return "Dimensionality mismatch when comparing ndarrays: {} != {}".format(
