@@ -80,7 +80,13 @@ class ArrayExpectations(DefaultExpectations):
                 comparison = isclose(self.actual, expected, atol = absoluteTolerance, 
                              rtol=relativeTolerance)
 
-        message = self.buildMessage("to be close to ", expected)
+        extraMessageParts = []
+        extraMessageParts.append(self._createDifferenceCountMessage(comparison))
+        extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
+
+        extraMessage = "\n" + "\n".join(extraMessageParts)
+        message = self.buildMessage("to be close to ", expected, 
+                                    extra = extraMessage)
 
         if all(comparison):
             self.success(message)
