@@ -63,6 +63,10 @@ class ArrayExpectations(DefaultExpectations):
 
     def toBeCloseTo(self, expected, absoluteTolerance = None, relativeTolerance = None):
         self._compareTypes(expected)
+        failMessage = self._compareSizes(expected)
+        if failMessage is not None:
+            self.fail(failMessage)
+            return # don't carry forward if we're in a not contenxt            
 
         if absoluteTolerance is None:
             if relativeTolerance is None:

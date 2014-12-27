@@ -371,4 +371,104 @@ class ToBeCloseToTests(ArrayExpectationsTests):
             AssertionError,
             expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
         
+    def test_vector_close_to_matrix_fails(self):
+        # Where
+        m = self._createMatrix(3, 2)
+        v = self._createVector(3)
+
+        # Then
+        expect(lambda: self.expecter.expect(v).toBeCloseTo(m)).toRaise(
+            AssertionError,
+            expectedMessage = "Dimensionality mismatch when comparing ndarrays: 1 != 2")
+        expect(lambda: self.expecter.expect(m).toBeCloseTo(v)).toRaise(
+            AssertionError,
+            expectedMessage = "Dimensionality mismatch when comparing ndarrays: 2 != 1")
+
+    def test_vector_not_close_to_matrix_passes(self):
+        # Where
+        m = self._createMatrix(3, 2)
+        v = self._createVector(3)
+
+        # When
+        self.expecter.expect(v).Not.toBeCloseTo(m)
+        self.expecter.expect(m).Not.toBeCloseTo(v)
+
+        # Then
+        # (no assertions were raised)
+
+    def test_vectors_of_different_sizes_equals_fails(self):
+        # Where
+        v1 = self._createVector(2)
+        v2 = self._createVector(3)
+
+        # Then
+        expect(lambda: self.expecter.expect(v1).toBeCloseTo(v2)).toRaise(
+            AssertionError,
+            expectedMessage = "Size mismatch: 2 != 3")
+        expect(lambda: self.expecter.expect(v2).toBeCloseTo(v1)).toRaise(
+            AssertionError,
+            expectedMessage = "Size mismatch: 3 != 2")
+
+    def test_vectors_of_different_sizes_not_equals_passes(self):
+        # Where
+        v1 = self._createVector(2)
+        v2 = self._createVector(3)
+
+        # When
+        self.expecter.expect(v1).Not.toBeCloseTo(v2)
+        self.expecter.expect(v2).Not.toBeCloseTo(v1)
+
+        # Then
+        # (no assertions were raised)
+
+    def test_matrices_of_different_num_rows_equals_fails(self):
+        # Where
+        m1 = self._createMatrix(2, 3)
+        m2 = self._createMatrix(3, 3)
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).toBeCloseTo(m2)).toRaise(
+            AssertionError,
+            expectedMessage = "Shape mismatch: (2, 3) != (3, 3)")
+        expect(lambda: self.expecter.expect(m2).toBeCloseTo(m1)).toRaise(
+            AssertionError,
+            expectedMessage = "Shape mismatch: (3, 3) != (2, 3)")
+
+    def test_matrices_of_different_num_rows_not_equals_passes(self):
+        # Where
+        m1 = self._createMatrix(2, 3)
+        m2 = self._createMatrix(3, 3)
+
+        # When
+        self.expecter.expect(m1).Not.toBeCloseTo(m2)
+        self.expecter.expect(m2).Not.toBeCloseTo(m1)
+
+        # Then
+        # (no expections are raised)
+
+    def test_matrices_of_different_num_cols_equals_fails(self):
+        # Where
+        m1 = self._createMatrix(3, 2)
+        m2 = self._createMatrix(3, 3)
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).toBeCloseTo(m2)).toRaise(
+            AssertionError,
+            expectedMessage = "Shape mismatch: (3, 2) != (3, 3)")
+        expect(lambda: self.expecter.expect(m2).toBeCloseTo(m1)).toRaise(
+            AssertionError,
+            expectedMessage = "Shape mismatch: (3, 3) != (3, 2)")
+
+    def test_matrices_of_different_num_cols_not_equals_passes(self):
+        # Where
+        m1 = self._createMatrix(3, 2)
+        m2 = self._createMatrix(3, 3)
+
+        # When
+        self.expecter.expect(m1).Not.toBeCloseTo(m2)
+        self.expecter.expect(m2).Not.toBeCloseTo(m1)
+
+        # Then
+        # (no expections are raised)
+
 
