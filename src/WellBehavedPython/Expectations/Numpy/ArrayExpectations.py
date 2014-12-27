@@ -38,30 +38,13 @@ class ArrayExpectations(DefaultExpectations):
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
     def toEqual(self, expected):
-        self._compareTypes(expected)
-        failMessage = self._compareSizes(expected)
-        if failMessage is not None:
-            self.fail(failMessage)
-            return # don't carry forward if we're in a not contenxt            
-
-
-        comparison = equal(self.actual, expected)
-        extraMessageParts = []
-        extraMessageParts.append(self._createDifferenceCountMessage(comparison))
-        extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
-
-        extraMessage = "\n" + "\n".join(extraMessageParts)
-
-        message = self.buildMessage("to exactly equal ", expected, 
-                                    extra = extraMessage)
-
-
-        if all(comparison):
-            self.success(message)
-        else:
-            self.fail(message)
+        self._compareElements(expected, absoluteTolerance = 0, relativeTolerance = 0, messageStub = "to exactly equal ")
 
     def toBeCloseTo(self, expected, absoluteTolerance = None, relativeTolerance = None):
+        self._compareElements(expected, absoluteTolerance, relativeTolerance, "to be close to ")
+        
+
+    def _compareElements(self, expected, absoluteTolerance, relativeTolerance, messageStub):
         self._compareTypes(expected)
         failMessage = self._compareSizes(expected)
         if failMessage is not None:
@@ -80,7 +63,13 @@ class ArrayExpectations(DefaultExpectations):
                 comparison = isclose(self.actual, expected, atol = absoluteTolerance, 
                              rtol=relativeTolerance)
 
-        message = self.buildMessage("to be close to ", expected)
+        extraMessageParts = []
+        extraMessageParts.append(self._createDifferenceCountMessage(comparison))
+        extraMessageParts.append(self._createDifferenceLocationMessage(comparison))
+
+        extraMessage = "\n" + "\n".join(extraMessageParts)
+        message = self.buildMessage(messageStub, expected, 
+                                    extra = extraMessage)
 
         if all(comparison):
             self.success(message)
