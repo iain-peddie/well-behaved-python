@@ -298,7 +298,7 @@ class ToBeCloseToTests(ArrayExpectationsTests):
             AssertionError,
             expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
 
-    def test_that_elements_just_inside_outside_tolerance_considered_not_close(self):
+    def test_that_elements_just_inside_outside_absolute_tolerance_considered_not_close(self):
         # Where
         tolerance = 1e-8
         tiny = 1e-16
@@ -315,3 +315,60 @@ class ToBeCloseToTests(ArrayExpectationsTests):
         expect(shouldFail).toRaise(
             AssertionError,
             expectedMessageMatches = "Expected \[.*\] to be close to \[.*\]")
+
+    def test_that_elements_just_inside_relative_tolerance_considered_close(self):
+        # Where
+        tolerance = 1e-5
+        delta = tolerance
+        v1 = ones(3)
+        
+        v2 = v1.copy()
+        v2[2] = 1+delta
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, relativeTolerance=tolerance)
+        shouldPass = lambda: self.expecter.expect(v1).toBeCloseTo(v2, relativeTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
+
+    def test_that_elements_just_inside_outside_relative_tolerance_considered_not_close(self):
+        # Where
+        tolerance = 1e-5
+        delta = 2*tolerance
+        v1 = ones(3)
+        
+        v2 = v1.copy()
+        v2[2] = 1+delta
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, relativeTolerance=tolerance)
+        shouldFail = lambda: self.expecter.expect(v1).toBeCloseTo(v2, relativeTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] to be close to \[.*\]")
+
+    def test_that_default_tolerances_forgiving(self):
+        # Where
+        v1 = ones(3)
+        
+        v2 = v1.copy()
+        v2[2] = 1+1e-10
+
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2)
+        shouldPass = lambda: self.expecter.expect(v1).toBeCloseTo(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
+        
+
