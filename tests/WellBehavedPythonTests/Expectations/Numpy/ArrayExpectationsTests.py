@@ -28,6 +28,18 @@ class ArrayExpectationsTests(TestCase):
     def before(self):
         self.expecter = ExpectationsRegistry.createDefaultExpectationsRegistry()
         self.expecter.register(lambda x: isinstance(x, ndarray), ArrayExpectations)
+        
+    def _createVector(self, numCols):
+        return zeros(numCols)
+
+    def _createMatrix(self, numRows, numCols):
+        return zeros([numRows, numCols])
+
+    def _createTensor(self, numRows, numCols, numLayers):
+        return zeros([numRows, numCols, numLayers])
+
+
+class ToEqualTests(ArrayExpectationsTests):
     
     def test_identical_vectors_considered_equal(self):
         # Where
@@ -242,13 +254,121 @@ class ArrayExpectationsTests(TestCase):
             expectedMessageMatches = "all elements differ")
         
         
+class ToBeCloseToTests(ArrayExpectationsTests):
 
+    def test_that_identical_vectors_considered_close(self):
+        # Where
+        v1 = self._createVector(3)
+        v2 = v1.copy()
+
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2)
+
+        # Then
+        self.expecter.expect(v1).toBeCloseTo(v2)
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected (\[\s*0\.\s+0\.\s+0\.\]) not to be close to \\1")
+
+    def test_that_identical_matrices_considered_close(self):
+        # Where
+        m1 = self._createMatrix(3,2)
+        m2 = m1.copy()
+
+        # Then
+        expect(lambda: self.expecter.expect(m1).Not.toBeCloseTo(m2)).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected (\[(?:\[\s*0\.\s+0\.\s*\]\s*){3}\]) not to be close to \\1")
+
+    def test_that_elements_just_inside_absolute_tolerance_considered_close(self):
+        # Where
+        tolerance = 1e-8
+        tiny = 1e-16
+        v1 = self._createVector(3)
         
-    def _createVector(self, numCols):
-        return zeros(numCols)
+        v2 = v1 + (tolerance - tiny)
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, absoluteTolerance=tolerance)
+        shouldPass = lambda: self.expecter.expect(v1).toBeCloseTo(v2, absoluteTolerance=tolerance)
 
-    def _createMatrix(self, numRows, numCols):
-        return zeros([numRows, numCols])
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
 
-    def _createTensor(self, numRows, numCols, numLayers):
-        return zeros([numRows, numCols, numLayers])
+    def test_that_elements_just_inside_outside_absolute_tolerance_considered_not_close(self):
+        # Where
+        tolerance = 1e-8
+        tiny = 1e-16
+        v1 = self._createVector(3)
+        
+        v2 = v1 + (tolerance + tiny)
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, absoluteTolerance=tolerance)
+        shouldFail = lambda: self.expecter.expect(v1).toBeCloseTo(v2, absoluteTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] to be close to \[.*\]")
+
+    def test_that_elements_just_inside_relative_tolerance_considered_close(self):
+        # Where
+        tolerance = 1e-5
+        delta = tolerance
+        v1 = ones(3)
+        
+        v2 = v1.copy()
+        v2[2] = 1+delta
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, relativeTolerance=tolerance)
+        shouldPass = lambda: self.expecter.expect(v1).toBeCloseTo(v2, relativeTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
+
+    def test_that_elements_just_inside_outside_relative_tolerance_considered_not_close(self):
+        # Where
+        tolerance = 1e-5
+        delta = 2*tolerance
+        v1 = ones(3)
+        
+        v2 = v1.copy()
+        v2[2] = 1+delta
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2, relativeTolerance=tolerance)
+        shouldFail = lambda: self.expecter.expect(v1).toBeCloseTo(v2, relativeTolerance=tolerance)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] to be close to \[.*\]")
+
+    def test_that_default_tolerances_forgiving(self):
+        # Where
+        v1 = ones(3)
+        
+        v2 = v1.copy()
+        v2[2] = 1+1e-10
+
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCloseTo(v2)
+        shouldPass = lambda: self.expecter.expect(v1).toBeCloseTo(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be close to \[.*\]")
+        
+
