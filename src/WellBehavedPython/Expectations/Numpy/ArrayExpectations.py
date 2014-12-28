@@ -46,7 +46,7 @@ class ArrayExpectations(DefaultExpectations):
         self._compareElementwise(expected, comparer, "to be close to ")
 
     def toBeReal(self):
-        comparer = lambda exp: isreal(exp)
+        comparer = lambda exp: isreal(self.actual)
         self._compareElementwise(None, comparer, "to be real")
 
     def _compareElementwise(self, expected, comparer, messageStub):

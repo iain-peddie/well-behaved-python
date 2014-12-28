@@ -548,7 +548,7 @@ class ToBeRealTests(ArrayExpectationsTests):
     
     def test_that_real_matrix_considered_real(self):
         # Where
-        m1 = self._createMatrix(3,3)
+        m1 = zeros([3,3], complex)
 
         # When
         shouldPass = lambda: self.expecter.expect(m1).toBeReal()
@@ -559,3 +559,18 @@ class ToBeRealTests(ArrayExpectationsTests):
         expect(shouldFail).toRaise(
             AssertionError,
             expectedMessageMatches = "Expected \[(\[.*\]\s*){3}\] not to be real")
+
+    def test_that_almost_real_matrix_not_considered_real(self):
+        # Where
+        m1 = zeros([3,3], complex)
+        m1[0:3,0:3] = 1+1j
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(m1).Not.toBeReal()
+        shouldFail = lambda: self.expecter.expect(m1).toBeReal()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[(\[.*\]\s*){3}\] to be real")
