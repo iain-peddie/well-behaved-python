@@ -38,30 +38,26 @@ class ArrayExpectations(DefaultExpectations):
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
 
     def toEqual(self, expected):
-        self._compareElements(expected, absoluteTolerance = 0, relativeTolerance = 0, messageStub = "to exactly equal ")
+        comparer = lambda exp: self._areElementsClose(exp, 0, 0)
+        self._compareElementwise(expected, comparer,  messageStub = "to exactly equal ")
 
     def toBeCloseTo(self, expected, absoluteTolerance = None, relativeTolerance = None):
-        self._compareElements(expected, absoluteTolerance, relativeTolerance, "to be close to ")
-        
+        comparer = lambda exp: self._areElementsClose(exp, absoluteTolerance, relativeTolerance)
+        self._compareElementwise(expected, comparer, "to be close to ")
 
-    def _compareElements(self, expected, absoluteTolerance, relativeTolerance, messageStub):
-        self._compareTypes(expected)
-        failMessage = self._compareSizes(expected)
-        if failMessage is not None:
-            self.fail(failMessage)
-            return # don't carry forward if we're in a not contenxt            
+    def toBeReal(self):
+        comparer = lambda exp: isreal(self.actual)
+        self._compareElementwise(None, comparer, "to be real")
 
-        if absoluteTolerance is None:
-            if relativeTolerance is None:
-                comparison = isclose(self.actual, expected)
-            else:
-                comparison = isclose(self.actual, expected, atol=0, rtol = relativeTolerance)
-        else:
-            if relativeTolerance is None:
-                comparison = isclose(self.actual, expected, atol=absoluteTolerance, rtol = 0)
-            else:                        
-                comparison = isclose(self.actual, expected, atol = absoluteTolerance, 
-                             rtol=relativeTolerance)
+    def _compareElementwise(self, expected, comparer, messageStub):
+        if not expected is None:
+            self._compareTypes(expected)
+            failMessage = self._compareSizes(expected)
+            if failMessage is not None:
+                self.fail(failMessage)
+                return # don't carry forward if we're in a not contenxt            
+
+        comparison = comparer(expected)
 
         extraMessageParts = []
         extraMessageParts.append(self._createDifferenceCountMessage(comparison))
@@ -75,6 +71,23 @@ class ArrayExpectations(DefaultExpectations):
             self.success(message)
         else:
             self.fail(message)
+
+    def _areElementsClose(self, expected, absoluteTolerance, relativeTolerance):
+        if absoluteTolerance is None:
+            if relativeTolerance is None:
+                comparison = isclose(self.actual, expected)
+            else:
+                comparison = isclose(self.actual, expected, atol=0, rtol = relativeTolerance)
+        else:
+            if relativeTolerance is None:
+                comparison = isclose(self.actual, expected, atol=absoluteTolerance, rtol = 0)
+            else:                        
+                comparison = isclose(self.actual, expected, atol = absoluteTolerance, 
+                             rtol=relativeTolerance)
+
+        return comparison
+
+
 
     def _compareSizes(self, expected):
         if self.actual.ndim != expected.ndim:
