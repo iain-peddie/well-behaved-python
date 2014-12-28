@@ -542,3 +542,20 @@ class ToBeCloseToTests(ArrayExpectationsTests):
         expect(lambda: self.expecter.expect(v1).toBeCloseTo(v2)).toRaise(
             AssertionError,
             expectedMessageMatches = "all elements differ")
+
+
+class ToBeRealTests(ArrayExpectationsTests):
+    
+    def test_that_real_matrix_considered_real(self):
+        # Where
+        m1 = self._createMatrix(3,3)
+
+        # When
+        shouldPass = lambda: self.expecter.expect(m1).toBeReal()
+        shouldFail = lambda: self.expecter.expect(m1).Not.toBeReal()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[(\[.*\]\s*){3}\] not to be real")
