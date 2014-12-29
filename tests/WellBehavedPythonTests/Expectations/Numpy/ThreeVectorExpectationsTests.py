@@ -49,3 +49,17 @@ class ToBeCollinearWithTests(ThreeVectorExpectationsTestCase):
             AssertionError,
             expectedMessageMatches = "Expected \[.*\] not to be collinear with \[.*\]")
 
+    def test_misaligned_vectors_not_considered_collinear(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(1, 0, 1e-4)
+
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).toBeCollinearWith(v2)
+        shouldPass = lambda: self.expecter.expect(v1).Not.toBeCollinearWith(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] to be collinear with \[.*\]")
