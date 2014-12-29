@@ -31,7 +31,7 @@ class ThreeVectorExpectations(ArrayExpectations):
         #     self.fail(message)
         #     return
 
-        metric = linalg.norm(cross(self.actual, expected))
+        metric = linalg.norm(cross(self.actual, expected))/(linalg.norm(self.actual) * linalg.norm(expected))
         message = self.buildMessage("to be collinear with ", expected)
         if metric > tolerance:
             self.fail(message)

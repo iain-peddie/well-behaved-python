@@ -63,3 +63,39 @@ class ToBeCollinearWithTests(ThreeVectorExpectationsTestCase):
         expect(shouldFail).toRaise(
             AssertionError,
             expectedMessageMatches = "Expected \[.*\] to be collinear with \[.*\]")
+
+    def test_antiparallel_vectors_considered_collinear(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(-1, 0, 0)
+
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).toBeCollinearWith(v2)
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBeCollinearWith(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be collinear with \[.*\]")
+
+    def test_short_parallel_vector_considered_parallel(self):
+        # Where
+        v1 = self._createVector(1, 1, 2)
+        v2 = self._createVector(1e-10, 1e-10, 2e-10)
+
+        # Then
+        self.expecter.expect(v1).toBeCollinearWith(v2)
+        self.expecter.expect(v2).toBeCollinearWith(v1)
+
+    def test_short_nonparalle_vector_considered_parallel(self):
+        # Where
+        v1 = self._createVector(1, 1, 2)
+        v2 = self._createVector(1e-10, 2e-10, 1e-10)
+
+        # Then
+
+        expect(lambda: self.expecter.expect(v1).toBeCollinearWith(v2)).toRaise(            
+            AssertionError)
+        expect(lambda: self.expecter.expect(v2).toBeCollinearWith(v1)).toRaise(
+            AssertionError)    
