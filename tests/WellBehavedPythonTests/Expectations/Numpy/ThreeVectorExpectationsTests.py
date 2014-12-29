@@ -98,4 +98,16 @@ class ToBeCollinearWithTests(ThreeVectorExpectationsTestCase):
         expect(lambda: self.expecter.expect(v1).toBeCollinearWith(v2)).toRaise(            
             AssertionError)
         expect(lambda: self.expecter.expect(v2).toBeCollinearWith(v1)).toRaise(
-            AssertionError)    
+            AssertionError)
+
+    def test_zero_vector_not_collinear_with_any_vector(self):
+        # Where
+        v1 = self._createVector(1, 1, 2)
+        v2 = 0 * v1
+
+        # Then
+
+        expect(lambda: self.expecter.expect(v1).toBeCollinearWith(v2)).toRaise(            
+            AssertionError)
+        expect(lambda: self.expecter.expect(v2).toBeCollinearWith(v1)).toRaise(
+            AssertionError)

@@ -26,13 +26,22 @@ class ThreeVectorExpectations(ArrayExpectations):
     def toBeCollinearWith(self, expected, tolerance = 1e-5):
         self._compareTypes(expected)
         
-        # message = self._compareSizes(expected)
-        # if message:
-        #     self.fail(message)
-        #     return
+        message = self._compareSizes(expected)
+        if message:
+            self.fail(message)
+            return
 
-        metric = linalg.norm(cross(self.actual, expected))/(linalg.norm(self.actual) * linalg.norm(expected))
+        na = linalg.norm(self.actual)
+        ne = linalg.norm(expected)
+
         message = self.buildMessage("to be collinear with ", expected)
+
+    
+        if na < 1e-16 or ne < 1e-16:
+            self.fail(message)
+            return
+
+        metric = linalg.norm(cross(self.actual, expected))/(na * ne)
         if metric > tolerance:
             self.fail(message)
         else:
