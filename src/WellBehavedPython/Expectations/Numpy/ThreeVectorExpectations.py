@@ -46,3 +46,19 @@ class ThreeVectorExpectations(ArrayExpectations):
             self.fail(message)
         else:
             self.success(message)
+
+    def toBePerpendicularTo(self, expected, tolerance = 1e-5):
+        self._compareTypes(expected)
+        
+        message = self._compareSizes(expected)
+        if message:
+            self.fail(message)
+            return
+
+        message = self.buildMessage("to be perpendicular to ", expected)
+        metric = linalg.norm(dot(self.actual, expected))
+
+        if metric > tolerance:
+            self.fail(message)
+        else:
+            self.success(message)
