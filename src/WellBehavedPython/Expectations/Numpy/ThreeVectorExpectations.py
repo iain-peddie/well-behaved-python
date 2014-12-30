@@ -24,6 +24,21 @@ from numpy import *
 class ThreeVectorExpectations(ArrayExpectations):
     
     def toBeCollinearWith(self, expected, tolerance = 1e-5):
+        """Tests whether expected is collinear with actual.
+
+        Note that for this definition collinear means parallel within
+        tolerance or antiparallel within tolernace.
+
+        Note that the test is ||(a X e) / (||a|| ||e||)|| > tolerance, where
+        a is actual, e is expected, X represents the cross product and ||x|| is
+        the 2-norm of x
+
+        Inputs
+        ------
+        expected: The expected value for actual to be tested for
+                  collinearity with.
+        tolerance: The tolerance for closeness."""
+
         self._compareTypes(expected)
         
         message = self._compareSizes(expected)
@@ -48,6 +63,21 @@ class ThreeVectorExpectations(ArrayExpectations):
             self.success(message)
 
     def toBePerpendicularTo(self, expected, tolerance = 1e-5):
+        """Tests whether expected is collinear with actual.
+
+        Note that for this definition collinear means parallel within
+        tolerance or antiparallel within tolernace.
+
+        Note that the test is (a . e) / (||a|| ||e||) > tolerance, where
+        a is actual, e is expected, X represents the cross product and ||x|| is
+        the 2-norm of x
+
+        Inputs
+        ------
+        expected: The expected value for actual to be tested for
+                  collinearity with.
+        tolerance: The tolerance for closeness."""
+
         self._compareTypes(expected)
         
         message = self._compareSizes(expected)
@@ -55,8 +85,11 @@ class ThreeVectorExpectations(ArrayExpectations):
             self.fail(message)
             return
 
+        na = linalg.norm(self.actual)
+        ne = linalg.norm(expected)
+
         message = self.buildMessage("to be perpendicular to ", expected)
-        metric = linalg.norm(dot(self.actual, expected))
+        metric = dot(self.actual, expected)/ (na*ne)
 
         if metric > tolerance:
             self.fail(message)

@@ -88,7 +88,7 @@ class ToBeCollinearWithTests(ThreeVectorExpectationsTestCase):
         self.expecter.expect(v1).toBeCollinearWith(v2)
         self.expecter.expect(v2).toBeCollinearWith(v1)
 
-    def test_short_nonparalle_vector_considered_parallel(self):
+    def test_short_nonparallel_vector_considered_parallel(self):
         # Where
         v1 = self._createVector(1, 1, 2)
         v2 = self._createVector(1e-10, 2e-10, 1e-10)
@@ -161,3 +161,20 @@ class ToBePerpendicularToTests(ThreeVectorExpectationsTestCase):
             expectedMessageMatches = "Expected \[.*\] to be perpendicular to \[.*\]")
     
         
+    def test_short_perpendicular_vector_considered_perpendicular(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(0, 1e-10, 0)
+
+        # Then
+        self.expecter.expect(v1).toBePerpendicularTo(v2)
+        self.expecter.expect(v2).toBePerpendicularTo(v1)
+
+    def test_short_nonperpendicular_vector_considered_perpendicular(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(1e-10, 1e-10, 0)
+
+        # Then
+        self.expecter.expect(v1).Not.toBePerpendicularTo(v2)
+        self.expecter.expect(v2).Not.toBePerpendicularTo(v1)
