@@ -178,3 +178,15 @@ class ToBePerpendicularToTests(ThreeVectorExpectationsTestCase):
         # Then
         self.expecter.expect(v1).Not.toBePerpendicularTo(v2)
         self.expecter.expect(v2).Not.toBePerpendicularTo(v1)
+
+    def test_zero_vector_not_collinear_with_any_vector(self):
+        # Where
+        v1 = self._createVector(1, 1, 2)
+        v2 = 0 * v1
+
+        # Then
+
+        expect(lambda: self.expecter.expect(v1).toBePerpendicularTo(v2)).toRaise(            
+            AssertionError)
+        expect(lambda: self.expecter.expect(v2).toBePerpendicularTo(v1)).toRaise(
+            AssertionError)
