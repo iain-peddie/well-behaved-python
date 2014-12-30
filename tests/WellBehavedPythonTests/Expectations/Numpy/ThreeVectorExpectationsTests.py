@@ -88,7 +88,7 @@ class ToBeCollinearWithTests(ThreeVectorExpectationsTestCase):
         self.expecter.expect(v1).toBeCollinearWith(v2)
         self.expecter.expect(v2).toBeCollinearWith(v1)
 
-    def test_short_nonparalle_vector_considered_parallel(self):
+    def test_short_nonparallel_vector_considered_parallel(self):
         # Where
         v1 = self._createVector(1, 1, 2)
         v2 = self._createVector(1e-10, 2e-10, 1e-10)
@@ -110,4 +110,83 @@ class ToBeCollinearWithTests(ThreeVectorExpectationsTestCase):
         expect(lambda: self.expecter.expect(v1).toBeCollinearWith(v2)).toRaise(            
             AssertionError)
         expect(lambda: self.expecter.expect(v2).toBeCollinearWith(v1)).toRaise(
+            AssertionError)
+
+class ToBePerpendicularToTests(ThreeVectorExpectationsTestCase):
+    
+    def test_100_vector_considered_perpendicular_to_010(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(0, 1, 0)
+
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).toBePerpendicularTo(v2)
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBePerpendicularTo(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be perpendicular to \[.*\]")
+
+    def test_110_vector_considered_perpendicular_to_001(self):
+        # Where
+        v1 = self._createVector(1, 1, 0)
+        v2 = self._createVector(0, 0, 1)
+
+        # When
+        shouldPass = lambda: self.expecter.expect(v1).toBePerpendicularTo(v2)
+        shouldFail = lambda: self.expecter.expect(v1).Not.toBePerpendicularTo(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] not to be perpendicular to \[.*\]")
+
+    def test_100_vector_not_considered_perpendicular_to_epsilon10(self):
+        # Where
+        epsilon = 1e-4
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(epsilon, 1, 0)
+
+        # When
+        shouldFail = lambda: self.expecter.expect(v1).toBePerpendicularTo(v2)
+        shouldPass = lambda: self.expecter.expect(v1).Not.toBePerpendicularTo(v2)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "Expected \[.*\] to be perpendicular to \[.*\]")
+    
+        
+    def test_short_perpendicular_vector_considered_perpendicular(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(0, 1e-10, 0)
+
+        # Then
+        self.expecter.expect(v1).toBePerpendicularTo(v2)
+        self.expecter.expect(v2).toBePerpendicularTo(v1)
+
+    def test_short_nonperpendicular_vector_considered_perpendicular(self):
+        # Where
+        v1 = self._createVector(1, 0, 0)
+        v2 = self._createVector(1e-10, 1e-10, 0)
+
+        # Then
+        self.expecter.expect(v1).Not.toBePerpendicularTo(v2)
+        self.expecter.expect(v2).Not.toBePerpendicularTo(v1)
+
+    def test_zero_vector_not_collinear_with_any_vector(self):
+        # Where
+        v1 = self._createVector(1, 1, 2)
+        v2 = 0 * v1
+
+        # Then
+
+        expect(lambda: self.expecter.expect(v1).toBePerpendicularTo(v2)).toRaise(            
+            AssertionError)
+        expect(lambda: self.expecter.expect(v2).toBePerpendicularTo(v1)).toRaise(
             AssertionError)
