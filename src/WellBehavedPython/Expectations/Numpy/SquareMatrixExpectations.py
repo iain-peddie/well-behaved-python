@@ -24,7 +24,7 @@ from numpy.dual import det
 class SquareMatrixExpectations(ArrayExpectations):
 
     def toBeInvertible(self):
-        """Indicates that actual is expected to be invertible.
+        """Examines actual to see if it is invertible.
 
         The logic for this is:
           - actual should be square (implicit)
@@ -45,5 +45,21 @@ class SquareMatrixExpectations(ArrayExpectations):
             self.fail(message)
         else:
             self.success(message)
+
+    def toBeOrthogonal(self, absoluteTolerance = None, relativeTolerance = None):
+        """Examines actual to see if it is orthogonal
+
+        That is, it checks to see that actual = transpose(actual) to within tolerance.
+        """
+
+
+        comparer = lambda exp: self._areElementsClose(exp, absoluteTolerance,
+                                          relativeTolerance)
+
+        expected = self.actual.transpose()
+        self._compareElementwise(expected, comparer, "to be orthogonal ")
+        
+
+        
 
     
