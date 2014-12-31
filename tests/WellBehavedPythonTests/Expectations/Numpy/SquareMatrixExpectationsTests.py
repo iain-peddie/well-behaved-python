@@ -59,4 +59,37 @@ class ToBeInvertibleTests(SquareMatrixExpectationsTestCase):
         expect(shouldFail).toRaise(
             AssertionError,
             expectedMessageMatches = "\] to be invertible")
+
+class ToBeOrthogonalTests(SquareMatrixExpectationsTestCase):
+
+    def test_identity_considered_orthogonal(self):
+        # Where
+        
+        i3 = identity(3)
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(i3).toBeOrthogonal()
+        shouldFail = lambda: self.expecter.expect(i3).Not.toBeOrthogonal()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] not to be orthogonal")
+
+    def test_projection_matrix_not_considered_orthogonal(self):
+        # Where
+        
+        p = array([[0, 1], 
+                   [0, 0]])
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(p).toBeOrthogonal()
+        shouldPass = lambda: self.expecter.expect(p).Not.toBeOrthogonal()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] to be orthogonal")
         
