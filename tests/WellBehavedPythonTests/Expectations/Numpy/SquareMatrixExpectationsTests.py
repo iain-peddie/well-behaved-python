@@ -123,3 +123,82 @@ class ToBeOrthogonalTests(SquareMatrixExpectationsTestCase):
             AssertionError,
             expectedMessageMatches = "\] not to be orthogonal")
         
+class ToBeHermitianTests(SquareMatrixExpectationsTestCase):
+
+    def test_identity_considered_hermitian(self):
+        # Where
+        
+        i3 = identity(3)
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(i3).toBeHermitian()
+        shouldFail = lambda: self.expecter.expect(i3).Not.toBeHermitian()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] not to be hermitian")
+
+    def test_pauli_matrix_sigma2_considered_hermitian(self):
+        # Where
+        sigma2 = array([[ 0, -1j],
+                        [1j, 0]])
+
+        # When
+        shouldPass = lambda: self.expecter.expect(sigma2).toBeHermitian()
+        shouldFail = lambda: self.expecter.expect(sigma2).Not.toBeHermitian()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] not to be hermitian")
+
+
+    def test_projection_matrix_not_considered_orthogonal(self):
+        # Where        
+        p = array([[0, 1j], 
+                   [0, 0]])
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(p).toBeHermitian()
+        shouldPass = lambda: self.expecter.expect(p).Not.toBeHermitian()
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] to be hermitian")
+
+    def test_not_quite_orthogonal_matrix_not_considered_orthogonal(self):
+        # Where        
+        p = array([[0, 1], 
+                   [1+1.1e-10j, 0]])
+        
+        # When
+        shouldFail = lambda: self.expecter.expect(p).toBeHermitian(absoluteTolerance=1e-10)
+        shouldPass = lambda: self.expecter.expect(p).Not.toBeHermitian(absoluteTolerance=1e-10)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] to be hermitian")
+        
+
+    def test_just_orthogonal_matrix_not_considered_orthogonal(self):
+        # Where        
+        p = array([[0, 1], 
+                   [1+0.99e-10j, 0]])
+        
+        # When
+        shouldPass = lambda: self.expecter.expect(p).toBeHermitian(absoluteTolerance=1e-10)
+        shouldFail = lambda: self.expecter.expect(p).Not.toBeHermitian(absoluteTolerance=1e-10)
+
+        # Then
+        shouldPass()
+        expect(shouldFail).toRaise(
+            AssertionError,
+            expectedMessageMatches = "\] not to be hermitian")
+
