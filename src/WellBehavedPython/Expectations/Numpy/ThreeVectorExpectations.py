@@ -22,11 +22,6 @@ from .ArrayExpectations import ArrayExpectations
 from numpy import *
 
 class ThreeVectorExpectations(ArrayExpectations):
-
-    def __init__(self, actual, strategy, reverseExpecter = None):
-        ArrayExpectations.__init__(self, actual, strategy, reverseExpecter)
-        self.zeroTolerance = 1e-16
-
     
     def toBeCollinearWith(self, expected, tolerance = 1e-5):
         """Tests whether expected is collinear with actual.
