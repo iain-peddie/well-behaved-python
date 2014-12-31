@@ -36,6 +36,7 @@ class ArrayExpectations(DefaultExpectations):
         """
 
         DefaultExpectations.__init__(self, actual, strategy, reverseExpecter)
+        self.zeroTolerance = 1e-16
 
     def toEqual(self, expected):
         comparer = lambda exp: self._areElementsClose(exp, 0, 0)
