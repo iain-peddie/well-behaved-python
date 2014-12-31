@@ -59,6 +59,22 @@ class SquareMatrixExpectations(ArrayExpectations):
         expected = self.actual.transpose()
         self._compareElementwise(expected, comparer, "to be orthogonal ")
         
+    def toBeHermitian(self, absoluteTolerance = None, relativeTolerance = None):
+        """Examines actual to see if it is hermitian
+
+        That is, it checks to see that actual is equal to it's hermitian conjugate,
+        that is actual = (actual*)^T (the transpose of the matrix whose elements are
+        the complex conjugates of actual's elements.
+        """
+
+
+        comparer = lambda exp: self._areElementsClose(exp, absoluteTolerance,
+                                          relativeTolerance)
+
+        expected = self.actual.conj().transpose()
+        self._compareElementwise(expected, comparer, "to be hermitian ")
+
+
 
         
 
