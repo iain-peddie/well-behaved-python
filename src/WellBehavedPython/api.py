@@ -89,6 +89,30 @@ def registerExpectationClass(usePredicate, constructor):
                  lambda actual, strategy, reverser: 
                            NumericExpecations(float(actual), strategy, reverser)."""
     _registry.register(usePredicate, constructor)
+
+def registerNumpy():
+    """Register the default WellBehavedPython provided expectations for Numpy ndarrays. These are:
+    
+    ArrayExpectation - for expectations on most ndarray objects. Provdes methods:
+       toEqual(other)
+       toBeCloseTo(other)
+       toBeReal()    
+    ThreeVectorExpectations -for expectations on 3 length vector objects. Provides methods:
+       toEqual(other)
+       toBeCloseTo(other)
+       toBeReal()    
+       toBeCollinearWith(other) - checks that two 3-vectors are aligned (ie are either parallel or antiparallel)
+       toBePerpendicularTo(other) - checks that two 3-vectors are perpendicular
+   SquareMatirxExpectations - for expectations on square matrics. Provides methods:
+       toEqual(other)
+       toBeCloseTo(other)
+       toBeReal()    
+       toBeInvertible() - checks that an invese can exist, without computing the inverse iteslf
+       toBeOrthogonal() - checks that the matrix is equal to it's transpose (within a configurable tolerance)
+       toBeHermitian() - checks that the matrix is equal to it's Hermitian conjugate, ie the transpose of 
+                  the complex conjugate. The tolerance is configurable."""
+
+    _registry.registerNumpyExpectations()
         
 def spyOn(methodOrObject):
     """spies on a given method.
