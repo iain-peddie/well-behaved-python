@@ -128,10 +128,35 @@ class ExpectationsRegistryNumpyTests(TestCase):
 
     def before(self):
         self.defaultRegistry = ExpectationsRegistry.createDefaultExpectationsRegistry()
-
     
-    def test_numpy_array_treated_as_numeric_by_default(self):
+    def test_registration_gives_ContainerExpectations_for_3_2_ndarray_by_default(self):
         # Where
-        pass
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3, 2)
+        
+        # When
+        expecter = registry.expect(numpyArray)
 
+        # Then
+        expect(expecter).toBeAnInstanceOf(ContainerExpectations)
+
+    def test_registration_gives_ArrayExpectations_for_3_2_ndarray_after_registering_numpy_expectations(self):
+        from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3, 2)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ArrayExpectations)        
+
+    def createNumpyArray(self, width, height):
+        from numpy import zeros
+        
+        return zeros([width, height])
+        
 
