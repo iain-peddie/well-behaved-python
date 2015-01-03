@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2013 Iain Peddie inr314159@hotmail.com
+# Copyright 2013-5 Iain Peddie inr314159@hotmail.com
 # 
 #    This file is part of WellBehavedPython
 #
@@ -107,8 +107,52 @@ class ExpectationsRegistry:
 
 
     def register(self, creationPredicate, createExpectations):
+        """Registers a new expectations class with a given creation predicate.
+
+        This can be used to set custom rules appropriate for your custom classes,
+        or for common external modules that are integral to what you are doing.
+        For instance, if you're doing a lot of image analysis using OpenCV, you
+        might want to write your own class to assert on the OpenCV data types 
+        coming our of your algorithms...
+
+        Note that registration acts as a stack, so your expectations will be tried
+        first. As such, if you have more than one rule to add, register the more
+        generic thing first, then the more specialised thing.
+
+        Inputs
+        ------
+        creationPredicate: A callable object that takes an object, and returns
+               whether or not createExpectations shoudl be created for it.
+               e.g. lambda item: isinstance(item, str)
+        createExpectations: A callable object that has the same signature as
+               DefaultExpectations and returns the correctly consturcted
+               expectations object. Can usually be a constructor. If your
+               expectations object has more inputs, you will need to register
+               it with a lambda that gives specific values to the extra parameters."""
+        
         self._factories.append(ExpectationsFactory(creationPredicate, 
                                                    createExpectations))
+
+    def registerNumpyExpectations(self):
+        """Registers the Numpy specific expectations against this registratio
+        object. This should only be called if numpy is installed on your system.
+        Otherwise you will likely get errors. (And if not, will be uncecessarily
+        slowing down the tests)."""
+
+        from numpy import ndarray
+        from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+        from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
+
+
+        self.register(lambda item: isinstance(item, ndarray), ArrayExpectations)
+        self.register(lambda item: isinstance(item, ndarray) and item.shape == (3,),
+                      ThreeVectorExpectations)
+        self.register(lambda item: isinstance(item, ndarray) and item.ndim == 2 and item.shape[0] == item.shape[1], 
+                      SquareMatrixExpectations)
+
+        
+    
 
     def _createDefaultExpecationsFactory(self):
         return ExpectationsFactory(

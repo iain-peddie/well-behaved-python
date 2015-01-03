@@ -36,8 +36,7 @@ def main():
         if not moduleExists('numpy'):
             ignoreFilters.append('Numpy')
             
-
-        suite = discoverTests('WellBehavedPythonTests', ignoreFilters = ['Samples'])
+        suite = discoverTests('WellBehavedPythonTests', ignoreFilters = ignoreFilters)
         
         buffer = True
 

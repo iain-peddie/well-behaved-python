@@ -122,3 +122,90 @@ class ExpectationsRegistryTests(TestCase):
         registry = self.createDefaultExpectationsRegistry()
         registry.register(isNumeric, NumericExpectations)
         return registry
+
+class ExpectationsRegistryNumpyTests(TestCase):
+    """These tests should only be run if numpy is installed."""
+
+    def before(self):
+        self.defaultRegistry = ExpectationsRegistry.createDefaultExpectationsRegistry()
+    
+    def test_registration_gives_ContainerExpectations_for_3_2_ndarray_by_default(self):
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3, 2)
+        
+        # When
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ContainerExpectations)
+
+    def test_registration_gives_ArrayExpectations_for_3_2_ndarray_after_registering_numpy_expectations(self):
+        from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3, 2)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ArrayExpectations)        
+        expect(expecter).Not.toBeAnInstanceOf(SquareMatrixExpectations)
+
+    def test_registration_gives_ArrayExpectations_for_2_ndarray_after_registering_numpy_expectations(self):
+        from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+        from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(2)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ArrayExpectations)
+        expect(expecter).Not.toBeAnInstanceOf(ThreeVectorExpectations)
+
+    def test_registration_gives_ThreeVectorExpectations_for_3_ndarray_after_registering_numpy_expectations(self):
+        from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ThreeVectorExpectations)        
+
+    def test_registration_of_square_matrix_uses_SquareMatrixExpectations(self):
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3,3)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(SquareMatrixExpectations)        
+
+    def createNumpyArray(self, width, height = None):
+        from numpy import zeros
+
+        if height is not None:
+            return zeros([width, height])
+        else:
+            return zeros(width)
+        
+
