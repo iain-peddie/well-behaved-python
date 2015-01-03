@@ -142,6 +142,7 @@ class ExpectationsRegistryNumpyTests(TestCase):
 
     def test_registration_gives_ArrayExpectations_for_3_2_ndarray_after_registering_numpy_expectations(self):
         from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
 
         # Where
         registry = self.defaultRegistry
@@ -153,6 +154,7 @@ class ExpectationsRegistryNumpyTests(TestCase):
 
         # Then
         expect(expecter).toBeAnInstanceOf(ArrayExpectations)        
+        expect(expecter).Not.toBeAnInstanceOf(SquareMatrixExpectations)
 
     def test_registration_gives_ArrayExpectations_for_2_ndarray_after_registering_numpy_expectations(self):
         from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
@@ -183,6 +185,20 @@ class ExpectationsRegistryNumpyTests(TestCase):
 
         # Then
         expect(expecter).toBeAnInstanceOf(ThreeVectorExpectations)        
+
+    def test_registration_of_square_matrix_uses_SquareMatrixExpectations(self):
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3,3)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(SquareMatrixExpectations)        
 
     def createNumpyArray(self, width, height = None):
         from numpy import zeros

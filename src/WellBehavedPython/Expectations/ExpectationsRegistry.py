@@ -142,10 +142,14 @@ class ExpectationsRegistry:
         from numpy import ndarray
         from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
         from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
+
 
         self.register(lambda item: isinstance(item, ndarray), ArrayExpectations)
         self.register(lambda item: isinstance(item, ndarray) and item.shape == (3,),
                       ThreeVectorExpectations)
+        self.register(lambda item: isinstance(item, ndarray) and item.ndim == 2 and item.shape[0] == item.shape[1], 
+                      SquareMatrixExpectations)
 
         
     
