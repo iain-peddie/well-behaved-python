@@ -200,6 +200,29 @@ class ExpectationsRegistryNumpyTests(TestCase):
         # Then
         expect(expecter).toBeAnInstanceOf(SquareMatrixExpectations)        
 
+    def test_registration_via_api(self):
+        from WellBehavedPython.Expectations.Numpy.SquareMatrixExpectations import SquareMatrixExpectations
+        from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+        from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+
+
+        # Where
+        vector = self.createNumpyArray(3)
+        nonsquareMatrix = self.createNumpyArray(2, 3)
+        squareMatrix = self.createNumpyArray(3, 3)
+        
+        # When
+        registerNumpy()
+        vectorExpectations = expect(vector)
+        nonsquareExpectations = expect(nonsquareMatrix)
+        squareExpectations = expect(squareMatrix)
+
+        # Then
+        expect(vectorExpectations).toBeAnInstanceOf(ThreeVectorExpectations)
+        expect(nonsquareExpectations).toBeAnInstanceOf(ArrayExpectations)
+        expect(squareExpectations).toBeAnInstanceOf(SquareMatrixExpectations)
+        
+
     def createNumpyArray(self, width, height = None):
         from numpy import zeros
 
