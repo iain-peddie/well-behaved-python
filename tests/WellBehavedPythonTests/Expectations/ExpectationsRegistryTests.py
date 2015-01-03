@@ -122,3 +122,16 @@ class ExpectationsRegistryTests(TestCase):
         registry = self.createDefaultExpectationsRegistry()
         registry.register(isNumeric, NumericExpectations)
         return registry
+
+class ExpectationsRegistryNumpyTests(TestCase):
+    """These tests should only be run if numpy is installed."""
+
+    def before(self):
+        self.defaultRegistry = ExpectationsRegistry.createDefaultExpectationsRegistry()
+
+    
+    def test_numpy_array_treated_as_numeric_by_default(self):
+        # Where
+        pass
+
+
