@@ -154,9 +154,42 @@ class ExpectationsRegistryNumpyTests(TestCase):
         # Then
         expect(expecter).toBeAnInstanceOf(ArrayExpectations)        
 
-    def createNumpyArray(self, width, height):
-        from numpy import zeros
+    def test_registration_gives_ArrayExpectations_for_2_ndarray_after_registering_numpy_expectations(self):
+        from WellBehavedPython.Expectations.Numpy.ArrayExpectations import ArrayExpectations
+        from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(2)
         
-        return zeros([width, height])
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ArrayExpectations)
+        expect(expecter).Not.toBeAnInstanceOf(ThreeVectorExpectations)
+
+    def test_registration_gives_ThreeVectorExpectations_for_3_ndarray_after_registering_numpy_expectations(self):
+        from WellBehavedPython.Expectations.Numpy.ThreeVectorExpectations import ThreeVectorExpectations
+
+        # Where
+        registry = self.defaultRegistry
+        numpyArray = self.createNumpyArray(3)
+        
+        # When
+        registry.registerNumpyExpectations()
+        expecter = registry.expect(numpyArray)
+
+        # Then
+        expect(expecter).toBeAnInstanceOf(ThreeVectorExpectations)        
+
+    def createNumpyArray(self, width, height = None):
+        from numpy import zeros
+
+        if height is not None:
+            return zeros([width, height])
+        else:
+            return zeros(width)
         
 
