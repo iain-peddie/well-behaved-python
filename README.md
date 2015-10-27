@@ -1,7 +1,22 @@
-Well Behaved Python Tutorial
-============================
+Well Behaved Python 
+====================
 
-Attempt to create a unit testing framework with a more fluent assertion api and set of error messages than the base python unittesting framework
+WellBehavedPython is a python3 testing framework with a fluent assertion setup, with the aim of making the text in the assertion line (in python) and the text output from the assertion line as simple as possible. 
+
+Thus a test line may say
+
+```python
+expect(value).toEqual("Three")
+```
+
+An the output would look like
+
+```
+expected "Four" to equal "Three"
+```
+
+Tutorial
+========
 
 Set up a test case class
 ------------------------
